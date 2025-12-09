@@ -19,4 +19,5 @@ public class Managers {
     private String id;
 
     @Column String pwd;
+
 }

@@ -39,4 +39,5 @@ public class Payment {
 
     @Column
     private LocalDateTime payment_data;
+
 }

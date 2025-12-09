@@ -29,4 +29,5 @@ public class Comments {
 
     @Column
     private boolean isRelease; // 공개여부
+
 }

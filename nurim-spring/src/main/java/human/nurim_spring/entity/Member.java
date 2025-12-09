@@ -48,4 +48,5 @@ public class Member {
 
     @Column
     private LocalDateTime nextPay;
+
 }

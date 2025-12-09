@@ -39,4 +39,5 @@ public class Reviews {
 
     @Column
     private boolean isRelease;
+
 }

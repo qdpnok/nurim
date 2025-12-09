@@ -27,4 +27,5 @@ public class Cart {
 
     @Column
     private boolean isBye_state;
+
 }

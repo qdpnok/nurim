@@ -28,4 +28,5 @@ public class QNA {
 
     @Column
     private boolean isRelease;
+
 }

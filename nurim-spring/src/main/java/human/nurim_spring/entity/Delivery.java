@@ -42,5 +42,6 @@ public class Delivery {
             throw new IllegalArgumentException("결제됨, 배송예정, 배송중, 배송완료만 입력 가능합니다.");
         }
         this.state = state;
+
     }
 }

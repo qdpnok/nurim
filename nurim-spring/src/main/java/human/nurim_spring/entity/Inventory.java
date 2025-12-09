@@ -24,5 +24,4 @@ public class Inventory {
 
     @Column
     private String storage_location;
-
 }

@@ -30,4 +30,5 @@ public class Revenue {
     private Long price;
 
     private Long quantity;
+
 }

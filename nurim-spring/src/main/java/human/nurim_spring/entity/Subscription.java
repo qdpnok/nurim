@@ -27,14 +27,20 @@ public class Subscription {
 
     @Column
     private LocalDateTime start_data;
+
     @Column
     private LocalDateTime end_data;
+
     @Column
     private LocalDateTime next_pay;
+
     @Column
     private Long price;
+
     @Column
     private LocalDateTime d_day;
+
     @Column
     private LocalDateTime remaining_cost;
+
 }

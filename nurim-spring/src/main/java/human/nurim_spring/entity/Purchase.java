@@ -45,4 +45,5 @@ public class Purchase {
         }
         this.installment_state = installment_state;
     }
+
 }
