@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class MainCategory {
+public class Category {
     @Id
     @Column(name = "category_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

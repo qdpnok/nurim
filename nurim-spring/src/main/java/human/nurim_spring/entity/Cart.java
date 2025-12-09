@@ -9,28 +9,22 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Product {
+public class Cart {
     @Id
-    @Column(name = "product_num")
+    @Column(name = "cart_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long num;
 
     @ManyToOne(fetch = FetchType.LAZY)  // 여러 Product는 하나의 MainCategory에 속함
-    @JoinColumn(name = "category_id")
-    private Category mainCategory;
+    @JoinColumn(name = "product_num")
+    private Product product;
 
     @Column
-    private Long price;
+    private Long quantity;
 
     @Column
-    private String spec;
+    private Long total_price;
 
     @Column
-    private String brand;
-
-    @Column
-    private String serialNum;
-
-    @Column
-    private String name;
+    private boolean isBye_state;
 }
