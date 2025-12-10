@@ -17,7 +17,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)  // 여러 Product는 하나의 MainCategory에 속함
     @JoinColumn(name = "category_id")
-    private Category mainCategory;
+    private SubCategory mainCategory;
 
     @Column
     private Long price;

@@ -3,25 +3,25 @@ package human.nurim_spring.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity @Getter
+@Entity
+@Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Inventory {
+public class SubCategory {
     @Id
-    @Column(name = "inventory_num")
+    @Column(name = "sub_category_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long num;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_num")
-    private Product product;
+    @JoinColumn(name = "main_category_num")
+    private MainCategory mainCategory;
+
 
     @Column
-    private Long quantity;
-
-    @Column
-    private String storage_location;
+    private String name;
 }
+
