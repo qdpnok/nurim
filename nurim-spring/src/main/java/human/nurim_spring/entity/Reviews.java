@@ -40,4 +40,6 @@ public class Reviews {
     @Column
     private boolean isRelease;
 
+    @Column
+    private String img;
 }

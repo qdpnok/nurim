@@ -16,7 +16,7 @@ public class Member {
     private Long num;
 
     @Column(unique = true, length = 100)
-    private String memberId;
+    private String id;
 
     @Column
     private String pwd;
@@ -24,17 +24,15 @@ public class Member {
     @Column(unique = true)
     private String email;
 
+    @Column
+    private String name;
+
     @Column(unique = true)
     private String phoneNum;
 
     @Column
     @ColumnDefault("'true'") // default true
     private String useYn;
-
-    @Column
-    @ColumnDefault("'USER'") // default user
-    @Enumerated(EnumType.STRING)
-    private PermissionStatus permission;
 
     @Column
     private LocalDateTime regDate;

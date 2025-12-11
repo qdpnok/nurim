@@ -16,8 +16,8 @@ public class Product {
     private Long num;
 
     @ManyToOne(fetch = FetchType.LAZY)  // 여러 Product는 하나의 MainCategory에 속함
-    @JoinColumn(name = "category_id")
-    private SubCategory mainCategory;
+    @JoinColumn(name = "sub_category_num")
+    private SubCategory subCategory;
 
     @Column
     private Long price;
@@ -34,4 +34,6 @@ public class Product {
     @Column
     private String name;
 
+    @Column
+    private String img;
 }
