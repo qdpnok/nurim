@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/nurim.iml" filepath="$PROJECT_DIR$/.idea/nurim.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/nurim-spring.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nurim-spring.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nurim-spring.test.iml" filepath="$PROJECT_DIR$/.idea/modules/nurim-spring.test.iml" />
     </modules>
   </component>
 </project>

@@ -7,7 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
-@Entity @Getter @Setter @ToString @NoArgsConstructor
+@Entity @Getter @Setter @ToString(exclude = "pwd") @NoArgsConstructor
 @Builder @AllArgsConstructor
 public class Member {
     @Id
@@ -18,33 +18,34 @@ public class Member {
     @Column(unique = true, length = 100)
     private String id;
 
-    @Column
     private String pwd;
 
     @Column(unique = true)
     private String email;
 
-    @Column
     private String name;
 
     @Column(unique = true)
     private String phoneNum;
 
-    @Column
-    @ColumnDefault("'true'") // default true
-    private String useYn;
+    // builder 패턴으로 생성 시 빈 값이면 true
+    @Builder.Default
+    private String useYn = "true";
 
-    @Column
     private LocalDateTime regDate;
-
-    @Column
     private LocalDateTime quitDate;
 
-    @Column
-    @ColumnDefault("'false'")
-    private String subState;
+    @Builder.Default
+    private String subState = "false";
 
-    @Column
     private LocalDateTime nextPay;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private PermissionStatus status = PermissionStatus.MEMBER;
+
+    @PrePersist
+    public void prePersist() {
+        this.regDate = LocalDateTime.now();
+    }
 }
