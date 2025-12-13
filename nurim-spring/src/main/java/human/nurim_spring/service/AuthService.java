@@ -1,13 +1,17 @@
 package human.nurim_spring.service;
 
+import human.nurim_spring.dto.LoginReqDto;
+import human.nurim_spring.dto.LoginResDto;
 import human.nurim_spring.dto.SignUpReqDto;
 import human.nurim_spring.entity.Member;
+import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +20,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository memberRepository;
-    private final JavaMailSender javaMailSender;
-    private static final String senderEmail = "nurim1210@gmail.com";
-    private static int number;
     private final PasswordEncoder passwordEncoder;
 
     // 이메일 중복 확인
@@ -31,49 +32,29 @@ public class AuthService {
         return memberRepository.existsById(id);
     }
 
-    // 이메일 인증
-    // 랜덤으로 숫자 생성
-    public static void createNumber() {
-        number = (int)(Math.random() * 90000) + 100000;
-    }
-    // 메일 작성
-    public MimeMessage createMail(String email) {
-        createNumber();
-        MimeMessage message = javaMailSender.createMimeMessage();
-
-        // post-it github 참고
-        // mailService, verifyCode
-        try {
-            message.setFrom(senderEmail);
-            message.setRecipients(MimeMessage.RecipientType.TO, email);
-            message.setSubject("이메일 인증");
-            String body = "";
-            body += "<h3>" + "요청하신 인증 번호입니다." + "</h3>";
-            body += "<h1>" + number + "</h1>";
-            body += "<h3>" + "감사합니다." + "</h3>";
-            message.setText(body, "UTF-8", "html");
-        } catch(MessagingException e) {
-            log.error("인증 메시지 생성 오류: ", e);
-        }
-        return message;
-    }
-
-    public int sendMail(String email) {
-        MimeMessage message = createMail(email);
-        javaMailSender.send(message);
-        return number;
-    }
-
     // 회원 가입
-    public boolean signUp(SignUpReqDto dto) {
-        try {
-            Member member = convertSignUpReqToMember(dto);
-            memberRepository.save(member);
-            return true;
-        } catch(Exception e) {
-            log.error("회원 가입 시 DB 오류 발생 : {}", e.getMessage());
-            return false;
+    public void signUp(SignUpReqDto dto) {
+        // 회원 가입 시에
+        if (memberRepository.existsByEmail(dto.getEmail())) {
+            throw new BusinessException("DUPLICATE_EMAIL", "이미 사용 중인 이메일입니다.");
         }
+        if (memberRepository.existsById(dto.getId())) {
+            throw new BusinessException("DUPLICATE_ID", "이미 사용 중인 아이디입니다.");
+        }
+        if(memberRepository.existsByPhoneNum(dto.getPhoneNum())) {
+            throw new BusinessException("DUPLICATE_PHONE", "이미 사용 중인 휴대폰 번호입니다.");
+        }
+        Member member = convertSignUpReqToMember(dto);
+        memberRepository.save(member);
+    }
+
+    // 로그인
+    public LoginResDto login(LoginReqDto dto) {
+        Member member = memberRepository.findById(dto.getId())
+                .orElseThrow(() -> new BusinessException("LOGIN_FAIL", "아이디 또는 비밀번호가 올바르지 않습니다."));
+        if(!passwordEncoder.matches(dto.getPwd(), member.getPwd()))
+            throw new BusinessException("LOGIN_FAIL", "아이디 또는 비밀번호가 올바르지 않습니다.");
+        return convertMemberToLoginRes(member);
     }
 
     // SignUpReq -> Member
@@ -84,6 +65,14 @@ public class AuthService {
                 .email(dto.getEmail())
                 .name(dto.getName())
                 .phoneNum(dto.getPhoneNum())
+                .build();
+    }
+
+    // Member -> LoginRes
+    private LoginResDto convertMemberToLoginRes(Member member) {
+        return LoginResDto.builder()
+                .num(member.getNum())
+                .name(member.getName())
                 .build();
     }
 }

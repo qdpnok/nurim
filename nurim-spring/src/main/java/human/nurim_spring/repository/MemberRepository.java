@@ -4,8 +4,12 @@ import human.nurim_spring.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member,Long> {
     boolean existsByEmail(String email);
     boolean existsById(String id);
+    boolean existsByPhoneNum(String phoneNum);
+    Optional<Member> findById(String id);
 }
