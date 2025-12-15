@@ -41,7 +41,9 @@ class MemberRepositoryTest {
         log.info(memberRepository.existsByEmail("tkdal@gmail.com") ? "이메일 O" : "이메일 X");
         log.info(memberRepository.existsById("tkdal") ? "아이디 O" : "아이디 X");
         Member member = memberRepository.findById("tkdal").orElseThrow(() -> new RuntimeException("해당 머시깽이 존재하지 않습니다."));
+        Member member2 = memberRepository.findByEmail("tkdal@gmail.com").orElseThrow(() -> new RuntimeException("해당 머시깽이 존재하지 않습니다."));
         log.info(member.toString());
+        log.info(member2.toString());
     }
 
 

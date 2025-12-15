@@ -2,17 +2,13 @@ package human.nurim_spring.service;
 
 import human.nurim_spring.dto.LoginReqDto;
 import human.nurim_spring.dto.LoginResDto;
-import human.nurim_spring.dto.SignUpEmailResDto;
+import human.nurim_spring.dto.AuthEmailResDto;
 import human.nurim_spring.dto.SignUpReqDto;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.MemberRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +58,7 @@ public class AuthService {
     }
 
     // 이메일 인증번호 전송
-    public SignUpEmailResDto send(String email) {
+    public AuthEmailResDto send(String email) {
         if(memberRepository.existsByEmail(email)) {
             throw new BusinessException("DUPLICATE_EMAIL", "이미 사용 중인 이메일입니다.");
         }
@@ -70,13 +66,48 @@ public class AuthService {
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
         int code = mailService.sendMail(email);
 
-        return new SignUpEmailResDto(email, code, validTime);
+        return new AuthEmailResDto(email, code, validTime);
     }
 
     // 이메일 인증번호 검증
     public void valid(int code, int sessionCode, LocalDateTime validTime) {
         if(code != sessionCode) throw new BusinessException("CODE_MISMATCH", "인증 코드가 일치하지 않습니다.");
         if(validTime.isBefore(LocalDateTime.now())) throw new BusinessException("CODE_TIMEOUT", "코드 유효 시간이 경과하였습니다.");
+    }
+
+    // 이메일 인증번호 전송: 아이디 찾기
+    public AuthEmailResDto findIdSend(String email) {
+        LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
+        int code = mailService.sendMail(email);
+
+        return new AuthEmailResDto(email, code, validTime);
+    }
+
+    // 이메일 인증번호 검증: 아이디 찾기
+    public String findIdValid(String email, int code, int sessionCode, LocalDateTime validTime) {
+        if(code != sessionCode) throw new BusinessException("CODE_MISMATCH", "인증 코드가 일치하지 않습니다.");
+        if(validTime.isBefore(LocalDateTime.now())) throw new BusinessException("CODE_TIMEOUT", "코드 유효 시간이 경과하였습니다.");
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        return member.getId();
+    }
+
+    // 이메일 인증번호 전송: 비밀번호 재설정
+    public AuthEmailResDto resetPwdSend(String email) {
+        LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
+        int code = mailService.sendMail(email);
+
+        return new AuthEmailResDto(email, code, validTime);
+    }
+
+    // 비밀번호 재설정
+    public void resetPwd(String email, String pwd) {
+        log.info(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+        member.setPwd(passwordEncoder.encode(pwd));
+        memberRepository.save(member);
     }
 
     // SignUpReq -> Member

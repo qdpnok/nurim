@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpEmailResDto {
+public class AuthEmailResDto {
     String email;
     int code;
     LocalDateTime validTime;
