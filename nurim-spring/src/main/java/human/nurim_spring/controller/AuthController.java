@@ -2,13 +2,17 @@ package human.nurim_spring.controller;
 
 import human.nurim_spring.dto.LoginReqDto;
 import human.nurim_spring.dto.LoginResDto;
+import human.nurim_spring.dto.SignUpEmailResDto;
 import human.nurim_spring.dto.SignUpReqDto;
 import human.nurim_spring.service.AuthService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -32,16 +36,34 @@ public class AuthController {
     }
 
     // 아이디 중복 확인
-    @GetMapping("/check-id/{id}")
-    public ResponseEntity<Boolean> checkId(@PathVariable String id) {
-        boolean isTrue = authService.existsById(id);
-        return ResponseEntity.ok(!isTrue);
+    @GetMapping("/check-id")
+    public ResponseEntity<Boolean> checkId(@RequestParam String memberId) {
+        return ResponseEntity.ok(!authService.existsById(memberId));
     }
 
     // 이메일 중복 확인
-    @GetMapping("/check-id/{email}")
-    public ResponseEntity<Boolean> checkEmail(@PathVariable String email) {
-        boolean isTrue = authService.existsByEmail(email);
-        return ResponseEntity.ok(!isTrue);
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+        return ResponseEntity.ok(!authService.existsByEmail(email));
+    }
+
+    // 인증 메일 전송
+    @PostMapping("/send-email")
+    public ResponseEntity<Void> send(@RequestParam String email, HttpSession session) {
+        SignUpEmailResDto dto = authService.send(email);
+
+        session.setAttribute("SIGNUP_EMAIL_CODE", dto.getCode());
+        session.setAttribute("SIGNUP_EMAIL_EXPIRE", dto.getValidTime());
+
+        return ResponseEntity.ok().build();
+    }
+
+    // 인증 메일 체크
+    @PostMapping("/valid-email")
+    public ResponseEntity<Void> validEmail(@RequestParam int code, HttpSession session){
+        int sessionCode = (int) session.getAttribute("SIGNUP_EMAIL_CODE");
+        LocalDateTime validTime = (LocalDateTime) session.getAttribute("SIGNUP_EMAIL_EXPIRE") ;
+        authService.valid(code, sessionCode, validTime);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

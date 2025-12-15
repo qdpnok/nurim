@@ -2,6 +2,7 @@ package human.nurim_spring.service;
 
 import human.nurim_spring.dto.LoginReqDto;
 import human.nurim_spring.dto.LoginResDto;
+import human.nurim_spring.dto.SignUpEmailResDto;
 import human.nurim_spring.dto.SignUpReqDto;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.error.BusinessException;
@@ -15,12 +16,15 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     // 이메일 중복 확인
     public boolean existsByEmail(String email) {
@@ -55,6 +59,24 @@ public class AuthService {
         if(!passwordEncoder.matches(dto.getPwd(), member.getPwd()))
             throw new BusinessException("LOGIN_FAIL", "아이디 또는 비밀번호가 올바르지 않습니다.");
         return convertMemberToLoginRes(member);
+    }
+
+    // 이메일 인증번호 전송
+    public SignUpEmailResDto send(String email) {
+        if(memberRepository.existsByEmail(email)) {
+            throw new BusinessException("DUPLICATE_EMAIL", "이미 사용 중인 이메일입니다.");
+        }
+
+        LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
+        int code = mailService.sendMail(email);
+
+        return new SignUpEmailResDto(email, code, validTime);
+    }
+
+    // 이메일 인증번호 검증
+    public void valid(int code, int sessionCode, LocalDateTime validTime) {
+        if(code != sessionCode) throw new BusinessException("CODE_MISMATCH", "인증 코드가 일치하지 않습니다.");
+        if(validTime.isBefore(LocalDateTime.now())) throw new BusinessException("CODE_TIMEOUT", "코드 유효 시간이 경과하였습니다.");
     }
 
     // SignUpReq -> Member

@@ -1,5 +1,6 @@
 package human.nurim_spring.service;
 
+import human.nurim_spring.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
