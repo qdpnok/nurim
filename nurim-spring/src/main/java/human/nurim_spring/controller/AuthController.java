@@ -64,6 +64,6 @@ public class AuthController {
         int sessionCode = (int) session.getAttribute("SIGNUP_EMAIL_CODE");
         LocalDateTime validTime = (LocalDateTime) session.getAttribute("SIGNUP_EMAIL_EXPIRE") ;
         authService.valid(code, sessionCode, validTime);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 }
