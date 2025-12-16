@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 // 사용할 아이콘 이미지들을 import 해주세요. (없으면 빈 박스로 나옵니다)
-// import SearchIcon from "../img/search.png";
 // import MessageIconImg from "../img/message.png";
 // import BellIconImg from "../img/bell.png";
 // import CartIconImg from "../img/cart.png";
@@ -13,13 +12,17 @@ import SearchIcon from "../img/search.png";
 // --- Styled Components 정의 ---
 
 const Container = styled.div`
-  align-items: center;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  position: fixed;
+  width: 100%; /* 화면 꽉 차게 설정 */
+  position: fixed; /* 상단 고정 */
   top: 0;
+  left: 0; /* 왼쪽 끝부터 시작 */
   z-index: 1000;
+
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column;
+  align-items: center; /* 내부 요소 중앙 정렬 */
+
+  background-color: white;
 `;
 
 const HeaderWrapper = styled.header`

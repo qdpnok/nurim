@@ -9,6 +9,7 @@ const Container = styled.div`
   align-items: center;
   border: 1px solid black;
   margin-top: 370px;
+  background-color: #ffffff;
 `;
 
 const Home = () => {
