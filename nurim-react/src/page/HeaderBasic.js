@@ -172,7 +172,7 @@ const Logo = styled.img`
   width: 130px;
   height: 24px;
   top: 25px;
-  left: 50%;
+  left: 670px;
 `;
 
 export const HeaderBasic = () => {
