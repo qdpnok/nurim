@@ -1,0 +1,237 @@
+.header-basic {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  margin-bottom: 180px;
+}
+
+.header-basic .HEADER {
+  background-color: #ffffff;
+  height: 78px;
+  position: relative;
+  width: 1440px;
+  border-bottom: 1px solid gray;
+}
+
+.header-basic .rectangle {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  height: 37px;
+  left: 100px;
+  opacity: 0.05;
+  position: absolute;
+  top: 20px;
+  width: 295px;
+}
+
+.header-basic .group {
+  display: flex;
+  gap: 122.4px;
+  height: 20px;
+  left: 115px;
+  position: absolute;
+  top: 29px;
+  width: 250px;
+}
+
+.header-basic .text-wrapper {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 18px;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: 1px;
+  opacity: 0.3;
+  width: 150px;
+}
+
+.header-basic .eva-search-outline {
+  height: 20px;
+  position: relative;
+  width: 20px;
+}
+
+.header-basic .vector {
+  height: 75.02%;
+  left: 12.5%;
+  position: absolute;
+  top: 12.5%;
+  width: 75.02%;
+}
+
+.header-basic .frame {
+  align-items: flex-start;
+  background-color: #2f6364;
+  border: 1px solid;
+  border-color: #ffffff;
+  border-radius: 28px;
+  display: inline-flex;
+  left: calc(50% + 550px);
+  padding: 8px 16px;
+  position: absolute;
+  top: calc(50% - 16px);
+}
+
+.header-basic .div {
+  color: #ffffff;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  position: relative;
+  text-align: center;
+  width: fit-content;
+}
+
+.header-basic .div-wrapper {
+  align-items: flex-start;
+  border-radius: 28px;
+  display: inline-flex;
+  left: calc(50% + 438px);
+  padding: 8px 16px;
+  position: absolute;
+  top: calc(50% - 16px);
+}
+
+.header-basic .text-wrapper-2 {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  position: relative;
+  text-align: center;
+  width: fit-content;
+}
+
+.header-basic .navbar {
+  background-color: #ffffff;
+  height: 76px;
+  position: relative;
+  width: 1440px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-basic .line {
+  height: 2px;
+  left: 381px;
+  position: absolute;
+  top: 1px;
+  width: 85px;
+}
+
+.header-basic .img {
+  height: 1px;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 1px;
+  width: 1440px;
+}
+
+.header-basic .text-wrapper-3 {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  left: 520px;
+  letter-spacing: 0;
+  line-height: normal;
+  opacity: 0.5;
+  position: absolute;
+  text-align: center;
+  top: 28px;
+}
+
+.header-basic .text-wrapper-4 {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  left: 795px;
+  letter-spacing: 0;
+  line-height: normal;
+  opacity: 0.5;
+  position: absolute;
+  text-align: center;
+  top: 28px;
+}
+
+.header-basic .text-wrapper-5 {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  left: 896px;
+  letter-spacing: 0;
+  line-height: normal;
+  opacity: 0.5;
+  position: absolute;
+  text-align: center;
+  top: 28px;
+}
+
+.header-basic .text-wrapper-6 {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  left: 990px;
+  letter-spacing: 0;
+  line-height: normal;
+  opacity: 0.5;
+  position: absolute;
+  text-align: center;
+  top: 28px;
+}
+
+.header-basic .text-wrapper-7 {
+  color: #1e1e1e;
+  font-family: "Outfit-Bold", Helvetica;
+  font-size: 14px;
+  font-weight: 700;
+  left: 404px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 28px;
+}
+
+.header-basic .group-2 {
+  display: flex;
+  height: 18px;
+  left: 637px;
+  position: absolute;
+  top: 28px;
+  width: 35px;
+}
+
+.header-basic .text-wrapper-8 {
+  color: #1e1e1e;
+  font-family: "Outfit-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 18px;
+  letter-spacing: 0;
+  line-height: normal;
+  opacity: 0.5;
+  text-align: center;
+  width: 40px;
+}
+
+.header-basic .line-separator {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.3); /* 반투명한 흰색 선 */
+  margin-top: 20px; /* 로고와 선 사이 간격 */
+}
