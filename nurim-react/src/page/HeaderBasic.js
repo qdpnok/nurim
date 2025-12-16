@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "../img/search.png";
 import { Link } from "react-router-dom";
+import MainLogo from "../img/MainLogo.png";
 
 const Container = styled.div`
   align-items: center;
@@ -71,19 +72,6 @@ const LoginFrame = styled.div`
   cursor: pointer;
 `;
 
-const LoginText = styled.div`
-  color: #ffffff;
-  font-family: "Outfit-Regular", Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: -1px;
-  position: relative;
-  text-align: center;
-  width: fit-content;
-`;
-
 const SignupFrame = styled.div`
   align-items: flex-start;
   border-radius: 28px;
@@ -93,19 +81,6 @@ const SignupFrame = styled.div`
   position: absolute;
   top: calc(50% - 16px);
   cursor: pointer;
-`;
-
-const SignupText = styled.div`
-  color: #1e1e1e;
-  font-family: "Outfit-Regular", Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: -1px;
-  position: relative;
-  text-align: center;
-  width: fit-content;
 `;
 
 const Navbar = styled.div`
@@ -155,12 +130,6 @@ const ContactText = styled(NavTextBase)`
   opacity: 0.5;
 `;
 
-const HomeText = styled(NavTextBase)`
-  font-family: "Outfit-Bold", Helvetica, sans-serif;
-  font-weight: 700;
-  left: 404px;
-`;
-
 const List2Group = styled.div`
   display: flex;
   height: 18px;
@@ -176,16 +145,43 @@ const List2Text = styled(NavTextBase)`
   position: static;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none; /* 밑줄 제거 */
+  color: inherit; /* 부모의 글자색을 그대로 물려받음 (Login은 흰색, Signup은 검은색) */
+  cursor: pointer;
+  display: flex; /* 위치 잡기 편하게 설정 */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const HomeMenu = styled(Link)`
+  text-decoration: none;
+  color: #1e1e1e;
+  cursor: pointer;
+  font-family: "Outfit-Bold", Helvetica, sans-serif;
+  font-weight: 700;
+  left: 404px;
+  top: 25px;
+  position: absolute;
+`;
+
+const Logo = styled.img`
+  position: absolute;
+  width: 130px;
+  height: 24px;
+  top: 25px;
+  left: 50%;
+`;
+
 export const HeaderBasic = () => {
   const [search, setSearch] = useState("");
 
   return (
     <Container>
       <HeaderWrapper>
-        {/* 검색창 배경 */}
         <SearchBackground />
-
-        {/* 검색창 그룹 (Input + Icon) */}
         <SearchGroup>
           <StyledInput
             type="text"
@@ -196,14 +192,20 @@ export const HeaderBasic = () => {
           <SearchImg src={SearchIcon} alt="검색" />
         </SearchGroup>
 
-        {/* 로그인 버튼 */}
         <LoginFrame>
-          <LoginText>Log In</LoginText>
+          <StyledLink to="/login" style={{ color: "#ffffff" }}>
+            Log In
+          </StyledLink>
         </LoginFrame>
+        <Link to="/">
+          <Logo src={MainLogo} alt="asd" />
+        </Link>
 
         {/* 회원가입 버튼 */}
         <SignupFrame>
-          <SignupText>Sign Up</SignupText>
+          <StyledLink to="/signup" style={{ color: "#1e1e1e" }}>
+            Sign Up
+          </StyledLink>
         </SignupFrame>
       </HeaderWrapper>
 
@@ -214,7 +216,7 @@ export const HeaderBasic = () => {
         <QAText>Q/A</QAText>
         <List3Text>List 3</List3Text>
         <ContactText>Contact Us</ContactText>
-        <HomeText>Home</HomeText>
+        <HomeMenu to="/">Home</HomeMenu>
 
         <List2Group>
           <List2Text>List 2</List2Text>
