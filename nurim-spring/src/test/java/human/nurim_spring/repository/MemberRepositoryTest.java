@@ -19,7 +19,7 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    private Member convertDtoToEntity() {
+    private Member buildMember() {
         return Member.builder()
                 .id("tkdal")
                 .pwd("tkdal0000")
@@ -30,7 +30,7 @@ class MemberRepositoryTest {
     }
 
     public Member createMember() {
-        return memberRepository.save(convertDtoToEntity());
+        return memberRepository.save(buildMember());
     }
 
     @Test
