@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SearchIcon from "../img/search.png"; 
+import SearchIcon from "../img/search.png";
 import { Link } from "react-router-dom";
-
 
 const Container = styled.div`
   align-items: center;
@@ -12,7 +11,7 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   margin-bottom: 180px;
-  z-index: 1000; 
+  z-index: 1000;
 `;
 
 const HeaderWrapper = styled.header`
@@ -36,17 +35,17 @@ const SearchBackground = styled.div`
 
 const SearchGroup = styled.div`
   display: flex;
-  gap: 122.4px; 
+  gap: 122.4px;
   height: 20px;
   left: 115px;
   position: absolute;
   top: 29px;
-  width: 273px; 
+  width: 273px;
   align-items: center;
 `;
 
 const StyledInput = styled.input`
-  background-color: transparent; 
+  background-color: transparent;
   border: none;
   color: black;
   width: 100%;
