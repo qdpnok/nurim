@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "../img/search.png";
 import { Link } from "react-router-dom";
+import MainLogo from "../img/MainLogo.png";
+
+// --- Styled Components ---
 
 const Container = styled.div`
-  align-items: center;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  position: fixed;
+  width: 100%; /* 화면 꽉 차게 설정 */
+  position: fixed; /* 상단 고정 */
   top: 0;
-  margin-bottom: 180px;
+  left: 0; /* 왼쪽 끝부터 시작 */
   z-index: 1000;
+
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column;
+  align-items: center; /* 내부 요소(헤더, 네비바) 중앙 정렬 */
+
+  background-color: white; /* 투명하지 않게 배경색 지정 */
 `;
 
 const HeaderWrapper = styled.header`
@@ -22,6 +28,7 @@ const HeaderWrapper = styled.header`
   border-bottom: 1px solid gray;
 `;
 
+// 검색창 관련
 const SearchBackground = styled.div`
   background-color: #1e1e1e;
   border-radius: 8px;
@@ -58,6 +65,7 @@ const SearchImg = styled.img`
   cursor: pointer;
 `;
 
+// 버튼 관련
 const LoginFrame = styled.div`
   align-items: flex-start;
   background-color: #2f6364;
@@ -71,19 +79,6 @@ const LoginFrame = styled.div`
   cursor: pointer;
 `;
 
-const LoginText = styled.div`
-  color: #ffffff;
-  font-family: "Outfit-Regular", Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: -1px;
-  position: relative;
-  text-align: center;
-  width: fit-content;
-`;
-
 const SignupFrame = styled.div`
   align-items: flex-start;
   border-radius: 28px;
@@ -95,24 +90,37 @@ const SignupFrame = styled.div`
   cursor: pointer;
 `;
 
-const SignupText = styled.div`
-  color: #1e1e1e;
-  font-family: "Outfit-Regular", Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: -1px;
-  position: relative;
-  text-align: center;
-  width: fit-content;
+// 공통 링크 스타일 (로그인/회원가입 내부 텍스트용)
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 `;
 
+// 로고
+const Logo = styled.img`
+  position: absolute;
+  width: 130px;
+  height: 24px;
+  top: 25px;
+  left: 670px; /* 로고는 헤더 중앙 쯤에 위치 유지 */
+`;
+
+// --- 네비게이션 바 (Flexbox 적용) ---
 const Navbar = styled.div`
   background-color: #ffffff;
   height: 76px;
-  position: relative;
   width: 1440px;
+  position: relative;
+  display: flex; /* Flexbox 적용 */
+  align-items: center;
+  justify-content: center; /* 가운데 정렬 */
+  gap: 60px; /* 메뉴 사이 간격 */
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
@@ -120,61 +128,28 @@ const LineSeparator = styled.div`
   width: 100%;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.3);
-  margin-top: 20px;
+  position: absolute;
+  top: 0;
 `;
 
-const NavTextBase = styled.div`
+// 네비게이션 아이템 공통 스타일 (Link 컴포넌트 확장)
+// $bold props가 있으면 굵게 표시
+const NavItem = styled(Link)`
   color: #1e1e1e;
   font-family: "Outfit-Regular", Helvetica, sans-serif;
   font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  top: 28px;
+  text-decoration: none;
+  font-weight: ${(props) => (props.$bold ? "700" : "400")};
+  opacity: ${(props) => (props.$bold ? "1" : "0.5")};
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+    font-weight: 700;
+  }
 `;
 
-const List1Text = styled(NavTextBase)`
-  left: 520px;
-  opacity: 0.5;
-`;
-
-const QAText = styled(NavTextBase)`
-  left: 795px;
-  opacity: 0.5;
-`;
-
-const List3Text = styled(NavTextBase)`
-  left: 896px;
-  opacity: 0.5;
-`;
-
-const ContactText = styled(NavTextBase)`
-  left: 990px;
-  opacity: 0.5;
-`;
-
-const HomeText = styled(NavTextBase)`
-  font-family: "Outfit-Bold", Helvetica, sans-serif;
-  font-weight: 700;
-  left: 404px;
-`;
-
-const List2Group = styled.div`
-  display: flex;
-  height: 18px;
-  left: 637px;
-  position: absolute;
-  top: 28px;
-  width: 35px;
-`;
-
-const List2Text = styled(NavTextBase)`
-  opacity: 0.5;
-  width: 40px;
-  position: static;
-`;
+// --- Component ---
 
 export const HeaderBasic = () => {
   const [search, setSearch] = useState("");
@@ -182,10 +157,7 @@ export const HeaderBasic = () => {
   return (
     <Container>
       <HeaderWrapper>
-        {/* 검색창 배경 */}
         <SearchBackground />
-
-        {/* 검색창 그룹 (Input + Icon) */}
         <SearchGroup>
           <StyledInput
             type="text"
@@ -196,29 +168,37 @@ export const HeaderBasic = () => {
           <SearchImg src={SearchIcon} alt="검색" />
         </SearchGroup>
 
-        {/* 로그인 버튼 */}
         <LoginFrame>
-          <LoginText>Log In</LoginText>
+          <StyledLink to="/login" style={{ color: "#ffffff" }}>
+            Log In
+          </StyledLink>
         </LoginFrame>
 
-        {/* 회원가입 버튼 */}
+        {/* 로고 클릭 시 홈으로 이동 */}
+        <Link to="/">
+          <Logo src={MainLogo} alt="Main Logo" />
+        </Link>
+
         <SignupFrame>
-          <SignupText>Sign Up</SignupText>
+          <StyledLink to="/signup" style={{ color: "#1e1e1e" }}>
+            Sign Up
+          </StyledLink>
         </SignupFrame>
       </HeaderWrapper>
 
       {/* 네비게이션 바 */}
       <Navbar>
         <LineSeparator />
-        <List1Text>List 1</List1Text>
-        <QAText>Q/A</QAText>
-        <List3Text>List 3</List3Text>
-        <ContactText>Contact Us</ContactText>
-        <HomeText>Home</HomeText>
 
-        <List2Group>
-          <List2Text>List 2</List2Text>
-        </List2Group>
+        {/* 순서대로 배치 (absolute 좌표 순서 참고: Home -> List1 -> List2 -> QA -> List3 -> Contact) */}
+        <NavItem to="/" $bold>
+          Home
+        </NavItem>
+        <NavItem to="/list1">List 1</NavItem>
+        <NavItem to="/list2">List 2</NavItem>
+        <NavItem to="/qa">Q/A</NavItem>
+        <NavItem to="/list3">List 3</NavItem>
+        <NavItem to="/contact">Contact Us</NavItem>
       </Navbar>
     </Container>
   );
