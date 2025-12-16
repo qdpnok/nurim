@@ -191,8 +191,8 @@ const SignUpLink = styled.span`
 // --- Component ---
 const LogIn = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [id, setId] = useState("");
+  const [pwd, setPwd] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -200,8 +200,8 @@ const LogIn = () => {
     e.preventDefault();
     try {
       const response = await api.post("/auth/login", {
-        email,
-        password,
+        id,
+        pwd,
         rememberMe,
       });
 
@@ -239,10 +239,10 @@ const LogIn = () => {
             <InputGroup>
               <InputLabel>Email (ID)</InputLabel>
               <StyledInput
-                type="email"
+                type="text"
                 placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={id}
+                onChange={(e) => setId(e.target.value)}
                 required
               />
             </InputGroup>
@@ -253,8 +253,8 @@ const LogIn = () => {
                 <StyledInput
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={pwd}
+                  onChange={(e) => setPwd(e.target.value)}
                   required
                 />
                 <ToggleBtn
