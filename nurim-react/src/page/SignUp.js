@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 
-// --- Styled Components ---
-
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;

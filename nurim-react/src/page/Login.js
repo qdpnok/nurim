@@ -6,7 +6,6 @@ import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
 import nr from "../img/NRLOGO.png";
 import nurimw from "../img/Logo.w.PNG";
-// --- Styled Components ---
 
 const Container = styled.div`
   width: 100%;

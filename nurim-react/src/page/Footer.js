@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Logo from "../img/Logo.w.PNG"; // 이미지 경로 확인
-
-// --- 레이아웃 컨테이너 ---
+import Logo from "../img/Logo.w.PNG";
 
 const FooterContainer = styled.div`
   background-color: #ffffff;
