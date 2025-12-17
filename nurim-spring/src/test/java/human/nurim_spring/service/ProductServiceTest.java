@@ -1,8 +1,11 @@
-package human.nurim_spring.repository;
+package human.nurim_spring.service;
 
 import human.nurim_spring.entity.MainCategory;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.SubCategory;
+import human.nurim_spring.repository.MainCategoryRepository;
+import human.nurim_spring.repository.ProductRepository;
+import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,17 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 @Slf4j
 @TestPropertySource(locations="classpath:application-test.properties")
-class ProductRepositoryTest {
+class ProductServiceTest {
     @Autowired
     ProductRepository productRepository;
     @Autowired
     SubCategoryRepository subCategoryRepository;
     @Autowired
     MainCategoryRepository mainCategoryRepository;
+    @Autowired
+    ProductService productService;
 
     public void initializeTest() {
         MainCategory m1 = new MainCategory();
@@ -105,17 +112,16 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("상품 조회 테스트")
-    public void getListTest() {
+    public void getProductTest() {
         initializeTest();
-        SubCategory sc = subCategoryRepository.findById(2L).get();
-        List<Product> list = productRepository.findBySubCategory(sc);
 
-        log.info("상품 조회 리스트");
-        log.info(list.toString());
+        List<Product> idList = productService.getList(2L);
+        log.info("카테고리 번호 조회: {}", idList.toString());
 
-        Product product = productRepository.findById(3L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
-        log.info("상품 단건 조회 By Id");
-        log.info(product.toString());
+        List<Product> list = productService.getList(null);
+        log.info("상품 전체 조회: {}", list.toString());
+
+        Product product = productService.get(3L);
+        log.info("상품 상세 조회: {}", product.toString());
     }
-
 }
