@@ -258,7 +258,6 @@ export const HeaderLogin = () => {
       {/* 네비게이션 바 */}
       <Navbar>
         <LineSeparator />
-
         {/* 순서를 디자인에 맞게 배치 */}
         <NavItem bold>Home</NavItem>
         <NavItem>List 1</NavItem>

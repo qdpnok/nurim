@@ -8,7 +8,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid black;
-  margin-top: 370px;
+  margin-top: 50px;
   background-color: #ffffff;
 `;
 
