@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios"; // Axios 인스턴스 import
 
-// --- Styled Components (기존 디자인 유지) ---
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;
