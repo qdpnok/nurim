@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
 
-// 1. 이미 만드신 컴포넌트들을 import 합니다.
 import HeaderBasic from "./HeaderBasic"; // 파일 경로가 다르면 수정 필요
 import HeaderLogin from "./HeaderLogin"; // 파일 경로가 다르면 수정 필요
 import Footer from "./Footer"; // 파일 경로가 다르면 수정 필요

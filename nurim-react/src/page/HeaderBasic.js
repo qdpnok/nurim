@@ -12,11 +12,9 @@ const Container = styled.div`
   top: 0;
   left: 0; /* 왼쪽 끝부터 시작 */
   z-index: 1000;
-
   display: flex; /* Flexbox 사용 */
   flex-direction: column;
   align-items: center; /* 내부 요소(헤더, 네비바) 중앙 정렬 */
-
   background-color: white; /* 투명하지 않게 배경색 지정 */
 `;
 
@@ -121,7 +119,7 @@ const Navbar = styled.div`
   align-items: center;
   justify-content: center; /* 가운데 정렬 */
   gap: 60px; /* 메뉴 사이 간격 */
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid gray;
 `;
 
 const LineSeparator = styled.div`

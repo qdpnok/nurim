@@ -1,15 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import Logo from "../img/Logo.w.PNG"; // 이미지 경로 확인
-
-// --- 레이아웃 컨테이너 ---
+import Logo from "../img/Logo.w.PNG";
 
 const FooterContainer = styled.div`
   background-color: #ffffff;
   min-height: 568px;
   width: 100%;
-
-  /* 화면 중앙 정렬을 위한 Flex 설정 */
+  margin-top: 30px;
   display: flex;
   justify-content: center;
 `;
@@ -19,6 +16,7 @@ const FooterInner = styled.div`
   width: 1440px;
   height: 568px;
   position: relative; /* 자식들의 absolute 기준 */
+  border-top: 1px solid gray;
 `;
 
 // 초록색 배경 (이제 1440px 안에 갇힘)
@@ -135,7 +133,7 @@ const BottomGroup = styled.div`
 
 const LogoImage = styled.img`
   width: 130px;
-  height: 50px;
+  height: 24px;
   margin-bottom: 10px;
   margin-top: 30px;
 `;

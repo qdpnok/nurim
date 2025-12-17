@@ -9,19 +9,15 @@ import { Link } from "react-router-dom";
 import MainLogo from "../img/MainLogo.png";
 import SearchIcon from "../img/search.png";
 
-// --- Styled Components 정의 ---
-
 const Container = styled.div`
   width: 100%; /* 화면 꽉 차게 설정 */
   position: fixed; /* 상단 고정 */
   top: 0;
   left: 0; /* 왼쪽 끝부터 시작 */
   z-index: 1000;
-
   display: flex; /* Flexbox 사용 */
   flex-direction: column;
   align-items: center; /* 내부 요소 중앙 정렬 */
-
   background-color: white;
 `;
 
@@ -258,7 +254,6 @@ export const HeaderLogin = () => {
       {/* 네비게이션 바 */}
       <Navbar>
         <LineSeparator />
-
         {/* 순서를 디자인에 맞게 배치 */}
         <NavItem bold>Home</NavItem>
         <NavItem>List 1</NavItem>
