@@ -1,4 +1,4 @@
-import axios from "../api/Axios";
+import axios from "axios";
 
 const api = axios.create({
   baseURL: "http://localhost:8222/api", // 백엔드 서버 주소
