@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/product/**").permitAll()
                         .requestMatchers("/api/manager/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
