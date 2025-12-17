@@ -41,8 +41,8 @@ public class AuthService {
         if (memberRepository.existsById(dto.getId())) {
             throw new BusinessException("DUPLICATE_ID", "이미 사용 중인 아이디입니다.");
         }
-        if(memberRepository.existsByPhoneNum(dto.getPhoneNum())) {
-            throw new BusinessException("DUPLICATE_PHONE", "이미 사용 중인 휴대폰 번호입니다.");
+        if (memberRepository.existsByPhoneNum(dto.getPhoneNum())) {
+            throw new BusinessException("DUPLICATE_PHONE", "이미 등록된 연락처입니다.");
         }
         Member member = convertSignUpReqToMember(dto);
         memberRepository.save(member);

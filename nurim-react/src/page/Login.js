@@ -256,8 +256,8 @@ const SignupText = styled.div`
 // --- Component ---
 const LogIn = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [id, setId] = useState("");
+  const [pwd, setPwd] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -265,8 +265,16 @@ const LogIn = () => {
     e.preventDefault();
     // 로그인 로직
     try {
-      const response = await api.post("/auth/login", { email, password });
-      if (response.status === 200) navigate("/");
+      const response = await api.post("/auth/login", {
+        id,
+        pwd,
+        rememberMe,
+      });
+
+      if (response.status === 200) {
+        alert("로그인 되었습니다.");
+        navigate("/");
+      }
     } catch (error) {
       console.error(error);
       alert("로그인 실패");
@@ -325,9 +333,10 @@ const LogIn = () => {
               <Label>ID</Label>
               <StyledInput
                 type="text"
-                placeholder="ID"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                required
               />
             </InputGroup>
 
@@ -336,9 +345,10 @@ const LogIn = () => {
               <InputWrapper>
                 <StyledInput
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  value={pwd}
+                  onChange={(e) => setPwd(e.target.value)}
+                  required
                 />
                 <EyeIcon onClick={() => setShowPassword(!showPassword)}>
                   {/* 아이콘 대신 텍스트 혹은 SVG 사용 가능 */}
