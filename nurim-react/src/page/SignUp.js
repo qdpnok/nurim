@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../api/Axios"; // Axios 인스턴스 import
 
+// --- Styled Components (기존 디자인 유지) ---
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -23,12 +25,12 @@ const Card = styled.div`
 `;
 
 const Content = styled.div`
-  width: 600px; // 폼 너비 적절하게 조정
+  width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 50px;
-  margin-top: 60px; // 로고와의 간격
+  margin-top: 60px;
 `;
 
 const Header = styled.div`
@@ -100,7 +102,7 @@ const Line = styled.div`
   height: 2px;
   background-color: ${(props) => (props.$active ? "#2f6364" : "#e0e0e0")};
   margin: 0 10px;
-  transform: translateY(-14px); // 원의 중앙으로 라인 이동
+  transform: translateY(-14px);
   transition: background-color 0.3s;
 `;
 
@@ -188,7 +190,7 @@ const AuthButton = styled.div`
 const SmallBtn = styled.button`
   position: absolute;
   right: 8px;
-  top: 38px; // 라벨 높이 고려
+  top: 38px;
   padding: 6px 12px;
   background: #2f6364;
   color: white;
@@ -225,7 +227,7 @@ const NextButton = styled.button`
   }
 `;
 
-// --- Modal UI (요청사항 반영: w535 h428) ---
+// --- Modal UI ---
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -254,7 +256,6 @@ const ModalContent = styled.div`
   position: relative;
 `;
 
-// 체크 아이콘 (CSS로 구현)
 const SuccessIcon = styled.div`
   width: 80px;
   height: 80px;
@@ -265,7 +266,6 @@ const SuccessIcon = styled.div`
   justify-content: center;
   margin-bottom: 30px;
 
-  // 체크 모양
   &::after {
     content: "";
     display: block;
@@ -314,60 +314,116 @@ const ModalButton = styled.button`
 const SignUp = () => {
   const navigate = useNavigate();
 
-  // --- 상태 관리 (State) ---
+  // --- 상태 관리 ---
   const [step, setStep] = useState(1);
   const [showModal, setShowModal] = useState(false);
 
-  // Step 1: 이메일
+  // Step 1: Email
   const [email, setEmail] = useState("");
-  const [isEmailUnique, setIsEmailUnique] = useState(false);
+  const [isEmailFormatValid, setIsEmailFormatValid] = useState(false); // 형식 유효성
   const [showAuthInput, setShowAuthInput] = useState(false);
   const [authCode, setAuthCode] = useState("");
   const [isAuthVerified, setIsAuthVerified] = useState(false);
 
-  // Step 2: 기본 정보
+  // Step 2: Info
   const [userId, setUserId] = useState("");
   const [isIdUnique, setIsIdUnique] = useState(false);
+  const [idCheckMsg, setIdCheckMsg] = useState(""); // 아이디 중복 확인 메시지
   const [userName, setUserName] = useState("");
   const [phone, setPhone] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(false);
 
-  // Step 3: 비밀번호
+  // Step 3: Password
   const [password, setPassword] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [isPwValid, setIsPwValid] = useState(false);
   const [isPwMatch, setIsPwMatch] = useState(false);
 
-  // --- 로직 (Logic) ---
+  // --- Logic ---
 
-  // 1. 이메일 체크
-  const checkEmail = (input) => {
+  // 1-1. 이메일 형식 체크
+  const handleEmailChange = (e) => {
+    const input = e.target.value;
     setEmail(input);
     const isValidFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
-    // 테스트용: 'test'가 포함 안되면 사용 가능
-    setIsEmailUnique(isValidFormat && !input.includes("test"));
+    setIsEmailFormatValid(isValidFormat);
   };
 
-  const handleRequestAuth = () => {
-    if (isEmailUnique) {
-      alert("인증번호가 발송되었습니다.");
+  // 1-2. 인증번호 요청 (API)
+  const handleRequestAuth = async () => {
+    if (!isEmailFormatValid) return;
+
+    try {
+      // 서버: 이메일 중복 체크 후 인증번호 발송
+      // 응답 예시: { status: 200, message: "Sent" }
+      await api.post("/auth/send-code", { email });
+      alert("인증번호가 이메일로 발송되었습니다.");
       setShowAuthInput(true);
+    } catch (error) {
+      console.error(error);
+      // 서버 에러 메시지에 따라 분기 가능 (예: 이미 가입된 이메일)
+      if (error.response && error.response.status === 409) {
+        alert("이미 가입된 이메일입니다.");
+      } else {
+        alert("인증번호 발송 실패. 다시 시도해주세요.");
+      }
     }
   };
 
-  const handleVerifyAuth = () => {
-    if (authCode.length === 6) {
-      setIsAuthVerified(true);
-    } else {
-      alert("6자리 인증번호를 입력해주세요.");
+  // 1-3. 인증번호 확인 (API)
+  const handleVerifyAuth = async () => {
+    if (authCode.length < 6) {
+      alert("인증번호 6자리를 입력해주세요.");
+      return;
+    }
+
+    try {
+      // 서버: { email, authCode } 확인
+      const response = await api.post("/auth/verify-code", {
+        email,
+        code: authCode,
+      });
+
+      if (response.status === 200) {
+        setIsAuthVerified(true);
+        alert("이메일 인증이 완료되었습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("인증번호가 올바르지 않거나 만료되었습니다.");
+      setIsAuthVerified(false);
     }
   };
 
-  // 2. 아이디 체크
-  const checkId = (input) => {
-    setUserId(input);
-    // 테스트용: 4글자 이상이면 가능
-    setIsIdUnique(input.length >= 4);
+  // 2-1. 아이디 중복 체크 (API + Debounce 추천하지만 여기선 onBlur 또는 버튼으로 처리)
+  // 여기서는 useEffect를 사용하여 입력 멈춤 감지 혹은 간단하게 onBlur 시 체크하도록 구현
+  const checkId = async () => {
+    if (userId.length < 4) {
+      setIdCheckMsg("아이디는 4글자 이상이어야 합니다.");
+      setIsIdUnique(false);
+      return;
+    }
+
+    try {
+      const response = await api.post("/auth/check-id", { userId });
+      if (response.status === 200) {
+        setIsIdUnique(true);
+        setIdCheckMsg(""); // 사용 가능하면 메시지 지움
+      }
+    } catch (error) {
+      setIsIdUnique(false);
+      if (error.response && error.response.status === 409) {
+        setIdCheckMsg("이미 사용중인 아이디입니다.");
+      } else {
+        setIdCheckMsg("중복 확인 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  // 아이디 입력 핸들러
+  const handleUserIdChange = (e) => {
+    setUserId(e.target.value);
+    setIsIdUnique(false); // 변경 시 다시 체크 필요
   };
 
   // 3. 폰번호 포맷
@@ -385,7 +441,7 @@ const SignUp = () => {
     setIsPhoneValid(val.length >= 10);
   };
 
-  // 4. 비밀번호
+  // 4. 비밀번호 로직
   const handlePassword = (input) => {
     setPassword(input);
     const pwRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -398,16 +454,32 @@ const SignUp = () => {
     setIsPwMatch(input === password && input.length > 0);
   };
 
-  const handleFinalSubmit = () => {
-    // API 호출 성공 가정
-    setShowModal(true);
+  // 5. 최종 회원가입 요청
+  const handleFinalSubmit = async () => {
+    if (!isPwValid || !isPwMatch) return;
+
+    const signupData = {
+      email,
+      userId,
+      userName,
+      phone,
+      password,
+    };
+
+    try {
+      const response = await api.post("/auth/signup", signupData);
+      if (response.status === 200 || response.status === 201) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("회원가입 처리에 실패했습니다. 정보를 확인해주세요.");
+    }
   };
 
   return (
     <Container>
       <Card>
-        {/* 상단 로고 (클릭 시 홈으로) */}
-
         <Content>
           <Header>
             <Title>Create an account</Title>
@@ -443,16 +515,17 @@ const SignUp = () => {
                   type="email"
                   placeholder="Enter your email"
                   value={email}
-                  onChange={(e) => checkEmail(e.target.value)}
+                  onChange={handleEmailChange}
+                  readOnly={showAuthInput} // 인증번호 발송 후엔 수정 불가 (선택사항)
                 />
-                {!isEmailUnique && email.length > 0 && (
-                  <ErrorText>Invalid email format or already taken.</ErrorText>
+                {!isEmailFormatValid && email.length > 0 && (
+                  <ErrorText>Invalid email format.</ErrorText>
                 )}
               </InputGroup>
 
               {!showAuthInput && (
                 <AuthButton
-                  disabled={!isEmailUnique}
+                  disabled={!isEmailFormatValid}
                   onClick={handleRequestAuth}
                 >
                   Request Authentication
@@ -468,6 +541,7 @@ const SignUp = () => {
                     maxLength={6}
                     value={authCode}
                     onChange={(e) => setAuthCode(e.target.value)}
+                    readOnly={isAuthVerified} // 인증 완료 후 수정 불가
                   />
                   {authCode.length === 6 && !isAuthVerified && (
                     <SmallBtn onClick={handleVerifyAuth}>Verify</SmallBtn>
@@ -490,8 +564,16 @@ const SignUp = () => {
                   type="text"
                   placeholder="Enter your ID"
                   value={userId}
-                  onChange={(e) => checkId(e.target.value)}
+                  onChange={handleUserIdChange}
+                  onBlur={checkId} // 포커스 잃을 때 중복 체크
                 />
+                {/* 중복 체크 메시지 출력 */}
+                {userId.length > 0 && !isIdUnique && (
+                  <ErrorText>{idCheckMsg || "Please check your ID."}</ErrorText>
+                )}
+                {isIdUnique && (
+                  <HelperText $valid={true}>Available ID</HelperText>
+                )}
               </InputGroup>
 
               <InputGroup>
@@ -564,7 +646,7 @@ const SignUp = () => {
         </Content>
       </Card>
 
-      {/* --- 성공 모달 (w535 x h428) --- */}
+      {/* --- Success Modal --- */}
       {showModal && (
         <ModalOverlay>
           <ModalContent>
