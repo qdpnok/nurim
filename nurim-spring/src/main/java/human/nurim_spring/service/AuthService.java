@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -66,7 +67,7 @@ public class AuthService {
         }
 
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
-        int code = mailService.sendMail(email);
+        CompletableFuture<Integer> code = mailService.sendMail(email);
 
         return new AuthEmailResDto(email, code, validTime);
     }
@@ -80,7 +81,7 @@ public class AuthService {
     // 이메일 인증번호 전송: 아이디 찾기
     public AuthEmailResDto findIdSend(String email) {
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
-        int code = mailService.sendMail(email);
+        CompletableFuture<Integer> code = mailService.sendMail(email);
 
         return new AuthEmailResDto(email, code, validTime);
     }
@@ -98,7 +99,7 @@ public class AuthService {
     // 이메일 인증번호 전송: 비밀번호 재설정
     public AuthEmailResDto resetPwdSend(String email) {
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
-        int code = mailService.sendMail(email);
+        CompletableFuture<Integer> code = mailService.sendMail(email);
 
         return new AuthEmailResDto(email, code, validTime);
     }
