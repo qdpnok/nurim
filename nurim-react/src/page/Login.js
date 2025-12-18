@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import api from "../api/Axios";
+import api from "../api/api";
 import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
 import nr from "../img/NRLOGO.png";
