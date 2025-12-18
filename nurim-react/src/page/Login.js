@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import api from "../api/api";
+import api from "../api/Axios";
 import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
-import nr from "../img/NRLOGO.png";
 import nurimw from "../img/Logo.w.PNG";
+import { useAuth } from "./AuthContext";
 
 const Container = styled.div`
   width: 100%;
@@ -255,6 +255,7 @@ const SignupText = styled.div`
 // --- Component ---
 const LogIn = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -262,7 +263,6 @@ const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 로그인 로직
     try {
       const response = await api.post("/auth/login", {
         id,
@@ -271,12 +271,23 @@ const LogIn = () => {
       });
 
       if (response.status === 200) {
+        // 3. 백엔드에서 받은 토큰 추출 (중요!)
+        // 백엔드가 헤더(Authorization)에 주는지, 바디(data)에 주는지에 따라 코드가 다릅니다.
+        // 아래는 보통의 경우들에 대한 예시입니다. 본인의 백엔드 응답에 맞춰 수정하세요.
+        const token =
+          response.headers["authorization"] ||
+          response.data.token ||
+          "dummy-token";
+
+        // 4. Context의 login 함수 호출 -> 전역 상태 true로 변경 -> 헤더 리렌더링
+        login(token);
+
         alert("로그인 되었습니다.");
         navigate("/");
       }
     } catch (error) {
       console.error(error);
-      alert("로그인 실패");
+      alert("로그인 실패: 아이디 또는 비밀번호를 확인하세요.");
     }
   };
 

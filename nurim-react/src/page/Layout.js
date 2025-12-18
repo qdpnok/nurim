@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 import HeaderBasic from "./HeaderBasic"; // 파일 경로가 다르면 수정 필요
 import HeaderLogin from "./HeaderLogin"; // 파일 경로가 다르면 수정 필요
@@ -33,17 +34,7 @@ const Main = styled.main`
 // --- Component ---
 
 const Layout = () => {
-  // 로그인 상태 관리 (나중에 Redux, Context API, 또는 localStorage 등으로 대체 가능)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // 예시: localStorage에 토큰이 있으면 로그인 상태로 간주
-    // 실제 로그인 로직에 맞춰 수정하시면 됩니다.
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const { isLoggedIn } = useAuth(); // Context에서 상태 가져오기
 
   return (
     <Wrapper>
