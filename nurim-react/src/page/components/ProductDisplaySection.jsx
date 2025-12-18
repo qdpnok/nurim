@@ -89,7 +89,7 @@ const SearchInput = styled.input`
 const SearchButton = styled.button`
   position: relative;
   width: 1.25rem; /* w-5 */
-  height: 1.25rem; /* h-5 */
+  height: 1.25rem;
   margin-right: -1px;
   flex-shrink: 0;
   background: transparent;

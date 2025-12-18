@@ -16,7 +16,7 @@ const tvSam031 = "https://placehold.co/100x443";
 
 const Section = styled.section`
   margin-left: 5rem; /* ml-20 */
-  margin-right: 5rem; /* mr-20 */
+  margin-right: 5rem;
   flex: 1;
   max-height: 786.57px;
 

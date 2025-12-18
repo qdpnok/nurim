@@ -10,7 +10,7 @@ import MainLogo from "../img/MainLogo.png";
 import SearchIcon from "../img/search.png";
 
 const Container = styled.div`
-  width: 100%; /* 화면 꽉 차게 설정 */
+  width: 100%;
   position: fixed; /* 상단 고정 */
   top: 0;
   left: 0; /* 왼쪽 끝부터 시작 */

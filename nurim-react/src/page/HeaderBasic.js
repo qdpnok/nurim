@@ -4,8 +4,6 @@ import SearchIcon from "../img/search.png";
 import { Link } from "react-router-dom";
 import MainLogo from "../img/MainLogo.png";
 
-// --- Styled Components ---
-
 const Container = styled.div`
   width: 100%; /* 화면 꽉 차게 설정 */
   position: fixed; /* 상단 고정 */

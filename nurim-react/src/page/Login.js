@@ -9,7 +9,7 @@ import nurimw from "../img/Logo.w.PNG";
 
 const Container = styled.div`
   width: 100%;
-  max-width: 1440px; // 전체 너비
+  max-width: 1440px;
   height: 900px; // 전체 높이
   margin: 0 auto;
   position: relative;

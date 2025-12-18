@@ -19,7 +19,7 @@ const Main = styled.main`
 const HotDealsSection = styled.section`
   display: flex;
   margin-left: 5rem; /* ml-20 */
-  margin-right: 5rem; /* mr-20 */
+  margin-right: 5rem;
   flex: 1;
   max-height: 34px;
   position: relative;

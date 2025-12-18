@@ -39,9 +39,9 @@ const ContentWrapper = styled.div`
 const Heading = styled.h2`
   position: relative;
   font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
+  font-weight: 600;
   color: var(--tokens-text-heading-main);
-  font-size: 1.875rem; /* 3xl */
+  font-size: 1.875rem;
   letter-spacing: 0;
   line-height: normal;
   width: 1280px;

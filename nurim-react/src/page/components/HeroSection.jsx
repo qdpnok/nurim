@@ -105,7 +105,7 @@ const ButtonText = styled.span`
   margin-left: -50px;
   margin-right: -50px;
   font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
+  font-weight: 600;
   color: #2f6364;
   font-size: 15px;
   letter-spacing: 0;

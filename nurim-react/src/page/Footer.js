@@ -11,7 +11,6 @@ const FooterContainer = styled.div`
   justify-content: center;
 `;
 
-// 내용물 고정 너비 (1440px) - 모든 요소의 기준점
 const FooterInner = styled.div`
   width: 1440px;
   height: 568px;

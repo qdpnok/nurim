@@ -4,6 +4,7 @@ import HOME from "./page/Home";
 import LogIn from "./page/Login";
 import SignUp from "./page/SignUp";
 import "./App.css";
+// 깃 테스트용.
 
 function App() {
   return (

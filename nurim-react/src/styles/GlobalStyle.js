@@ -49,7 +49,6 @@ export const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
-  /* Reset for layout */
   *, *::before, *::after {
     box-sizing: border-box;
   }

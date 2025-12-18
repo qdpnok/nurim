@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 import HeaderBasic from "./HeaderBasic"; // 파일 경로가 다르면 수정 필요
 import HeaderLogin from "./HeaderLogin"; // 파일 경로가 다르면 수정 필요
-import Footer from "./Footer"; // 파일 경로가 다르면 수정 필요
+import Footer from "./Footer";
 
 // --- Styled Components ---
 

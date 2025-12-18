@@ -40,7 +40,7 @@ const Title = styled.h2`
   font-family: "Poppins", Helvetica, sans-serif;
   font-weight: 600; /* SemiBold */
   color: black;
-  font-size: 1.5rem; /* 2xl */
+  font-size: 1.5rem;
   letter-spacing: 0;
   line-height: normal;
   width: 1280px;

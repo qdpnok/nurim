@@ -56,7 +56,7 @@ const Title = styled.h2`
   width: fit-content;
   margin-top: -1px;
   font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
+  font-weight: 600;
   color: var(--tokens-text-heading-main);
   font-size: 35px;
   letter-spacing: 0;
