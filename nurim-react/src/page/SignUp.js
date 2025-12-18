@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/api";
+import api from "../api/Axios";
 
 const Container = styled.div`
   width: 100%;

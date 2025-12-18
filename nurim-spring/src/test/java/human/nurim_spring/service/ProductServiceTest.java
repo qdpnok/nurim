@@ -7,6 +7,7 @@ import human.nurim_spring.repository.MainCategoryRepository;
 import human.nurim_spring.repository.ProductRepository;
 import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ class ProductServiceTest {
     @Autowired
     ProductService productService;
 
+    @BeforeEach
     public void initializeTest() {
         MainCategory m1 = new MainCategory();
         MainCategory m2 = new MainCategory();
@@ -113,8 +115,6 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 조회 테스트")
     public void getProductTest() {
-        initializeTest();
-
         List<Product> idList = productService.getList(2L);
         log.info("카테고리 번호 조회: {}", idList.toString());
 
