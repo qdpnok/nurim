@@ -355,7 +355,7 @@ const SignUp = () => {
     try {
       // 서버: 이메일 중복 체크 후 인증번호 발송
       // 응답 예시: { status: 200, message: "Sent" }
-      await api.post("/auth/send-code", { email });
+      await api.post(`/auth/signup-send-email?email=${email}`);
       alert("인증번호가 이메일로 발송되었습니다.");
       setShowAuthInput(true);
     } catch (error) {
@@ -378,10 +378,9 @@ const SignUp = () => {
 
     try {
       // 서버: { email, authCode } 확인
-      const response = await api.post("/auth/verify-code", {
-        email,
-        code: authCode,
-      });
+      const response = await api.post(
+        `/auth/signup-valid-email?code=${authCode}`
+      );
 
       if (response.status === 200) {
         setIsAuthVerified(true);
@@ -404,7 +403,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await api.post("/auth/check-id", { userId });
+      const response = await api.get(`/auth/check-id?memberId=${userId}`);
       if (response.status === 200) {
         setIsIdUnique(true);
         setIdCheckMsg(""); // 사용 가능하면 메시지 지움
@@ -459,14 +458,14 @@ const SignUp = () => {
 
     const signupData = {
       email,
-      userId,
-      userName,
-      phone,
-      password,
+      id: userId,
+      name: userName,
+      phoneNum: phone,
+      pwd: password,
     };
 
     try {
-      const response = await api.post("/auth/signup", signupData);
+      const response = await api.post("/auth/join", signupData);
       if (response.status === 200 || response.status === 201) {
         setShowModal(true);
       }
