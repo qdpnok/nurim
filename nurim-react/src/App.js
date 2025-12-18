@@ -5,12 +5,13 @@ import LogIn from "./page/Login";
 import SignUp from "./page/SignUp";
 import "./App.css";
 import { AuthProvider } from "./page/AuthContext";
-// 깃 테스트용.
+import ScrollToTop from "./ScrollToTop";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HOME />} />

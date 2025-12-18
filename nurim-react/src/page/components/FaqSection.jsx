@@ -1,179 +1,151 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import { ArrowDown } from "lucide-react";
-import { ArrowUp } from "lucide-react";
+import styled, { keyframes, css } from "styled-components";
+import { ChevronDown } from "lucide-react"; // Arrow 대신 더 일반적인 Chevron 사용
+
+// 애니메이션 정의
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
 
 const Section = styled.section`
+  width: 100%;
   display: flex;
-  width: 1280px;
-  height: 766px;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: var(--tokens-spacing-spacing-2xl);
-  padding-top: var(--tokens-spacing-spacing-xl);
-  padding-right: var(--tokens-spacing-spacing-3xl);
-  padding-bottom: var(--tokens-spacing-spacing-xl);
-  padding-left: var(--tokens-spacing-spacing-3xl);
-  background-color: var(--tokens-background-primary);
-  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 100px 20px; /* 상하 여백 넉넉하게, 좌우 여백 추가 */
+  box-sizing: border-box;
   margin-top: 90px;
 `;
 
 const ContentWrapper = styled.div`
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--tokens-spacing-spacing-lg);
-  padding-right: var(--tokens-spacing-spacing-3xl);
-  padding-left: var(--tokens-spacing-spacing-3xl);
-  padding-top: 0;
-  padding-bottom: 0;
-  align-self: stretch;
   width: 100%;
-  flex: 0 0 auto;
+  max-width: 1000px; /* 너무 넓지 않게 최대 너비 제한 */
   display: flex;
-  position: relative;
+  flex-direction: column;
+  gap: 40px;
 `;
 
 const Header = styled.header`
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem; /* gap-2.5 */
-  padding-top: var(--tokens-spacing-spacing-sm);
-  padding-bottom: var(--tokens-spacing-spacing-sm);
-  padding-left: 0;
-  padding-right: 0;
-  position: relative;
-  align-self: stretch;
-  width: 100%;
-  flex: 0 0 auto;
-  background-color: transparent;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
-  font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 600;
-  color: var(--tokens-text-heading-main);
-  font-size: 35px;
-  letter-spacing: 0;
-  line-height: normal;
-  white-space: nowrap;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  color: #111;
+  font-size: 35px; /* 제목 크기 키움 */
+  line-height: 1.2;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
+`;
+
+const FaqList = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #e5e5e5; /* 상단 라인 추가 */
 `;
 
 const FaqItemWrapper = styled.div`
-  width: 1200px;
-  align-items: flex-start;
-  gap: var(--tokens-spacing-spacing-sm);
-  position: relative;
-  flex: 0 0 auto;
-  margin-right: -80px;
   display: flex;
   flex-direction: column;
-  justify-content: ${({ $expanded }) => ($expanded ? "flex-start" : "center")};
-  height: 133px;
+  border-bottom: 1px solid #e5e5e5;
+  transition: background-color 0.2s ease;
+
+  /* 아이템 전체에 호버 효과 */
+  &:hover {
+    background-color: #f9f9f9;
+  }
 `;
 
-const FaqContent = styled.div`
-  align-items: ${({ $expanded }) => ($expanded ? "flex-start" : "center")};
-  gap: var(--primitives-spacing-12);
-  padding-top: var(--tokens-spacing-spacing-md);
-  padding-bottom: var(--tokens-spacing-spacing-md);
-  padding-left: 0;
-  padding-right: 0;
-  align-self: stretch;
-  width: 100%;
-  flex: 0 0 auto;
+const FaqHeader = styled.div`
   display: flex;
-  position: relative;
+  align-items: flex-start; /* 상단 정렬 유지 */
+  justify-content: space-between;
+  padding: 40px 0; /* 넉넉한 터치 영역 */
+  cursor: pointer; /* 클릭 가능 표시 */
+  gap: 20px;
 `;
 
 const Number = styled.div`
-  position: relative;
-  width: 42px;
-  font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 500; /* Medium */
-  color: var(--tokens-text-heading-main);
-  font-size: 1.25rem; /* xl */
-  text-align: center;
-  letter-spacing: 0;
-  line-height: normal;
-  margin-top: ${({ $expanded }) => ($expanded ? "-1px" : "0")};
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  color: #111;
+  font-size: 18px;
+  width: 40px;
+  flex-shrink: 0; /* 번호 영역 줄어들지 않게 */
+  margin-top: 4px; /* 시각적 보정 */
 `;
 
 const TextContainer = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: var(--tokens-spacing-spacing-md);
-  position: relative;
-  flex: 1;
-  flex-grow: 1;
+  gap: 12px;
 `;
 
-const Question = styled.p`
-  position: relative;
-  align-self: ${({ $expanded }) => ($expanded ? "stretch" : "auto")};
-  flex: ${({ $expanded }) => ($expanded ? "none" : "1")};
-  margin-top: ${({ $expanded }) => ($expanded ? "-1px" : "0")};
-  font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 500; /* Medium */
-  color: var(--tokens-text-heading-main);
-  font-size: 1.25rem; /* xl */
-  letter-spacing: 0;
-  line-height: normal;
+const Question = styled.h3`
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  color: #111;
+  font-size: 20px;
+  line-height: 1.4;
 `;
 
-const Answer = styled.p`
-  position: relative;
-  align-self: stretch;
-  font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 400; /* Regular */
-  color: var(--tokens-text-body-sub);
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: normal;
+const Answer = styled.div`
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: #666; /* 회색조로 본문 구분 */
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 10px;
+  max-width: 90%; /* 너무 길어지지 않게 */
+
+  /* 등장 애니메이션 */
+  animation: ${fadeIn} 0.3s ease-out forwards;
 `;
 
 const ToggleButton = styled.button`
-  gap: 0.625rem; /* gap-2.5 */
-  padding: 0.625rem; /* p-2.5 */
-  flex: 0 0 auto;
-  background-color: var(--tokens-buttons-secondary);
-  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f3f3f3; /* 연한 회색 배경 */
+  border: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  border-radius: var(--tokens-radius-radius-full);
   cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  /* 버튼 호버 효과 */
+  ${FaqItemWrapper}:hover & {
+    background-color: #111;
+    color: white;
+  }
 `;
 
-const Divider = styled.div`
-  position: relative;
-  align-self: stretch;
-  width: 100%;
-  height: 1px;
-  background-color: #d9d9d9;
-`;
+// 아이콘 회전 스타일
+const StyledChevron = styled(ChevronDown)`
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
 
-const StyledArrowDown = styled(ArrowDown)`
-  position: relative !important;
-  width: 1.5rem !important; /* w-6 */
-  height: 1.5rem !important; /* h-6 */
+  /* 열렸을 때 180도 회전 */
+  ${({ $isOpen }) =>
+    $isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
 `;
-
-const StyledArrowUp = styled(ArrowUp)`
-  position: relative !important;
-  width: 1.5rem !important; /* w-6 */
-  height: 1.5rem !important; /* h-6 */
-`;
-
 export const FaqSection = () => {
-  const [expandedItems, setExpandedItems] = useState([0, 3]);
+  // 수정 1: 배열([]) 대신 숫자(0) 하나만 저장. (처음에 0번이 열려있음)
+  // 다 닫힌 상태로 시작하려면 useState(null) 로 설정하세요.
+  const [openId, setOpenId] = useState(0);
 
   const faqData = [
     {
@@ -187,13 +159,15 @@ export const FaqSection = () => {
       id: 1,
       number: "02",
       question: "Do you offer international shipping?",
-      answer: "",
+      answer:
+        "Yes, we ship to over 50 countries worldwide. Shipping costs and delivery times vary depending on the destination. Please check our shipping policy page for detailed information.",
     },
     {
       id: 2,
       number: "03",
       question: "What is your return policy?",
-      answer: "",
+      answer:
+        "We offer a 30-day return policy for all unused items in their original packaging. Once we receive the returned item, we will process your refund within 5-7 business days.",
     },
     {
       id: 3,
@@ -204,52 +178,42 @@ export const FaqSection = () => {
     },
   ];
 
+  // 수정 2: 토글 로직 변경
   const toggleItem = (id) => {
-    setExpandedItems((prev) =>
-      prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]
-    );
+    // 이미 열려있는 걸 누르면 닫기(null), 아니면 해당 번호 열기(id)
+    setOpenId((prevId) => (prevId === id ? null : id));
   };
 
   return (
     <Section>
       <ContentWrapper>
         <Header>
-          <Title>We have got the answers to your questions!</Title>
+          <Title>We have got the answers to your questions</Title>
         </Header>
-        {faqData.map((item) => (
-          <FaqItemWrapper
-            key={item.id}
-            $expanded={expandedItems.includes(item.id)}
-          >
-            <FaqContent $expanded={expandedItems.includes(item.id)}>
-              <Number $expanded={expandedItems.includes(item.id)}>
-                {item.number}
-              </Number>
 
-              {expandedItems.includes(item.id) ? (
-                <TextContainer>
-                  <Question $expanded={true}>{item.question}</Question>
-                  <Answer>{item.answer}</Answer>
-                </TextContainer>
-              ) : (
-                <Question $expanded={false}>{item.question}</Question>
-              )}
+        <FaqList>
+          {faqData.map((item) => {
+            // 수정 3: 배열 includes 대신 단순 비교 (===)
+            const isOpen = openId === item.id;
 
-              <ToggleButton
-                onClick={() => toggleItem(item.id)}
-                aria-expanded={expandedItems.includes(item.id)}
-                aria-label={`Toggle ${item.question}`}
-              >
-                {expandedItems.includes(item.id) ? (
-                  <StyledArrowDown />
-                ) : (
-                  <StyledArrowUp />
-                )}
-              </ToggleButton>
-            </FaqContent>
-            <Divider />
-          </FaqItemWrapper>
-        ))}
+            return (
+              <FaqItemWrapper key={item.id} onClick={() => toggleItem(item.id)}>
+                <FaqHeader>
+                  <Number>{item.number}</Number>
+
+                  <TextContainer>
+                    <Question>{item.question}</Question>
+                    {isOpen && item.answer && <Answer>{item.answer}</Answer>}
+                  </TextContainer>
+
+                  <ToggleButton aria-label="Toggle answer">
+                    <StyledChevron $isOpen={isOpen} />
+                  </ToggleButton>
+                </FaqHeader>
+              </FaqItemWrapper>
+            );
+          })}
+        </FaqList>
       </ContentWrapper>
     </Section>
   );
