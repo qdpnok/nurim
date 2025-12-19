@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-// 사용할 아이콘 이미지들을 import 해주세요. (없으면 빈 박스로 나옵니다)
-// import MessageIconImg from "../img/message.png";
-// import BellIconImg from "../img/bell.png";
-// import CartIconImg from "../img/cart.png";
-// import ProfileImg from "../img/profile.png";
-import { Link, useNavigate } from "react-router-dom"; // useNavigate 추가
+// 사용할 아이콘 이미지들을 import 해주세요.
+import { Link, useNavigate } from "react-router-dom";
 import MainLogo from "../img/MainLogo.png";
 import SearchIcon from "../img/search.png";
+import mypage from "../img/mypageicon.png";
+import heart from "../img/hearticon.png";
+import bell from "../img/bellicon.png";
+import cart from "../img/carticon.png";
 
 const Container = styled.div`
   width: 100%;
-  position: fixed; /* 상단 고정 */
+  position: fixed;
   top: 0;
-  left: 0; /* 왼쪽 끝부터 시작 */
+  left: 0;
   z-index: 1000;
-  display: flex; /* Flexbox 사용 */
+  display: flex;
   flex-direction: column;
-  align-items: center; /* 내부 요소 중앙 정렬 */
+  align-items: center;
   background-color: white;
 `;
 
@@ -85,7 +85,7 @@ const BadgeBase = styled.div`
   height: 10px;
   position: absolute;
   top: 0;
-  right: 0; /* 아이콘 우측 상단 배치 */
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,72 +97,72 @@ const BadgeBase = styled.div`
   min-width: 10px;
 `;
 
-// 1. 메시지 아이콘 (왼쪽 1079px)
+const MypageWrapper = styled(IconWrapperBase)`
+  left: 1022px;
+  top: 25px;
+`;
+
 const MessageWrapper = styled(IconWrapperBase)`
   left: 1079px;
+  top: 25px;
 `;
+
 const MessageBadge = styled(BadgeBase)`
-  background-color: #00a3ff; /* 파란색 */
+  background-color: #00a3ff;
 `;
 
 // 2. 알림 벨 아이콘 (왼쪽 1136px)
 const BellWrapper = styled(IconWrapperBase)`
   left: 1136px;
+  top: 25px;
 `;
+
 const BellBadge = styled(BadgeBase)`
-  background-color: #ff0000; /* 빨간색 */
+  background-color: #ff0000;
 `;
 
 // 3. 장바구니/사람 아이콘 (왼쪽 1198px)
 const CartWrapper = styled(IconWrapperBase)`
-  left: 1198px;
-`;
-const CartBadge = styled(BadgeBase)`
-  background-color: #00cc82; /* 초록색 */
-`;
-
-// --- 로그아웃 버튼 스타일 추가 ---
-const LogoutButton = styled.button`
-  position: absolute;
-  left: 1280px; /* 아이콘들 오른쪽 적절한 위치에 배치 */
+  left: 1193px;
   top: 25px;
-  background: none;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
-  padding: 5px 15px;
-  cursor: pointer;
-  font-family: "Outfit-Regular", Helvetica, sans-serif;
-  font-size: 12px;
-  color: #1e1e1e;
-  transition: all 0.2s;
+`;
 
+const CartBadge = styled(BadgeBase)`
+  background-color: #00cc82;
+`;
+
+// --- 로그아웃 버튼 스타일 (HeaderBasic의 LoginFrame과 동일하게 수정) ---
+const LogoutButton = styled.button`
+  /* 위치 및 크기 설정 (LoginFrame 참조) */
+  position: absolute;
+  left: calc(50% + 550px); /* LoginFrame과 동일한 위치 계산 */
+  top: calc(50% - 16px); /* LoginFrame과 동일한 위치 계산 */
+
+  display: inline-flex;
+  align-items: center; /* 텍스트 세로 중앙 정렬 */
+  justify-content: center;
+
+  padding: 8px 16px; /* LoginFrame과 동일한 패딩 */
+  border-radius: 28px; /* LoginFrame과 동일한 둥근 모서리 */
+
+  /* 색상 설정 */
+  background-color: #2f6364; /* LoginFrame과 동일한 배경색 */
+  border: 1px solid #ffffff; /* LoginFrame과 동일한 테두리 */
+  color: #ffffff; /* 텍스트 색상 흰색 */
+
+  /* 폰트 설정 */
+  font-family: "Outfit-Regular", Helvetica, sans-serif;
+  font-size: 14px; /* 기본 폰트 사이즈 */
+  cursor: pointer;
+  white-space: nowrap; /* 줄바꿈 방지 */
+
+  /* 호버 효과 (선택사항) */
   &:hover {
-    background-color: #1e1e1e;
-    color: #ffffff;
-    border-color: #1e1e1e;
+    opacity: 0.9;
   }
 `;
 
-// 4. 프로필 이미지 (왼쪽 1283px -> 로그아웃 버튼 때문에 위치 조정 필요 시 수정)
-const ProfileWrapper = styled.div`
-  height: 44px;
-  width: 44px;
-  left: 1360px; /* 로그아웃 버튼 옆으로 밀어둠 (예시) */
-  position: absolute;
-  top: 17px; /* 중앙 정렬을 위해 위치 조정 */
-  border-radius: 22px;
-  background-color: #d9d9d9; /* 이미지가 없을 때 회색 배경 */
-  overflow: hidden;
-  cursor: pointer;
-`;
-
-const ProfileImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-// --- 네비게이션 바 (Flexbox 적용) ---
+// --- 네비게이션 바 ---
 const Navbar = styled.div`
   background-color: #ffffff;
   height: 76px;
@@ -171,7 +171,7 @@ const Navbar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 60px; /* 메뉴 사이 간격 */
+  gap: 60px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
@@ -179,8 +179,8 @@ const NavItem = styled.div`
   color: #1e1e1e;
   font-family: "Outfit-Regular", Helvetica, sans-serif;
   font-size: 14px;
-  font-weight: ${(props) => (props.bold ? "700" : "400")}; /* Home만 굵게 */
-  opacity: ${(props) => (props.bold ? "1" : "0.5")}; /* Home만 진하게 */
+  font-weight: ${(props) => (props.bold ? "700" : "400")};
+  opacity: ${(props) => (props.bold ? "1" : "0.5")};
   cursor: pointer;
   position: relative;
 
@@ -216,18 +216,12 @@ const SearchImg = styled.img`
 
 export const HeaderLogin = () => {
   const [search, setSearch] = useState("");
-  const nav = useNavigate(); // 페이지 이동을 위한 훅
+  const nav = useNavigate();
 
   // 로그아웃 핸들러
   const handleLogout = () => {
-    // 1. 사용자 확인 (선택 사항)
     if (!window.confirm("로그아웃 하시겠습니까?")) return;
-
-    // 2. 토큰 및 사용자 정보 삭제 (저장 방식에 따라 키 이름 변경 필요)
-    // 예: localStorage, sessionStorage, Cookies
     localStorage.removeItem("accessToken");
-
-    // 3. 로그아웃 완료 알림 및 페이지 이동
     alert("로그아웃 되었습니다.");
     window.location.href = "/";
   };
@@ -251,47 +245,36 @@ export const HeaderLogin = () => {
           <Logo src={MainLogo} alt="Logo" />
         </Link>
 
-        {/* 1. 메시지 아이콘 (파란 뱃지 '0') */}
+        {/* 1. 마이페이지 */}
+        <MypageWrapper>
+          <img src={mypage} alt="mypage" style={{ width: "30px" }} />
+        </MypageWrapper>
+
+        {/* 2. 위시리스트 아이콘 */}
         <MessageWrapper>
-          {/* <img src={MessageIconImg} alt="msg" style={{width: '20px'}} /> */}
-          <div
-            style={{ width: "20px", height: "20px", background: "#ccc" }}
-          ></div>
-          <MessageBadge>0</MessageBadge>
+          <img src={heart} alt="msg" style={{ width: "20px" }} />
+          <BellBadge>0</BellBadge>
         </MessageWrapper>
 
-        {/* 2. 알림 아이콘 (빨간 뱃지 '99+') */}
+        {/* 3. 알림 아이콘 */}
         <BellWrapper>
-          {/* <img src={BellIconImg} alt="bell" style={{width: '20px'}} /> */}
-          <div
-            style={{ width: "20px", height: "20px", background: "#ccc" }}
-          ></div>
-          {/* <BellBadge>99+</BellBadge> */}
+          <img src={bell} alt="bell" style={{ width: "20px" }} />
+          <MessageBadge>0</MessageBadge>
         </BellWrapper>
 
-        {/* 3. 장바구니 아이콘 (초록 뱃지 '6') */}
+        {/* 4. 장바구니 아이콘 */}
         <CartWrapper>
-          {/* <img src={CartIconImg} alt="cart" style={{width: '20px'}} /> */}
-          <div
-            style={{ width: "20px", height: "20px", background: "#ccc" }}
-          ></div>
-          <CartBadge>6</CartBadge>
+          <img src={cart} alt="cart" style={{ width: "20px" }} />
+          <CartBadge>0</CartBadge>
         </CartWrapper>
 
-        {/* 로그아웃 버튼 */}
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-
-        {/* 프로필 이미지 (필요 시 주석 해제하여 사용) */}
-        {/* <ProfileWrapper>
-             <ProfileImage src={ProfileImg} alt="Profile" />
-           </ProfileWrapper> 
-        */}
+        {/* 로그아웃 버튼 (LoginFrame 스타일 적용됨) */}
+        <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>
       </HeaderWrapper>
 
       {/* 네비게이션 바 */}
       <Navbar>
         <LineSeparator />
-        {/* 순서를 디자인에 맞게 배치 */}
         <NavItem bold>Home</NavItem>
         <NavItem>List 1</NavItem>
         <NavItem>List 2</NavItem>
