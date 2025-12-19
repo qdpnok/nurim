@@ -378,10 +378,12 @@ const SignUp = () => {
     }
 
     try {
-      // 서버: { email, authCode } 확인
-      const response = await api.post(
-        `/auth/signup-valid-email?code=${authCode}`
-      );
+      const response = await api.post(`/auth/signup-valid-email`, null, {
+        params: {
+          email: email,
+          code: authCode,
+        },
+      });
 
       if (response.status === 200) {
         setIsAuthVerified(true);
@@ -394,8 +396,6 @@ const SignUp = () => {
     }
   };
 
-  // 2-1. 아이디 중복 체크 (API + Debounce 추천하지만 여기선 onBlur 또는 버튼으로 처리)
-  // 여기서는 useEffect를 사용하여 입력 멈춤 감지 혹은 간단하게 onBlur 시 체크하도록 구현
   const checkId = async () => {
     if (userId.length < 4) {
       setIdCheckMsg("아이디는 4글자 이상이어야 합니다.");
