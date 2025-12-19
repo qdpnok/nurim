@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-const acLg021 = "https://placehold.co/100x443";
-const image12 = "https://placehold.co/100x443";
-const refSam0212 = "https://placehold.co/100x443";
-const washLg051 = "https://placehold.co/100x443";
+
+import acLg021 from "../../img/ac_lg_01.png";
+import washLg051 from "../../img/wash_lg_05.png";
+import refSam021 from "../../img/ref_sam_02.png";
+import tvsam01 from "../../img/sam_tv_01.png";
 
 const Section = styled.section`
   margin-top: 90px;
@@ -127,7 +128,7 @@ export const FeaturedProductsSection = () => {
     },
     {
       id: 2,
-      image: refSam0212,
+      image: refSam021,
       alt: "Ref sam",
       name: "삼성전자 양문형냉장고_RS84T5081SA",
       price: "1,500,000won",
@@ -136,7 +137,7 @@ export const FeaturedProductsSection = () => {
     },
     {
       id: 3,
-      image: image12,
+      image: tvsam01,
       alt: "Image",
       name: "삼성전자 더 세리프 55인치_KQ55LST01BFXKR",
       price: "1,450,000won",

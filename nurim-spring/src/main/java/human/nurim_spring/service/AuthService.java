@@ -1,18 +1,20 @@
 package human.nurim_spring.service;
 
-import human.nurim_spring.dto.LoginReqDto;
-import human.nurim_spring.dto.LoginResDto;
-import human.nurim_spring.dto.AuthEmailResDto;
-import human.nurim_spring.dto.SignUpReqDto;
+import human.nurim_spring.dto.*;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.error.BusinessException;
+import human.nurim_spring.jwt.TokenProvider;
 import human.nurim_spring.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -21,6 +23,8 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final AuthenticationManagerBuilder managerBuilder;
+    private final TokenProvider tokenProvider;
 
     // 이메일 중복 확인
     public boolean existsByEmail(String email) {
@@ -49,12 +53,11 @@ public class AuthService {
     }
 
     // 로그인
-    public LoginResDto login(LoginReqDto dto) {
-        Member member = memberRepository.findById(dto.getId())
-                .orElseThrow(() -> new BusinessException("LOGIN_FAIL", "아이디 또는 비밀번호가 올바르지 않습니다."));
-        if(!passwordEncoder.matches(dto.getPwd(), member.getPwd()))
-            throw new BusinessException("LOGIN_FAIL", "아이디 또는 비밀번호가 올바르지 않습니다.");
-        return convertMemberToLoginRes(member);
+    public TokenDto login(LoginReqDto dto) {
+        UsernamePasswordAuthenticationToken authenticationToken = dto.toAuthentication();
+
+        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+        return tokenProvider.generateTokenDto(authentication);
     }
 
     // 이메일 인증번호 전송
@@ -64,7 +67,7 @@ public class AuthService {
         }
 
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
-        int code = mailService.sendMail(email);
+        CompletableFuture<Integer> code = mailService.sendMail(email);
 
         return new AuthEmailResDto(email, code, validTime);
     }
@@ -78,7 +81,7 @@ public class AuthService {
     // 이메일 인증번호 전송: 아이디 찾기
     public AuthEmailResDto findIdSend(String email) {
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
-        int code = mailService.sendMail(email);
+        CompletableFuture<Integer> code = mailService.sendMail(email);
 
         return new AuthEmailResDto(email, code, validTime);
     }
@@ -96,7 +99,7 @@ public class AuthService {
     // 이메일 인증번호 전송: 비밀번호 재설정
     public AuthEmailResDto resetPwdSend(String email) {
         LocalDateTime validTime = LocalDateTime.now().plusMinutes(5);
-        int code = mailService.sendMail(email);
+        CompletableFuture<Integer> code = mailService.sendMail(email);
 
         return new AuthEmailResDto(email, code, validTime);
     }

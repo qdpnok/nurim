@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api/api";
+import api from "../api/Axios";
 
 const Container = styled.div`
-  width: 100%;
-  min-height: 100vh;
+  width: 1440px;
+  height: 1024px;
   background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Poppins", sans-serif;
+  margin-top: -140px;
 `;
 
 const Card = styled.div`

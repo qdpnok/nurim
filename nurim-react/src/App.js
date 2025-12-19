@@ -4,19 +4,23 @@ import HOME from "./page/Home";
 import LogIn from "./page/Login";
 import SignUp from "./page/SignUp";
 import "./App.css";
-// 깃 테스트용.
+import { AuthProvider } from "./page/AuthContext";
+import ScrollToTop from "./ScrollToTop";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HOME />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<LogIn />} />
-        </Route>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HOME />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<LogIn />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

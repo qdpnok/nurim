@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-const vector = "https://placehold.co/100x443";
+import sc from "../../img/Searchg.png";
 
 const Section = styled.section`
   display: flex;
@@ -132,7 +132,7 @@ export const ProductDisplaySection = () => {
           aria-label="제품 검색"
         />
         <SearchButton type="submit" aria-label="검색">
-          <SearchIcon src={vector} alt="" />
+          <SearchIcon src={sc} alt="" />
         </SearchButton>
       </SearchForm>
     </Section>

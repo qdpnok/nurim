@@ -1,18 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-const acLg011 = "https://placehold.co/100x443";
-const airDy011 = "https://placehold.co/100x443";
-const image1 = "https://placehold.co/100x443";
-const refSam021 = "https://placehold.co/100x443";
-const tvLg011 = "https://placehold.co/100x443";
-const tvSam031 = "https://placehold.co/100x443";
 
-// import acLg011 from "./ac-lg-01-1.png";
-// import airDy011 from "./air-dy-01-1.png";
-// import image1 from "./image-1.png";
-// import refSam021 from "./ref-sam-02-1.png";
-// import tvLg011 from "./tv-lg-01-1.png";
-// import tvSam031 from "./tv-sam-03-1.png";
+import acLg011 from "../../img/ac_lg_01.png";
+import airDy011 from "../../img/air_dy_01.png";
+import image1 from "../../img/sam_tv_01.png";
+import refSam021 from "../../img/ref_sam_02.png";
+import tvLg011 from "../../img/tv_lg_01.png";
+import tvSam031 from "../../img/tv_sam_03.png";
 
 const Section = styled.section`
   margin-left: 5rem; /* ml-20 */

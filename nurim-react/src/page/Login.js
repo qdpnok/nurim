@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import api from "../api/api";
+import api from "../api/Axios";
 import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
-import nr from "../img/NRLOGO.png";
 import nurimw from "../img/Logo.w.PNG";
+import { useAuth } from "./AuthContext";
+import ceye from "../img/Ceye.png";
+import oeye from "../img/Oeye.png";
 
 const Container = styled.div`
   width: 100%;
@@ -31,7 +33,7 @@ const Container = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); // 이미지에 맞춰 어둡기 조절
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 0;
   }
 `;
@@ -42,9 +44,9 @@ const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between; // 좌우 배분
+  justify-content: space-between;
   align-items: center;
-  padding: 0 100px; // 전체 좌우 여백
+  padding: 0 100px;
   box-sizing: border-box;
 
   @media (max-width: 1024px) {
@@ -55,6 +57,7 @@ const ContentWrapper = styled.div`
 
 // --- 좌측 브랜드 영역 ---
 const LeftSection = styled.div`
+  margin-left: 160px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -74,7 +77,6 @@ const LogoArea = styled.h1`
   font-family: sans-serif;
   letter-spacing: 2px;
 
-  // 로고 이미지를 쓴다면 img 태그로 대체 가능
   span {
     font-family: "Zen Kaku Gothic Antique", sans-serif;
   }
@@ -119,13 +121,14 @@ const LoginCard = styled.div`
   width: 460px;
   height: 768px;
   background-color: white;
-  border-radius: 20px; // 둥근 모서리
+  border-radius: 20px 20px 0px 0px; // 둥근 모서리
   padding: 80px 50px; // 내부 여백
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center; // 내부 요소 수직 중앙 정렬
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  margin-right: 150px;
+  margin-top: 150px;
 `;
 
 const CardHeader = styled.div`
@@ -193,6 +196,12 @@ const EyeIcon = styled.span`
   cursor: pointer;
   color: #999;
   font-size: 18px;
+
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
 `;
 
 const OptionsRow = styled.div`
@@ -255,6 +264,7 @@ const SignupText = styled.div`
 // --- Component ---
 const LogIn = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -262,7 +272,6 @@ const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // 로그인 로직
     try {
       const response = await api.post("/auth/login", {
         id,
@@ -271,12 +280,19 @@ const LogIn = () => {
       });
 
       if (response.status === 200) {
+        const token =
+          response.headers["authorization"] ||
+          response.data.token ||
+          "dummy-token";
+
+        login(token);
+
         alert("로그인 되었습니다.");
         navigate("/");
       }
     } catch (error) {
       console.error(error);
-      alert("로그인 실패");
+      alert("로그인 실패: 아이디 또는 비밀번호를 확인하세요.");
     }
   };
 
@@ -332,7 +348,7 @@ const LogIn = () => {
               <Label>ID</Label>
               <StyledInput
                 type="text"
-                placeholder="Enter your email"
+                placeholder="Enter your ID"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 required
@@ -344,14 +360,13 @@ const LogIn = () => {
               <InputWrapper>
                 <StyledInput
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Enter your Password"
                   value={pwd}
                   onChange={(e) => setPwd(e.target.value)}
                   required
                 />
                 <EyeIcon onClick={() => setShowPassword(!showPassword)}>
-                  {/* 아이콘 대신 텍스트 혹은 SVG 사용 가능 */}
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                  <img src={showPassword ? oeye : ceye} alt="toggle" />
                 </EyeIcon>
               </InputWrapper>
             </InputGroup>

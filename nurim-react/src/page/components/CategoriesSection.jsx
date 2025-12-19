@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import { ArrowRight } from "lucide-react";
-const x12 = "https://placehold.co/100x443";
-const x1 = "https://placehold.co/100x443";
-const TV1 = "https://placehold.co/100x443";
-const ref = "https://placehold.co/100x443";
-const image = "https://placehold.co/100x443";
+import ac from "../../img/C_ac.png";
+import wt from "../../img/C_wt.png";
+import tv from "../../img/C_tv.png";
+import ref from "../../img/C_ref.png";
+
+import air from "../../img/C_air.png";
 
 const Section = styled.section`
   display: flex;
@@ -157,10 +158,10 @@ const ProductImage = styled.img`
   ${(props) =>
     props.$id === 1 &&
     `
-    top: 0.625rem; /* top-2.5 */
+    top: 50px;
     left: 336px;
     width: 100px;
-    height: 443px;
+    height: 350px;
     aspect-ratio: 0.22;
   `}
    /* Example for id:2 (null image logic handled in render but here just styles) */
@@ -168,8 +169,8 @@ const ProductImage = styled.img`
     props.$id === 2 &&
     `
      top: 2rem; /* top-8 */
-     left: 294px;
-     width: 246px;
+     left: 100px;
+     width: 600px;
      height: 390px;
      aspect-ratio: 0.63;
      background-image: url('/image-4.png'); /* Adjust path */
@@ -180,10 +181,10 @@ const ProductImage = styled.img`
   ${(props) =>
     props.$id === 3 &&
     `
-    top: 73px;
+    top: -25px;
     left: 528px;
     width: 585px;
-    height: 306px;
+    height: 500px;
     aspect-ratio: 1.91;
   `}
   /* Example for id:4 */
@@ -231,7 +232,7 @@ export const CategoriesSection = () => {
     {
       id: 1,
       title: "에어컨",
-      image: x12,
+      image: ac,
       layout: "half",
     },
     {
@@ -244,19 +245,19 @@ export const CategoriesSection = () => {
     {
       id: 3,
       title: "TV",
-      image: TV1,
+      image: tv,
       layout: "full",
     },
     {
       id: 4,
       title: "세탁기",
-      image: x1,
+      image: wt,
       layout: "half",
     },
     {
       id: 5,
       title: "공기청정기",
-      image: image,
+      image: air,
       layout: "half",
     },
   ];

@@ -1,16 +1,20 @@
 package human.nurim_spring.service;
 
-import human.nurim_spring.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@EnableAsync
 public class MailService {
     private final JavaMailSender javaMailSender;
     private static final String senderEmail = "nurim1210@gmail.com";
@@ -41,9 +45,10 @@ public class MailService {
         return message;
     }
 
-    public int sendMail(String email) {
+    @Async
+    public CompletableFuture<Integer> sendMail(String email) {
         MimeMessage message = createMail(email);
         javaMailSender.send(message);
-        return number;
+        return CompletableFuture.completedFuture(1);
     }
 }
