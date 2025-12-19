@@ -32,4 +32,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.get(num));
     }
 
+    // hotdeal 4개 조회
+    @GetMapping("/hotdeal")
+    public ResponseEntity<List<ProductResDto>> listHotdeal() {
+        return ResponseEntity.ok(productService.getListTop4DiscountRate());
+    }
 }
