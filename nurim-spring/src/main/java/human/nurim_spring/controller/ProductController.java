@@ -1,5 +1,6 @@
 package human.nurim_spring.controller;
 
+import human.nurim_spring.dto.ProductResDto;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +16,19 @@ import java.util.List;
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
 
     // 상품 목록 조회:
     // 카테고리 번호가 있으면 해당 제품만, 없으면 전체
     // required = false 파라미터 없어도 된다
     @GetMapping("/list")
-    public ResponseEntity<List<Product>> list(@RequestParam(required = false) Long id) {
+    public ResponseEntity<List<ProductResDto>> list(@RequestParam(required = false) Long id) {
         return ResponseEntity.ok(productService.getList(id));
     }
 
     // 상품 상세 조회
     @GetMapping("/detail/{num}")
-    public ResponseEntity<Product> get(@PathVariable Long num) {
+    public ResponseEntity<ProductResDto> get(@PathVariable Long num) {
         return ResponseEntity.ok(productService.get(num));
     }
 
