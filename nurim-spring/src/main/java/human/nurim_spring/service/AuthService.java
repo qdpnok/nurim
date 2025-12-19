@@ -118,8 +118,8 @@ public class AuthService {
     }
 
     // [수정] 이메일 인증번호 전송: 비밀번호 재설정
-    public void resetPwdSend(String email, String id) {
-        if(!memberRepository.existsByIdAndEmail(id, email)){
+    public void resetPwdSend(String email) {
+        if(!memberRepository.existsByEmail(email)){
             throw new BusinessException("NOT_EXIST_MEMBER", "회원 정보가 일치하지 않습니다.");
         }
 

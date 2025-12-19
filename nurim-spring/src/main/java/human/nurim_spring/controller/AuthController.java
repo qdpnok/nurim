@@ -71,8 +71,8 @@ public class AuthController {
 
     // [변경] 인증 메일 전송: 비밀번호 재설정
     @PostMapping("/resetPwd-send-email")
-    public ResponseEntity<Void> resetPwdSend(@RequestParam String email, @RequestParam String id) {
-        authService.resetPwdSend(email, id);
+    public ResponseEntity<Void> resetPwdSend(@RequestParam String email) {
+        authService.resetPwdSend(email);
         return ResponseEntity.ok().build();
     }
 
