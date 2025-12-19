@@ -68,4 +68,16 @@ public class ProductService {
                 .name(product.getName())
                 .build();
     }
+
+    // 상품 이름으로 검색
+    public List<ProductResDto> searchProducts(String keyword) {
+        List<Product> result = productRepository.findByNameContaining(keyword);
+        List<ProductResDto> list = new ArrayList<>();
+
+        for(Product product : result) {
+            list.add(convertProductToProductRes(product));
+        }
+
+        return list;
+    }
 }

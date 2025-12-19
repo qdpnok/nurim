@@ -23,6 +23,9 @@ class ProductRepositoryTest {
     @Autowired
     SubCategoryRepository subCategoryRepository;
 
+    @Autowired
+    MainCategoryRepository mainCategoryRepository;
+
     @Test
     @DisplayName("상품 조회 테스트")
     public void getListTest() {
@@ -35,6 +38,9 @@ class ProductRepositoryTest {
         Product product = productRepository.findById(3L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
         log.info("상품 단건 조회 By Id");
         log.info(product.toString());
+
+        list = productRepository.findByNameContaining("비스포크");
+        log.info("'비스포크' 검색 결과: {}", list.toString());
 
         list = productRepository.findTop4ByOrderByDiscountRateDesc();
         log.info("할인률 top 4: {}", list.toString());
