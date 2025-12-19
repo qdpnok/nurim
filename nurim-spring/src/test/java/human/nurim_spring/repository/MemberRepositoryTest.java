@@ -44,6 +44,10 @@ class MemberRepositoryTest {
         Member member2 = memberRepository.findByEmail("tkdal@gmail.com").orElseThrow(() -> new RuntimeException("해당 머시깽이 존재하지 않습니다."));
         log.info(member.toString());
         log.info(member2.toString());
+
+        log.info(memberRepository.existsByIdAndEmail("tkdal", "tkdal@gmail.com") ? "이메일, 아이디 일치" : "이메일, 아이디 불일치");
+        log.info(memberRepository.existsByIdAndEmail("tkda", "tkdal@gmail.com") ? "이메일, 아이디 일치" : "이메일, 아이디 불일치");
+        log.info(memberRepository.existsByIdAndEmail("tkdal", "tal@gmail.com") ? "이메일, 아이디 일치" : "이메일, 아이디 불일치");
     }
 
 

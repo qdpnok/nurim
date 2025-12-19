@@ -37,6 +37,7 @@ public class ProductController {
     public ResponseEntity<List<ProductResDto>> listHotdeal() {
         return ResponseEntity.ok(productService.getListTop4DiscountRate());
     }
+
     // 검색 API
     // http://localhost:8080/api/product/search?keyword=삼성
     @GetMapping("/search")
