@@ -138,8 +138,6 @@ export const HeroSection = () => {
       <StartButton aria-label="Start exploring NURIM rental services">
         <ButtonText>Start Now</ButtonText>
       </StartButton>
-      <DecorLineVertical aria-hidden="true" />
-      <DecorLineHorizontal aria-hidden="true" />
     </Section>
   );
 };
