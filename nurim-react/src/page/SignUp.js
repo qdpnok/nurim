@@ -375,7 +375,7 @@ const SignUp = () => {
       setShowAuthInput(true);
     } catch (error) {
       console.error(error);
-      if (error.response && error.response.status === 409) {
+      if (error.response && error.response.status === 400) {
         alert("이미 가입된 이메일입니다.");
       } else {
         alert("인증번호 발송 실패. 다시 시도해주세요.");
