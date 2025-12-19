@@ -1,3 +1,4 @@
+// MailService.java
 package human.nurim_spring.service;
 
 import jakarta.mail.MessagingException;
@@ -6,30 +7,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@EnableAsync
 public class MailService {
+
     private final JavaMailSender javaMailSender;
     private static final String senderEmail = "nurim1210@gmail.com";
-    private static int number;
 
-    // 이메일 인증
-    // 랜덤으로 숫자 생성
-    public static void createNumber() {number = (int)(Math.random() * 90000) + 100000;}
-    // 메일 작성
-    public MimeMessage createMail(String email) {
-        createNumber();
+    // 메일 생성 (기존과 동일)
+    public MimeMessage createMail(String email, String number) {
         MimeMessage message = javaMailSender.createMimeMessage();
-
-        // post-it github 참고해서 html 부분 분리할 수 있음
-        // mailService, verifyCode
         try {
             message.setFrom(senderEmail);
             message.setRecipients(MimeMessage.RecipientType.TO, email);
@@ -45,10 +35,17 @@ public class MailService {
         return message;
     }
 
+    // ★ 변경점 1: @Async 어노테이션 추가 (비동기 처리)
+    // ★ 변경점 2: Redis 저장 로직 제거 (AuthService로 이동)
+    // ★ 변경점 3: 인증번호를 매개변수로 받음
     @Async
-    public CompletableFuture<Integer> sendMail(String email) {
-        MimeMessage message = createMail(email);
-        javaMailSender.send(message);
-        return CompletableFuture.completedFuture(1);
+    public void sendMail(String email, String number) {
+        MimeMessage message = createMail(email, number);
+        try {
+            javaMailSender.send(message); // 시간이 오래 걸리는 작업
+            log.info("이메일 전송 성공: {}", email);
+        } catch (Exception e) {
+            log.error("이메일 전송 실패: ", e);
+        }
     }
 }
