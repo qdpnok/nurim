@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import mainBanner1 from "../../img/main_banner.jpg";
-const rectangle1 = "https://placehold.co/100x443";
+// const rectangle1 = "https://placehold.co/100x443"; 임시 이미지.
 
 const Section = styled.section`
   width: 1440px;
@@ -9,16 +9,6 @@ const Section = styled.section`
   position: relative;
   background-color: white;
   margin: 0 auto;
-  margin-top: 30px;
-`;
-
-const BackgroundImg = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1440px;
-  height: 748px;
-  object-fit: cover;
 `;
 
 const BannerImg = styled.img`
@@ -134,7 +124,6 @@ const DecorLineHorizontal = styled.div`
 export const HeroSection = () => {
   return (
     <Section>
-      <BackgroundImg src={rectangle1} alt="Background decoration" />
       <BannerImg
         src={mainBanner1}
         alt="Modern apartment interior showcasing rental lifestyle"
