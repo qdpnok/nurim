@@ -11,4 +11,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findBySubCategory(SubCategory subCategory);
     List<Product> findByNameContaining(String keyword);  // 제품 이름으로 검색
+    List<Product> findTop4ByOrderByDiscountRateDesc();
 }

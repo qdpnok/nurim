@@ -1,5 +1,6 @@
 package human.nurim_spring.service;
 
+import human.nurim_spring.dto.ProductResDto;
 import human.nurim_spring.entity.MainCategory;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.SubCategory;
@@ -115,13 +116,13 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 조회 테스트")
     public void getProductTest() {
-        List<Product> idList = productService.getList(2L);
+        List<ProductResDto> idList = productService.getList(2L);
         log.info("카테고리 번호 조회: {}", idList.toString());
 
-        List<Product> list = productService.getList(null);
+        List<ProductResDto> list = productService.getList(null);
         log.info("상품 전체 조회: {}", list.toString());
 
-        Product product = productService.get(3L);
+        ProductResDto product = productService.get(3L);
         log.info("상품 상세 조회: {}", product.toString());
     }
 }

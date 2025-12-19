@@ -22,6 +22,7 @@ class ProductRepositoryTest {
     ProductRepository productRepository;
     @Autowired
     SubCategoryRepository subCategoryRepository;
+
     @Autowired
     MainCategoryRepository mainCategoryRepository;
 
@@ -40,6 +41,9 @@ class ProductRepositoryTest {
 
         list = productRepository.findByNameContaining("비스포크");
         log.info("'비스포크' 검색 결과: {}", list.toString());
+
+        list = productRepository.findTop4ByOrderByDiscountRateDesc();
+        log.info("할인률 top 4: {}", list.toString());
     }
 
 }

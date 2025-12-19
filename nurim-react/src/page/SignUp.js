@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
@@ -125,6 +125,19 @@ const Label = styled.label`
   font-size: 15px;
   color: #555;
   font-weight: 500;
+`;
+
+// [추가] 재전송 링크 스타일
+const ResendLink = styled.span`
+  font-size: 13px;
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #2f6364;
+  }
 `;
 
 const StyledInput = styled.input`
@@ -355,13 +368,13 @@ const SignUp = () => {
 
     try {
       // 서버: 이메일 중복 체크 후 인증번호 발송
-      // 응답 예시: { status: 200, message: "Sent" }
-      await api.post(`/auth/signup-send-email?email=${email}`);
+      await api.post(`/auth/signup-send-email`, null, {
+        params: { email: email },
+      });
       alert("인증번호가 이메일로 발송되었습니다.");
       setShowAuthInput(true);
     } catch (error) {
       console.error(error);
-      // 서버 에러 메시지에 따라 분기 가능 (예: 이미 가입된 이메일)
       if (error.response && error.response.status === 409) {
         alert("이미 가입된 이메일입니다.");
       } else {
@@ -378,10 +391,12 @@ const SignUp = () => {
     }
 
     try {
-      // 서버: { email, authCode } 확인
-      const response = await api.post(
-        `/auth/signup-valid-email?code=${authCode}`
-      );
+      const response = await api.post(`/auth/signup-valid-email`, null, {
+        params: {
+          email: email,
+          code: authCode,
+        },
+      });
 
       if (response.status === 200) {
         setIsAuthVerified(true);
@@ -394,8 +409,6 @@ const SignUp = () => {
     }
   };
 
-  // 2-1. 아이디 중복 체크 (API + Debounce 추천하지만 여기선 onBlur 또는 버튼으로 처리)
-  // 여기서는 useEffect를 사용하여 입력 멈춤 감지 혹은 간단하게 onBlur 시 체크하도록 구현
   const checkId = async () => {
     if (userId.length < 4) {
       setIdCheckMsg("아이디는 4글자 이상이어야 합니다.");
@@ -515,7 +528,7 @@ const SignUp = () => {
                   placeholder="Enter your email"
                   value={email}
                   onChange={handleEmailChange}
-                  readOnly={showAuthInput} // 인증번호 발송 후엔 수정 불가 (선택사항)
+                  readOnly={showAuthInput}
                 />
                 {!isEmailFormatValid && email.length > 0 && (
                   <ErrorText>Invalid email format.</ErrorText>
@@ -533,14 +546,29 @@ const SignUp = () => {
 
               {showAuthInput && (
                 <InputGroup>
-                  <Label>Authentication Code</Label>
+                  {/* [수정] 라벨과 get it again 링크를 양옆으로 배치 */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Label>
+                      Please enter the six-digit authentication number.
+                    </Label>
+                    <ResendLink onClick={handleRequestAuth}>
+                      get it again
+                    </ResendLink>
+                  </div>
+
                   <StyledInput
                     type="text"
                     placeholder="6-digit code"
                     maxLength={6}
                     value={authCode}
                     onChange={(e) => setAuthCode(e.target.value)}
-                    readOnly={isAuthVerified} // 인증 완료 후 수정 불가
+                    readOnly={isAuthVerified}
                   />
                   {authCode.length === 6 && !isAuthVerified && (
                     <SmallBtn onClick={handleVerifyAuth}>Verify</SmallBtn>
@@ -564,9 +592,8 @@ const SignUp = () => {
                   placeholder="Enter your ID"
                   value={userId}
                   onChange={handleUserIdChange}
-                  onBlur={checkId} // 포커스 잃을 때 중복 체크
+                  onBlur={checkId}
                 />
-                {/* 중복 체크 메시지 출력 */}
                 {userId.length > 0 && !isIdUnique && (
                   <ErrorText>{idCheckMsg || "Please check your ID."}</ErrorText>
                 )}
