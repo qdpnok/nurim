@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
 
     // 상품 목록 조회:
     // 카테고리 번호가 있으면 해당 제품만, 없으면 전체
@@ -31,4 +31,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.get(num));
     }
 
+    // 검색 API
+    // http://localhost:8080/api/product/search?keyword=삼성
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> search(@RequestParam(value = "keyword") String keyword) {
+        return ResponseEntity.ok(productService.searchProducts(keyword));
+    }
 }
