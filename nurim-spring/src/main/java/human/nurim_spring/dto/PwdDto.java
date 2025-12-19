@@ -6,5 +6,6 @@ import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
 public class PwdDto {
-    String pwd;
+    private String email;
+    private String pwd;
 }
