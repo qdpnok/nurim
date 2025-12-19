@@ -36,4 +36,11 @@ public class Product {
 
     @Column
     private String img;
+
+    // 여기 추가했어요오
+    @Column(name = "price_48")
+    private Long price48;
+
+    @Column(name = "price_36")
+    private Long price36;
 }
