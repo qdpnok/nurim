@@ -43,4 +43,7 @@ public class Product {
 
     @Column(name = "price_36")
     private Long price36;
+
+    // 1219 할인률 컬럼 추가
+    private Long discountRate;
 }

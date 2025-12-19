@@ -28,9 +28,9 @@ INSERT INTO sub_category (sub_category_num, main_category_num, name) VALUES (10,
 -- price는 60개월 가격임
 
 -- [구독: TV (1번)]
-INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36) VALUES (1, 'LG', '스탠바이미', '27ART10AKPL', 'tv_lg_01.jpg', 24900, 29900, 39900);
-INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36) VALUES (1, 'LG', '스탠바이미 Go', '27LX5QKNA', 'tv_lg_02.jpg', 26900, 31900, 41900);
-INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36) VALUES (1, 'Samsung', '더 세리프 (55)', 'KQ55LST01BFXKR', 'tv_sam_01.jpg', 38900, 45900, 59900);
+INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36, discount_rate) VALUES (1, 'LG', '스탠바이미', '27ART10AKPL', 'tv_lg_01.jpg', 24900, 29900, 39900, 30);
+INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36, discount_rate) VALUES (1, 'LG', '스탠바이미 Go', '27LX5QKNA', 'tv_lg_02.jpg', 26900, 31900, 41900, 43);
+INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36, discount_rate) VALUES (1, 'Samsung', '더 세리프 (55)', 'KQ55LST01BFXKR', 'tv_sam_01.jpg', 38900, 45900, 59900, 20);
 INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36) VALUES (1, 'Samsung', '더 프레임 (65)', 'KQ65LST03AFXKR', 'tv_sam_02.jpg', 46900, 54900, 72900);
 INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36) VALUES (1, 'Samsung', '더 세로 (43)', 'KQ43LST05BFXKR', 'tv_sam_03.jpg', 32900, 38900, 49900);
 INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, price_48, price_36) VALUES (1, 'LG', '올레드 포제 (55)', '55LX1QKNA', 'tv_lg_03.jpg', 59900, 69900, 92900);
