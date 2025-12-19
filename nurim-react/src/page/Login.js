@@ -327,13 +327,6 @@ const LogIn = () => {
             <br />
             '누리게' 하는 라이프스타일 파트너입니다.
           </Description>
-
-          {/* 하단 슬라이더 인디케이터 흉내 */}
-          <SliderIndicators>
-            <div className="active" />
-            <div className="inactive" />
-            <div className="inactive" />
-          </SliderIndicators>
         </LeftSection>
 
         {/* 오른쪽 섹션 (흰색 카드) */}
