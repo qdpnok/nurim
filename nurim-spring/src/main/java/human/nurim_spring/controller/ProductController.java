@@ -32,6 +32,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.get(num));
     }
 
+    // hotdeal 4개 조회
+    @GetMapping("/hotdeal")
+    public ResponseEntity<List<ProductResDto>> listHotdeal() {
+        return ResponseEntity.ok(productService.getListTop4DiscountRate());
+    }
+
     // 검색 API
     // http://localhost:8080/api/product/search?keyword=비스포크
     @GetMapping("/search")

@@ -49,6 +49,18 @@ public class ProductService {
         return convertProductToProductRes(product);
     }
 
+    // 할인율이 높은 상품 4개 검색
+    public List<ProductResDto> getListTop4DiscountRate() {
+        List<ProductResDto> list = new ArrayList<>();
+        List<Product> result = productRepository.findTop4ByOrderByDiscountRateDesc();
+
+        for(Product product : result) {
+            list.add(convertProductToProductRes(product));
+        }
+
+        return list;
+    }
+
     private ProductResDto convertProductToProductRes(Product product) {
         return ProductResDto.builder()
                 .num(product.getNum())

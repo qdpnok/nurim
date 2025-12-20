@@ -8,6 +8,7 @@ import nurimw from "../img/Logo.w.PNG";
 import { useAuth } from "./AuthContext";
 import ceye from "../img/Ceye.png";
 import oeye from "../img/Oeye.png";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -19,7 +20,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  // 배경 이미지
   background-image: url(${bgimg});
   background-size: cover;
   background-position: center;
@@ -220,7 +220,7 @@ const CheckboxLabel = styled.label`
   color: #555;
 `;
 
-const ForgotLink = styled.span`
+const ForgotLink = styled(Link)`
   color: #555;
   cursor: pointer;
 
@@ -327,13 +327,6 @@ const LogIn = () => {
             <br />
             '누리게' 하는 라이프스타일 파트너입니다.
           </Description>
-
-          {/* 하단 슬라이더 인디케이터 흉내 */}
-          <SliderIndicators>
-            <div className="active" />
-            <div className="inactive" />
-            <div className="inactive" />
-          </SliderIndicators>
         </LeftSection>
 
         {/* 오른쪽 섹션 (흰색 카드) */}
@@ -380,7 +373,7 @@ const LogIn = () => {
                 />
                 Remember me
               </CheckboxLabel>
-              <ForgotLink>Forgot ID/Password?</ForgotLink>
+              <ForgotLink to="/findip">Forgot ID/Password?</ForgotLink>
             </OptionsRow>
 
             <SubmitButton type="submit">LOGIN</SubmitButton>

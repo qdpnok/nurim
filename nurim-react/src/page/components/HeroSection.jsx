@@ -103,24 +103,6 @@ const ButtonText = styled.span`
   white-space: nowrap;
 `;
 
-const DecorLineVertical = styled.div`
-  position: absolute;
-  top: 0;
-  left: 458px;
-  width: 26px;
-  height: 340px;
-  background-color: #d9d9d9;
-`;
-
-const DecorLineHorizontal = styled.div`
-  position: absolute;
-  top: 439px;
-  left: 0;
-  width: 140px;
-  height: 13px;
-  background-color: #d9d9d9;
-`;
-
 export const HeroSection = () => {
   return (
     <Section>

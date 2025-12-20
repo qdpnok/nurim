@@ -5,7 +5,6 @@ import ac from "../../img/C_ac.png";
 import wt from "../../img/C_wt.png";
 import tv from "../../img/C_tv.png";
 import ref from "../../img/C_ref.png";
-
 import air from "../../img/C_air.png";
 
 const Section = styled.section`

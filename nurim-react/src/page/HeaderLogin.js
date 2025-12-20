@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-// 사용할 아이콘 이미지들을 import 해주세요.
 import { Link, useNavigate } from "react-router-dom";
 import MainLogo from "../img/MainLogo.png";
 import SearchIcon from "../img/search.png";
