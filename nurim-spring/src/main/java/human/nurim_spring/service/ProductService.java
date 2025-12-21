@@ -3,9 +3,11 @@ package human.nurim_spring.service;
 import human.nurim_spring.dto.MainProductResDto;
 import human.nurim_spring.dto.ProductListResDto;
 import human.nurim_spring.entity.Product;
+import human.nurim_spring.entity.Reviews;
 import human.nurim_spring.entity.SubCategory;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.ProductRepository;
+import human.nurim_spring.repository.ReviewsRepository;
 import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,43 @@ import java.util.List;
 public class ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final ProductRepository productRepository;
+    private final ReviewsRepository reviewsRepository;
+
+    public List<ProductListResDto> getList(Long id) {
+        List<Product> products;
+        List<ProductListResDto> list = new ArrayList<>();
+
+        // 서브 카테고리 id가 있으면 서브카테고리로 검색, 아니면 전부 검색
+        if(id != null) {
+            SubCategory subCategory = subCategoryRepository.findById(id)
+                    .orElseThrow(() -> new BusinessException("NOT_EXIST_SUBCATEGORY", "존재하지 않는 서브 카테고리입니다."));
+            products = productRepository.findBySubCategory(subCategory);
+        } else {
+            products = productRepository.findAll();
+        }
+
+        // product + reviews 해서 productListResDto로 convert
+        for(Product product: products) {
+            List<Reviews> reviews = reviewsRepository.findByProduct(product);
+
+            Long count=0L, sum=0L, avg;
+
+            // reviews가 비어있다면 count 0, avg 0으로 add 아니면 계산.
+            if(reviews.isEmpty()) {
+                list.add(convertProductToProductListRes(product, 0L, 0L));
+            } else {
+                for(Reviews review: reviews) {
+                    sum += review.getScope();
+                    count++;
+                }
+
+                avg = sum / count;
+                list.add(convertProductToProductListRes(product, count, avg));
+            }
+        }
+
+        return list;
+    }
 
     // 상품 목록 조회: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
     public List<MainProductResDto> getMainList(Long id) {
@@ -76,6 +115,20 @@ public class ProductService {
                 .name(product.getName())
                 .price(product.getPrice())
                 .discountRate(product.getDiscountRate())
+                .build();
+    }
+
+    private ProductListResDto convertProductToProductListRes(Product product, Long count, Long avg) {
+        return ProductListResDto.builder()
+                .num(product.getNum())
+                .name(product.getName())
+                .price(product.getPrice())
+                .spec(product.getSpec())
+                .brand(product.getBrand())
+                .img(product.getImg())
+                .discountRate(product.getDiscountRate())
+                .scopeCount(count)
+                .scopeAvg(avg)
                 .build();
     }
 

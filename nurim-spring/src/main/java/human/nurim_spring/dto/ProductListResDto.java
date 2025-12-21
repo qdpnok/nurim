@@ -12,4 +12,6 @@ public class ProductListResDto {
     private String brand;
     private String img;
     private Long discountRate;
+    private Long scopeCount;
+    private Long scopeAvg;
 }
