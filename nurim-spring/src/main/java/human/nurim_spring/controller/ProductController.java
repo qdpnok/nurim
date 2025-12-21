@@ -22,8 +22,8 @@ public class ProductController {
     // 카테고리 번호가 있으면 해당 제품만, 없으면 전체
     // required = false 파라미터 없어도 된다
     @GetMapping("/list")
-    public ResponseEntity<List<MainProductResDto>> list(@RequestParam(required = false) Long id) {
-        return ResponseEntity.ok(productService.getMainList(id));
+    public ResponseEntity<List<ProductListResDto>> list(@RequestParam(required = false) Long id, @RequestParam(required = false)Integer pageNum) {
+        return ResponseEntity.ok(productService.getList(id, pageNum));
     }
 
     // 상품 상세 조회

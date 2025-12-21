@@ -26,11 +26,13 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 상품 목록 조회: 상품 정보 + 리뷰
-    public List<ProductListResDto> getList(Long id, int pageNum) {
+    public List<ProductListResDto> getList(Long id, Integer pageNum) {
         List<Object[]> results;
         List<ProductListResDto> list = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(pageNum, 8);
+
+
+        Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum, 8);
 
         // 서브 카테고리 id가 있으면 서브카테고리로 검색, 아니면 전부 검색
         if(id != null) {
