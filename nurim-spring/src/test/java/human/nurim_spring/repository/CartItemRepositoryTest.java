@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -86,6 +88,20 @@ class CartItemRepositoryTest {
         CartItem searchItem = cartItemRepository.findByCart(searchCart)
                 .orElseThrow(() -> new RuntimeException("장바구니 아이템 조회 실패"));
         log.info("장바구니 아이템 조회 결과: 수량 - {}, 가격 - {}, 총 가격 - {}", searchItem.getQuantity(), searchItem.getPrice(), searchItem.getTotalPrice());
+
+        // 수정 테스트
+        qty = 8L;
+        searchItem.setQuantity(qty);
+        searchItem.setTotalPrice(qty*searchItem.getPrice());
+        CartItem fixItem = cartItemRepository.save(searchItem);
+        log.info("장바구니 아이템 조회 결과: 수량 - {}, 가격 - {}, 총 가격 - {}", fixItem.getQuantity(), fixItem.getPrice(), fixItem.getTotalPrice());
+
+        // 삭제 테스트
+        cartItemRepository.delete(fixItem);
+        List<CartItem> items = cartItemRepository.findAll();
+        for(CartItem item: items) {
+            log.info("장바구니 아이템 : {}", item.getProduct().getName());
+        }
 
     }
 }
