@@ -91,8 +91,20 @@ class ProductRepositoryTest {
         list = productRepository.findTop4ByOrderByDiscountRateDesc();
         log.info("할인률 top 4: {}", list.toString());
 
-        // 리뷰와 함께 조회
+        // 리뷰와 함께 조회: 카테고리
         List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc);
+
+        for(Object[] result: productWithReviewsStats){
+            product = (Product) result[0];
+            Long reviewCount = (Long) result[1];
+            Double avg = (Double) result[2];
+
+            log.info("상품 정보: {}", product.getName());
+            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+        }
+
+        // 리뷰와 함께 조회: 전체
+        productWithReviewsStats = productRepository.findAllProductWithReviewStats();
 
         for(Object[] result: productWithReviewsStats){
             product = (Product) result[0];

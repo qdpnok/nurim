@@ -14,6 +14,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContaining(String keyword);  // 제품 이름으로 검색
     List<Product> findTop4ByOrderByDiscountRateDesc();
 
+    // product join reviews (subcategory)
     @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r WHERE p.subCategory = :subCategory GROUP BY p")
     List<Object[]> findProductWithReviewStats(SubCategory subCategory);
+
+    // product join reviews (all)
+    @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r GROUP BY p")
+    List<Object[]> findAllProductWithReviewStats();
 }
