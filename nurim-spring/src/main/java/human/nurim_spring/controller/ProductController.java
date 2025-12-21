@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     // 검색 API
-    // http://localhost:8080/api/product/search?keyword=삼성
+    // http://localhost:8080/api/product/search?keyword=비스포크
     @GetMapping("/search")
     public ResponseEntity<List<ProductListResDto>> search(@RequestParam(value = "keyword") String keyword) {
         return ResponseEntity.ok(productService.searchProducts(keyword));

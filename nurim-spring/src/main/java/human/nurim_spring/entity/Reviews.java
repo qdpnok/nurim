@@ -2,6 +2,9 @@ package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -42,4 +45,8 @@ public class Reviews {
 
     @Column
     private String img;
+
+    @CreationTimestamp
+    @Column(name = "reg_date", updatable = false)
+    private LocalDateTime regDate;
 }
