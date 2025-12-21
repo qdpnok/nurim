@@ -26,11 +26,11 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 상품 목록 조회: 상품 정보 + 리뷰
-    public List<ProductListResDto> getList(Long id) {
+    public List<ProductListResDto> getList(Long id, int pageNum) {
         List<Object[]> results;
         List<ProductListResDto> list = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(0, 8);
+        Pageable pageable = PageRequest.of(pageNum, 8);
 
         // 서브 카테고리 id가 있으면 서브카테고리로 검색, 아니면 전부 검색
         if(id != null) {
@@ -47,7 +47,7 @@ public class ProductService {
             Long count = (Long) result[1];
             Double avg = (Double) result[2];
 
-            list.add(convertProductToProductListRes(product, count, avg));
+            list.add(convertProductToProductListRes(product, count, avg == null ? 0 : avg));
         }
 
         return list;
