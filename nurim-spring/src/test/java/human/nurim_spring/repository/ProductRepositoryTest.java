@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,8 +93,10 @@ class ProductRepositoryTest {
         list = productRepository.findTop4ByOrderByDiscountRateDesc();
         log.info("할인률 top 4: {}", list.toString());
 
+        Pageable pageable = PageRequest.of(0,8);
+
         // 리뷰와 함께 조회: 카테고리
-        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc);
+        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
 
         for(Object[] result: productWithReviewsStats){
             product = (Product) result[0];
@@ -104,7 +108,7 @@ class ProductRepositoryTest {
         }
 
         // 리뷰와 함께 조회: 전체
-        productWithReviewsStats = productRepository.findAllProductWithReviewStats();
+        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
 
         for(Object[] result: productWithReviewsStats){
             product = (Product) result[0];

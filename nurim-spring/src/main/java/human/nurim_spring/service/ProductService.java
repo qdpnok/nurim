@@ -11,6 +11,8 @@ import human.nurim_spring.repository.ReviewsRepository;
 import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,39 +24,30 @@ import java.util.List;
 public class ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final ProductRepository productRepository;
-    private final ReviewsRepository reviewsRepository;
 
+    // 상품 목록 조회: 상품 정보 + 리뷰
     public List<ProductListResDto> getList(Long id) {
-        List<Product> products;
+        List<Object[]> results;
         List<ProductListResDto> list = new ArrayList<>();
+
+        Pageable pageable = PageRequest.of(0, 8);
 
         // 서브 카테고리 id가 있으면 서브카테고리로 검색, 아니면 전부 검색
         if(id != null) {
             SubCategory subCategory = subCategoryRepository.findById(id)
                     .orElseThrow(() -> new BusinessException("NOT_EXIST_SUBCATEGORY", "존재하지 않는 서브 카테고리입니다."));
-            products = productRepository.findBySubCategory(subCategory);
+            results = productRepository.findProductWithReviewStats(subCategory, pageable);
         } else {
-            products = productRepository.findAll();
+            results = productRepository.findAllProductWithReviewStats(pageable);
         }
 
-        // product + reviews 해서 productListResDto로 convert
-        for(Product product: products) {
-            List<Reviews> reviews = reviewsRepository.findByProduct(product);
+        // product join reviews 해서 productListResDto로 convert
+        for(Object[] result: results) {
+            Product product = (Product) result[0];
+            Long count = (Long) result[1];
+            Double avg = (Double) result[2];
 
-            Long count=0L, sum=0L, avg;
-
-            // reviews가 비어있다면 count 0, avg 0으로 add 아니면 계산.
-            if(reviews.isEmpty()) {
-                list.add(convertProductToProductListRes(product, 0L, 0L));
-            } else {
-                for(Reviews review: reviews) {
-                    sum += review.getScope();
-                    count++;
-                }
-
-                avg = sum / count;
-                list.add(convertProductToProductListRes(product, count, avg));
-            }
+            list.add(convertProductToProductListRes(product, count, avg));
         }
 
         return list;
@@ -118,7 +111,7 @@ public class ProductService {
                 .build();
     }
 
-    private ProductListResDto convertProductToProductListRes(Product product, Long count, Long avg) {
+    private ProductListResDto convertProductToProductListRes(Product product, Long count, Double avg) {
         return ProductListResDto.builder()
                 .num(product.getNum())
                 .name(product.getName())
