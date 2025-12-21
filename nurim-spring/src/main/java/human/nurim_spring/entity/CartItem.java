@@ -1,15 +1,14 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@Builder @AllArgsConstructor
 public class CartItem {
     @Id
     @Column(name = "cart_item_num")
@@ -25,6 +24,8 @@ public class CartItem {
     private Product product;
 
     private Long quantity;
+
+    private Long price;
 
     private Long totalPrice;
 
