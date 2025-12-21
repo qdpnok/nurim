@@ -1,6 +1,7 @@
 package human.nurim_spring.service;
 
-import human.nurim_spring.dto.ProductResDto;
+import human.nurim_spring.dto.MainProductResDto;
+import human.nurim_spring.dto.ProductListResDto;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.SubCategory;
 import human.nurim_spring.error.BusinessException;
@@ -21,9 +22,9 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 상품 목록 조회: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
-    public List<ProductResDto> getList(Long id) {
+    public List<MainProductResDto> getMainList(Long id) {
         List<Product> result;
-        List<ProductResDto> list = new ArrayList<>();
+        List<MainProductResDto> list = new ArrayList<>();
 
         if (id != null) {
             SubCategory subCategory = subCategoryRepository.findById(id)
@@ -35,14 +36,14 @@ public class ProductService {
         }
 
         for(Product product : result) {
-            list.add(convertProductToProductRes(product));
+            list.add(convertProductToMainPrdRes(product));
         }
 
         return list;
     }
 
     // 상품 상세 조회
-    public ProductResDto get(Long id) {
+    public ProductListResDto get(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_PRODUCT", "존재하지 않는 상품입니다."));
 
@@ -50,8 +51,8 @@ public class ProductService {
     }
 
     // 할인율이 높은 상품 4개 검색
-    public List<ProductResDto> getListTop4DiscountRate() {
-        List<ProductResDto> list = new ArrayList<>();
+    public List<ProductListResDto> getListTop4DiscountRate() {
+        List<ProductListResDto> list = new ArrayList<>();
         List<Product> result = productRepository.findTop4ByOrderByDiscountRateDesc();
 
         for(Product product : result) {
@@ -61,18 +62,27 @@ public class ProductService {
         return list;
     }
 
-    private ProductResDto convertProductToProductRes(Product product) {
-        return ProductResDto.builder()
+    private ProductListResDto convertProductToProductRes(Product product) {
+        return ProductListResDto.builder()
                 .num(product.getNum())
                 .price(product.getPrice())
                 .name(product.getName())
                 .build();
     }
 
+    private MainProductResDto convertProductToMainPrdRes(Product product) {
+        return MainProductResDto.builder()
+                .num(product.getNum())
+                .name(product.getName())
+                .price(product.getPrice())
+                .discountRate(product.getDiscountRate())
+                .build();
+    }
+
     // 상품 이름으로 검색
-    public List<ProductResDto> searchProducts(String keyword) {
+    public List<ProductListResDto> searchProducts(String keyword) {
         List<Product> result = productRepository.findByNameContaining(keyword);
-        List<ProductResDto> list = new ArrayList<>();
+        List<ProductListResDto> list = new ArrayList<>();
 
         for(Product product : result) {
             list.add(convertProductToProductRes(product));
