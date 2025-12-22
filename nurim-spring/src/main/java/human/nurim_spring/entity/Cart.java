@@ -3,6 +3,9 @@ package human.nurim_spring.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity @Getter
 @Setter
 @ToString
@@ -15,17 +18,12 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long num;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // 여러 Product는 하나의 MainCategory에 속함
-    @JoinColumn(name = "product_num")
-    private Product product;
+    // 하나의 회원은 하나의 장바구니를 가짐
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_num")
+    private Member member;
 
-    @Column
-    private Long quantity;
-
-    @Column
-    private Long total_price;
-
-    @Column
-    private boolean isBye_state;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
 
 }
