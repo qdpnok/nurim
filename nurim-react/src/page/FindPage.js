@@ -60,7 +60,7 @@ const MainTextBox = styled.h2`
 const TabWrapper = styled.div`
   display: flex;
   width: 100%;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
 `;
 
 // IDBox, PWBox를 통합하거나 props로 스타일 제어
