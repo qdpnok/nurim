@@ -1,23 +1,24 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-@Builder @AllArgsConstructor
-public class CartItem {
+public class PurchaseWishlistItem {
     @Id
-    @Column(name = "cart_item_num")
+    @Column(name = "purchase_wishlist_item_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long num;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_num")
-    private Cart cart;
+    @JoinColumn(name = "purchase_wishlist_num")
+    private PurchaseWishlist purchaseWishlist;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_num")
