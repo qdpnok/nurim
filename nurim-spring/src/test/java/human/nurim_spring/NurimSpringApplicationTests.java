@@ -9,5 +9,4 @@ class NurimSpringApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
