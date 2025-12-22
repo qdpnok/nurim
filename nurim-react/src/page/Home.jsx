@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { CategoriesSection } from "./components/CategoriesSection";
-import { FaqSection } from "./components/FaqSection";
-import { FeaturedProductsSection } from "./components/FeaturedProductsSection";
-import { HeroSection } from "./components/HeroSection";
-import { ProductDisplaySection } from "./components/ProductDisplaySection";
-import { PromotionsSection } from "./components/PromotionsSection";
+import { CategoriesSection } from "./components/Main/CategoriesSection";
+import { FaqSection } from "./components/Main/FaqSection";
+import { FeaturedProductsSection } from "./components/Main/FeaturedProductsSection";
+import { HeroSection } from "./components/Main/HeroSection";
+import { ProductDisplaySection } from "./components/Main/ProductDisplaySection";
+import { PromotionsSection } from "./components/Main/PromotionsSection";
 
 const Main = styled.main`
   background-color: white;

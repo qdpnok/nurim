@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
-import { useAuth } from "./components/AuthContext";
+import { useAuth } from "./components/Auth/AuthContext";
 
-import HeaderBasic from "./components/HeaderBasic";
-import HeaderLogin from "./components/HeaderLogin";
-import Footer from "./components/Footer";
+import HeaderBasic from "./components/Layout/HeaderBasic";
+import HeaderLogin from "./components/Layout/HeaderLogin";
+import Footer from "./components/Layout/Footer";
 
 const Wrapper = styled.div`
   display: flex;

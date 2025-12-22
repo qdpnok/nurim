@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/Axios"; // Axios 인스턴스 (baseURL이 /api로 설정되어 있다고 가정)
-import EmailVerification from "../components/EmailVerification";
+import api from "../../../api/Axios"; // Axios 인스턴스 (baseURL이 /api로 설정되어 있다고 가정)
+import EmailVerification from "./EmailVerification";
 
 // --- 스타일 정의 (기존과 동일) ---
 const FormSection = styled.div`
@@ -166,9 +166,10 @@ export default function FindPw() {
       {step === 1 && (
         <>
           <Description>
-            Please verify your email address to
+            Please enter your ID & email address.
             <br />
-            <b>Reset Password.</b>
+            We will send you a verification code to issue a{" "}
+            <b>change password.</b>
           </Description>
 
           <EmailVerification

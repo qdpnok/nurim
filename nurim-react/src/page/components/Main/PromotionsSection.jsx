@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import acLg011 from "../../img/ac_lg_01.png";
-import airDy011 from "../../img/air_dy_01.png";
-import image1 from "../../img/sam_tv_01.png";
-import refSam021 from "../../img/ref_sam_02.png";
-import tvLg011 from "../../img/tv_lg_01.png";
-import tvSam031 from "../../img/tv_sam_03.png";
+import acLg011 from "../../../img/ac_lg_01.png";
+import airDy011 from "../../../img/air_dy_01.png";
+import image1 from "../../../img/sam_tv_01.png";
+import refSam021 from "../../../img/ref_sam_02.png";
+import tvLg011 from "../../../img/tv_lg_01.png";
+import tvSam031 from "../../../img/tv_sam_03.png";
 
 const Section = styled.section`
   margin-left: 5rem; /* ml-20 */

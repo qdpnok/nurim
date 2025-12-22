@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-// 이미지 경로와 컴포넌트 경로는 본인의 프로젝트 구조에 맞게 수정해주세요.
 import LoginBannerImg from "../img/LoginBGImg.jpg";
-import FindId from "./components/FindId"; // 위에서 만든 파일
-import FindPw from "./components/FindPw"; // 위에서 만든 파일
+import FindId from "./components/Auth/FindId";
+import FindPw from "./components/Auth/FindPw";
 
+// --- 스타일 정의 ---
 const Container = styled.div`
   width: 100%;
   max-width: 1440px;
@@ -14,12 +14,10 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-image: url(${LoginBannerImg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   &::before {
     content: "";
     position: absolute;
@@ -39,11 +37,11 @@ const ContentWrapper = styled.div`
   height: 644px;
   background-color: white;
   display: flex;
-  flex-direction: column; /* 세로 정렬로 변경 */
+  flex-direction: column;
   align-items: center;
   font-family: "Poppins", sans-serif;
   border-radius: 8px;
-  padding: 30px; /* 내부 여백 추가 */
+  padding: 30px;
   box-sizing: border-box;
 `;
 
@@ -60,12 +58,11 @@ const MainTextBox = styled.h2`
 const TabWrapper = styled.div`
   display: flex;
   width: 100%;
-  /* margin-bottom: 30px; */
+  margin-bottom: 30px;
 `;
 
-// IDBox, PWBox를 통합하거나 props로 스타일 제어
 const TabBox = styled.div`
-  flex: 1; /* 반반 차지 */
+  flex: 1;
   height: 40px;
   display: flex;
   justify-content: center;
@@ -73,33 +70,26 @@ const TabBox = styled.div`
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-
-  /* 선택되었을 때와 아닐 때의 스타일 구분 */
   color: ${(props) => (props.isActive ? "#000000" : "#A0A0A0")};
   border-bottom: ${(props) =>
     props.isActive ? "2px solid #000000" : "1px solid #E0E0E0"};
-
   transition: all 0.2s;
 `;
 
 const InputTotalBox = styled.div`
-  width: 100%; /* 부모에 맞춤 */
-  flex: 1; /* 남은 공간 다 차지 */
+  width: 100%;
+  flex: 1;
   display: flex;
   justify-content: center;
-  /* border: 1px solid gray; 개발 중에만 보이게 하고 나중엔 빼셔도 됩니다 */
 `;
 
 const FIP = () => {
-  // 현재 탭 상태 관리 ('ID' 또는 'PW')
   const [activeTab, setActiveTab] = useState("ID");
 
   return (
     <Container>
       <ContentWrapper>
         <MainTextBox>Find ID · Password</MainTextBox>
-
-        {/* 탭 버튼 영역 */}
         <TabWrapper>
           <TabBox
             isActive={activeTab === "ID"}
@@ -114,8 +104,6 @@ const FIP = () => {
             PASSWORD
           </TabBox>
         </TabWrapper>
-
-        {/* 탭에 따라 내용 교체 */}
         <InputTotalBox>
           {activeTab === "ID" ? <FindId /> : <FindPw />}
         </InputTotalBox>

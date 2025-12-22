@@ -7,7 +7,7 @@ import {
   ErrorText,
   HelperText,
   NextButton,
-} from "../../styles/AuthStyles";
+} from "../../../styles/AuthStyles";
 
 export default function SignUpInfo({
   userId,

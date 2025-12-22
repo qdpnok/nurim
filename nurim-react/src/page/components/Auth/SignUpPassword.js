@@ -7,7 +7,7 @@ import {
   HelperText,
   ErrorText,
   NextButton,
-} from "../../styles/AuthStyles";
+} from "../../../styles/AuthStyles";
 
 export default function SignUpPassword({
   password,

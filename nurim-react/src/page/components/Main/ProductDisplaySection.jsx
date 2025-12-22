@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import sc from "../../img/Searchg.png";
+import sc from "../../../img/Searchg.png";
 
 const Section = styled.section`
   display: flex;
