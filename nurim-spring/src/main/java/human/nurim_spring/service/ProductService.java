@@ -2,6 +2,7 @@ package human.nurim_spring.service;
 
 import human.nurim_spring.dto.MainProductResDto;
 import human.nurim_spring.dto.ProductListResDto;
+import human.nurim_spring.dto.ProductReviewSummaryDto;
 import human.nurim_spring.entity.MainCategory;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.Reviews;
@@ -13,6 +14,7 @@ import human.nurim_spring.repository.ReviewsRepository;
 import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class ProductService {
 
     // 상품 목록 조회: 상품 정보 + 리뷰
     public List<ProductListResDto> getList(Long id, Integer pageNum) {
-        List<Object[]> results;
+        Page<ProductReviewSummaryDto> results;
         List<ProductListResDto> list = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum-1, 9);
@@ -43,14 +45,14 @@ public class ProductService {
         } else {
 //            List<>
 
-            results = productRepository.findAllProductWithReviewStats(pageable);
+            results = productRepository.findAllProduct(pageable);
         }
 
         // product join reviews 해서 productListResDto로 convert
-        for(Object[] result: results) {
-            Product product = (Product) result[0];
-            Long count = (Long) result[1];
-            Double avg = (Double) result[2];
+        for(ProductReviewSummaryDto result: results) {
+            Product product = result.product();
+            Long count = result.reviewCount();
+            Double avg = result.avgScope();
 
             list.add(convertProductToProductListRes(product, count, avg == null ? 0 : avg));
         }

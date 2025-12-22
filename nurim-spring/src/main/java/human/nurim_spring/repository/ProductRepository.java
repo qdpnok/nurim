@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // product join reviews (subcategory)
     @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r WHERE p.subCategory = :subCategory GROUP BY p")
-    List<ProductReviewSummaryDto> findProductWithReviewStats(SubCategory subCategory, Pageable pageable);
+    Page<ProductReviewSummaryDto> findProductWithReviewStats(SubCategory subCategory, Pageable pageable);
 
     // product join reviews (all)
      @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r GROUP BY p")

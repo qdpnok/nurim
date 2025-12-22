@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
@@ -78,47 +79,47 @@ class ProductRepositoryTest {
     public void getListTest() {
         initTest();
 
-//        SubCategory sc = subCategoryRepository.findById(1L).get();
-//        List<Product> list = productRepository.findBySubCategory(sc);
-//
-//        log.info("상품 조회 리스트");
-//        log.info(list.toString());
-//
-//        Product product = productRepository.findById(3L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
-//        log.info("상품 단건 조회 By Id");
-//        log.info(product.toString());
-//
-//        list = productRepository.findByNameContaining("비스포크");
-//        log.info("'비스포크' 검색 결과: {}", list.toString());
-//
-//        list = productRepository.findTop4ByOrderByDiscountRateDesc();
-//        log.info("할인률 top 4: {}", list.toString());
-//
-//        Pageable pageable = PageRequest.of(0,8);
-//
-//        // 리뷰와 함께 조회: 카테고리
-//        List<ProductReviewSummaryDto> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
-//
-//        for(ProductReviewSummaryDto result: productWithReviewsStats){
-//            product = result.product();
-//            Long reviewCount = result.reviewCount();
-//            Double avg = result.avgScope();
-//
-//            log.info("상품 정보: {}", product.getName());
-//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-//        }
-//
-//        // 리뷰와 함께 조회: 전체
-//        productWithReviewsStats = productRepository.findAllProduct(pageable);
-//
-//        for(Object[] result: productWithReviewsStats){
-//            product = (Product) result[0];
-//            Long reviewCount = (Long) result[1];
-//            Double avg = (Double) result[2];
-//
-//            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
-//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-//        }
+        SubCategory sc = subCategoryRepository.findById(1L).get();
+        List<Product> list = productRepository.findBySubCategory(sc);
+
+        log.info("상품 조회 리스트");
+        log.info(list.toString());
+
+        Product product = productRepository.findById(3L).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
+        log.info("상품 단건 조회 By Id");
+        log.info(product.toString());
+
+        list = productRepository.findByNameContaining("비스포크");
+        log.info("'비스포크' 검색 결과: {}", list.toString());
+
+        list = productRepository.findTop4ByOrderByDiscountRateDesc();
+        log.info("할인률 top 4: {}", list.toString());
+
+        Pageable pageable = PageRequest.of(0,8);
+
+        // 리뷰와 함께 조회: 카테고리
+        Page<ProductReviewSummaryDto> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
+
+        for(ProductReviewSummaryDto result: productWithReviewsStats){
+            product = result.product();
+            Long reviewCount = result.reviewCount();
+            Double avg = result.avgScope();
+
+            log.info("상품 정보: {}", product.getName());
+            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+        }
+
+        // 리뷰와 함께 조회: 전체
+        productWithReviewsStats = productRepository.findAllProduct(pageable);
+
+        for(ProductReviewSummaryDto result: productWithReviewsStats){
+            product = result.product();
+            Long reviewCount = result.reviewCount();
+            Double avg = result.avgScope();
+
+            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
+            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+        }
 
     }
 
