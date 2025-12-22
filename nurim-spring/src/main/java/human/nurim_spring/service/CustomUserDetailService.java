@@ -1,6 +1,7 @@
 package human.nurim_spring.service;
 
 import human.nurim_spring.entity.Member;
+import human.nurim_spring.jwt.CustomUserDetails;
 import human.nurim_spring.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +35,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
         log.info("grantedAuthority : {}", grantedAuthority);
 
-        return new User(
-                String.valueOf(member.getId()),
-                member.getPwd(),
-                Collections.singleton(grantedAuthority)
-        );
+        return new CustomUserDetails(member);
     }
 }
