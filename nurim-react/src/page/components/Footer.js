@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Logo from "../img/Logo.w.PNG";
+import Logo from "../../img/Logo.w.PNG";
 
 const FooterContainer = styled.div`
   background-color: #ffffff;
