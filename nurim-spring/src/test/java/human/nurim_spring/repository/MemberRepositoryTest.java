@@ -29,17 +29,18 @@ class MemberRepositoryTest {
                 .build();
     }
 
-    public Member createMember() {
-        return memberRepository.save(buildMember());
-    }
-
     @Test
     @DisplayName("Member 테이블 데이터 생성 및 중복 확인 테스트")
     public void createMemberTest() {
-        createMember();
+        memberRepository.save(buildMember());
+
         log.info(memberRepository.findAll().toString());
+
+        // 이메일, id 존재 여부
         log.info(memberRepository.existsByEmail("tkdal@gmail.com") ? "이메일 O" : "이메일 X");
         log.info(memberRepository.existsById("tkdal") ? "아이디 O" : "아이디 X");
+
+        // id로 member 조회, email로 member 조회
         Member member = memberRepository.findById("tkdal").orElseThrow(() -> new RuntimeException("해당 머시깽이 존재하지 않습니다."));
         Member member2 = memberRepository.findByEmail("tkdal@gmail.com").orElseThrow(() -> new RuntimeException("해당 머시깽이 존재하지 않습니다."));
         log.info(member.toString());

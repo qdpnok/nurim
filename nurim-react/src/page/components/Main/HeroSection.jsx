@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import mainBanner1 from "../../img/main_banner.jpg";
+import mainBanner1 from "../../../img/main_banner.jpg";
 // const rectangle1 = "https://placehold.co/100x443"; 임시 이미지.
 
 const Section = styled.section`

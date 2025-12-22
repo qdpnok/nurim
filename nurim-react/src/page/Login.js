@@ -1,31 +1,28 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../api/Axios";
 import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
 import nurimw from "../img/Logo.w.PNG";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./components/Auth/AuthContext";
 import ceye from "../img/Ceye.png";
 import oeye from "../img/Oeye.png";
-import { Link } from "react-router-dom";
 
+// --- 스타일 정의 ---
 const Container = styled.div`
   width: 100%;
   max-width: 1440px;
-  height: 900px; // 전체 높이
+  height: 900px;
   margin: 0 auto;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-image: url(${bgimg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  // 배경 어둡게 처리 (Overlay)
   &::before {
     content: "";
     position: absolute;
@@ -48,14 +45,12 @@ const ContentWrapper = styled.div`
   align-items: center;
   padding: 0 100px;
   box-sizing: border-box;
-
   @media (max-width: 1024px) {
     justify-content: center;
     padding: 0 40px;
   }
 `;
 
-// --- 좌측 브랜드 영역 ---
 const LeftSection = styled.div`
   margin-left: 160px;
   display: flex;
@@ -63,32 +58,25 @@ const LeftSection = styled.div`
   justify-content: center;
   color: white;
   max-width: 500px;
-  height: 768px; // 카드와 높이 균형을 위해 설정 (선택사항)
-
+  height: 768px;
   @media (max-width: 1024px) {
-    display: none; // 화면이 작아지면 숨기거나 디자인 변경 필요
+    display: none;
   }
 `;
 
 const LogoArea = styled.h1`
   font-size: 40px;
   font-weight: bold;
-  margin-bottom: 120px; // 로고와 텍스트 사이 간격
+  margin-bottom: 120px;
   font-family: sans-serif;
   letter-spacing: 2px;
-
-  span {
-    font-family: "Zen Kaku Gothic Antique", sans-serif;
-  }
 `;
-
 const MainSlogan = styled.h2`
   font-size: 42px;
   font-weight: 700;
   margin-bottom: 24px;
   font-family: "Zen Kaku Gothic Antique", sans-serif;
 `;
-
 const Description = styled.p`
   font-size: 16px;
   line-height: 1.8;
@@ -97,36 +85,16 @@ const Description = styled.p`
   margin-bottom: 60px;
 `;
 
-const SliderIndicators = styled.div`
-  display: flex;
-  gap: 8px;
-
-  div {
-    height: 4px;
-    background-color: white;
-    border-radius: 2px;
-  }
-  .active {
-    width: 40px;
-    opacity: 1;
-  }
-  .inactive {
-    width: 20px;
-    opacity: 0.5;
-  }
-`;
-
-// --- 우측 흰색 로그인 카드 ---
 const LoginCard = styled.div`
   width: 460px;
   height: 768px;
   background-color: white;
-  border-radius: 20px 20px 0px 0px; // 둥근 모서리
-  padding: 80px 50px; // 내부 여백
+  border-radius: 20px 20px 0px 0px;
+  padding: 80px 50px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center; // 내부 요소 수직 중앙 정렬
+  justify-content: center;
   margin-right: 150px;
   margin-top: 150px;
 `;
@@ -134,7 +102,6 @@ const LoginCard = styled.div`
 const CardHeader = styled.div`
   margin-bottom: 40px;
 `;
-
 const WelcomeText = styled.p`
   font-size: 14px;
   color: #888;
@@ -143,7 +110,6 @@ const WelcomeText = styled.p`
   letter-spacing: 1px;
   text-transform: uppercase;
 `;
-
 const TitleText = styled.h2`
   font-size: 28px;
   color: #333;
@@ -154,25 +120,21 @@ const TitleText = styled.h2`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px; // 입력창 사이 간격
+  gap: 24px;
 `;
-
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
 `;
-
 const Label = styled.label`
   font-size: 13px;
   color: #666;
   font-weight: 500;
 `;
-
 const InputWrapper = styled.div`
   position: relative;
 `;
-
 const StyledInput = styled.input`
   width: 100%;
   height: 52px;
@@ -181,13 +143,11 @@ const StyledInput = styled.input`
   padding: 0 16px;
   font-size: 15px;
   box-sizing: border-box;
-
   &:focus {
     outline: none;
     border-color: #2f6364;
   }
 `;
-
 const EyeIcon = styled.span`
   position: absolute;
   right: 16px;
@@ -196,7 +156,6 @@ const EyeIcon = styled.span`
   cursor: pointer;
   color: #999;
   font-size: 18px;
-
   img {
     width: 20px;
     height: 20px;
@@ -209,9 +168,8 @@ const OptionsRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  margin-top: -10px; // 간격 조절
+  margin-top: -10px;
 `;
-
 const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
@@ -219,20 +177,17 @@ const CheckboxLabel = styled.label`
   cursor: pointer;
   color: #555;
 `;
-
 const ForgotLink = styled(Link)`
   color: #555;
   cursor: pointer;
-
   &:hover {
     text-decoration: underline;
   }
 `;
-
 const SubmitButton = styled.button`
   width: 100%;
   height: 56px;
-  background-color: #2f6364; // 청록색
+  background-color: #2f6364;
   color: white;
   border: none;
   border-radius: 8px;
@@ -240,18 +195,15 @@ const SubmitButton = styled.button`
   font-weight: 700;
   cursor: pointer;
   margin-top: 20px;
-
   &:hover {
     background-color: #244f50;
   }
 `;
-
 const SignupText = styled.div`
   text-align: center;
   margin-top: 30px;
   font-size: 13px;
   color: #666;
-
   span {
     color: #333;
     font-weight: 700;
@@ -261,7 +213,6 @@ const SignupText = styled.div`
   }
 `;
 
-// --- Component ---
 const LogIn = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -273,20 +224,13 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/login", {
-        id,
-        pwd,
-        rememberMe,
-      });
-
+      const response = await api.post("/auth/login", { id, pwd, rememberMe });
       if (response.status === 200) {
         const token =
           response.headers["authorization"] ||
           response.data.token ||
           "dummy-token";
-
         login(token);
-
         alert("로그인 되었습니다.");
         navigate("/");
       }
@@ -301,7 +245,6 @@ const LogIn = () => {
     height: 32px;
     margin-bottom: 5px;
   `;
-
   const LogoNR = styled.img`
     width: 75px;
     height: 46px;
@@ -311,15 +254,12 @@ const LogIn = () => {
   return (
     <Container>
       <ContentWrapper>
-        {/* 왼쪽 섹션 */}
         <LeftSection>
           <LogoArea>
             <LogoNR src={nrw} alt="흰로고" />
             <LogoNurim src={nurimw} alt="흰로고" />
           </LogoArea>
-
           <MainSlogan>소유를 넘어선 경험</MainSlogan>
-
           <Description>
             누림은 단순히 제품을 빌려주는 '대여 서비스'가 아니라,
             <br />
@@ -328,14 +268,11 @@ const LogIn = () => {
             '누리게' 하는 라이프스타일 파트너입니다.
           </Description>
         </LeftSection>
-
-        {/* 오른쪽 섹션 (흰색 카드) */}
         <LoginCard>
           <CardHeader>
             <WelcomeText>WELCOME BACK</WelcomeText>
             <TitleText>Log In to your Account</TitleText>
           </CardHeader>
-
           <Form onSubmit={handleSubmit}>
             <InputGroup>
               <Label>ID</Label>
@@ -347,7 +284,6 @@ const LogIn = () => {
                 required
               />
             </InputGroup>
-
             <InputGroup>
               <Label>Password</Label>
               <InputWrapper>
@@ -363,7 +299,6 @@ const LogIn = () => {
                 </EyeIcon>
               </InputWrapper>
             </InputGroup>
-
             <OptionsRow>
               <CheckboxLabel>
                 <input
@@ -375,10 +310,8 @@ const LogIn = () => {
               </CheckboxLabel>
               <ForgotLink to="/findip">Forgot ID/Password?</ForgotLink>
             </OptionsRow>
-
             <SubmitButton type="submit">LOGIN</SubmitButton>
           </Form>
-
           <SignupText>
             New User?{" "}
             <span onClick={() => navigate("/signup")}>SIGN UP HERE</span>
@@ -388,5 +321,4 @@ const LogIn = () => {
     </Container>
   );
 };
-
 export default LogIn;

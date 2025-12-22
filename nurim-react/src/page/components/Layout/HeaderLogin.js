@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import MainLogo from "../img/MainLogo.png";
-import SearchIcon from "../img/search.png";
-import mypage from "../img/mypageicon.png";
-import heart from "../img/hearticon.png";
-import bell from "../img/bellicon.png";
-import cart from "../img/carticon.png";
+import { Link } from "react-router-dom";
+import MainLogo from "../../../img/MainLogo.png";
+import SearchIcon from "../../../img/search.png";
+import mypage from "../../../img/mypageicon.png";
+import heart from "../../../img/hearticon.png";
+import bell from "../../../img/bellicon.png";
+import cart from "../../../img/carticon.png";
 
 const Container = styled.div`
   width: 100%;
@@ -25,7 +25,6 @@ const HeaderWrapper = styled.header`
   height: 78px;
   position: relative;
   width: 1440px;
-  border-bottom: 1px solid gray;
 `;
 
 // --- 검색창 스타일 ---
@@ -97,11 +96,6 @@ const BadgeBase = styled.div`
 `;
 
 const MypageWrapper = styled(IconWrapperBase)`
-  left: 1022px;
-  top: 25px;
-`;
-
-const MessageWrapper = styled(IconWrapperBase)`
   left: 1079px;
   top: 25px;
 `;
@@ -114,10 +108,6 @@ const MessageBadge = styled(BadgeBase)`
 const BellWrapper = styled(IconWrapperBase)`
   left: 1136px;
   top: 25px;
-`;
-
-const BellBadge = styled(BadgeBase)`
-  background-color: #ff0000;
 `;
 
 // 3. 장바구니/사람 아이콘 (왼쪽 1198px)
@@ -171,7 +161,6 @@ const Navbar = styled.div`
   align-items: center;
   justify-content: center;
   gap: 60px;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
 const NavItem = styled.div`
@@ -215,7 +204,6 @@ const SearchImg = styled.img`
 
 export const HeaderLogin = () => {
   const [search, setSearch] = useState("");
-  const nav = useNavigate();
 
   // 로그아웃 핸들러
   const handleLogout = () => {
@@ -249,12 +237,6 @@ export const HeaderLogin = () => {
           <img src={mypage} alt="mypage" style={{ width: "30px" }} />
         </MypageWrapper>
 
-        {/* 2. 위시리스트 아이콘 */}
-        <MessageWrapper>
-          <img src={heart} alt="msg" style={{ width: "20px" }} />
-          <BellBadge>0</BellBadge>
-        </MessageWrapper>
-
         {/* 3. 알림 아이콘 */}
         <BellWrapper>
           <img src={bell} alt="bell" style={{ width: "20px" }} />
@@ -274,12 +256,13 @@ export const HeaderLogin = () => {
       {/* 네비게이션 바 */}
       <Navbar>
         <LineSeparator />
-        <NavItem bold>Home</NavItem>
-        <NavItem>List 1</NavItem>
-        <NavItem>List 2</NavItem>
-        <NavItem>Q/A</NavItem>
-        <NavItem>List 3</NavItem>
-        <NavItem>Contact Us</NavItem>
+        <NavItem to="/" $bold>
+          Home
+        </NavItem>
+        <NavItem to="/list1">All product</NavItem>
+        <NavItem to="/list2">Subscriptions</NavItem>
+        <NavItem to="/qa">Purchase</NavItem>
+        <NavItem to="/list3">QnA</NavItem>
       </Navbar>
     </Container>
   );

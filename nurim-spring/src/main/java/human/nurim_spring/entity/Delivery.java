@@ -3,6 +3,8 @@ package human.nurim_spring.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity @Getter
 @Setter
 @ToString
@@ -32,6 +34,8 @@ public class Delivery {
     private boolean isAdvance_visit;
 
     private Long invoice_num;
+
+    private LocalDateTime deliveryDate;
 
     private String state;
 

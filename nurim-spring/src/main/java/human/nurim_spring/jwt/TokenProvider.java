@@ -33,6 +33,8 @@ public class TokenProvider {
 
     // 토큰 생성 메서드
     public TokenDto generateTokenDto(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -42,6 +44,7 @@ public class TokenProvider {
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
+                .claim("memberNum", userDetails.getMemberNum())
                 .claim(AUTHORITIES_KEY, authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
