@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
 import EmailVerification from "./components/EmailVerification";
 
-// 스타일 정의 (Container, Card, Header 등 기존과 동일)
+// --- 스타일 정의 (기존과 동일) ---
 const Container = styled.div`
   width: 1440px;
   height: 1024px;
@@ -158,7 +158,6 @@ const NextButton = styled.button`
     background-color: #244f50;
   }
 `;
-// Modal UI
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -262,6 +261,7 @@ const SignUp = () => {
     setIsEmailVerified(true);
   };
 
+  // 2. 아이디 중복 체크 (수정됨: URL에서 /api 제거)
   const checkId = async () => {
     if (userId.length < 4) {
       setIdCheckMsg("아이디는 4글자 이상이어야 합니다.");
@@ -269,7 +269,8 @@ const SignUp = () => {
       return;
     }
     try {
-      const response = await api.get(`/api/auth/check-id?memberId=${userId}`);
+      // [수정] /api 제거 -> /auth/check-id
+      const response = await api.get(`/auth/check-id?memberId=${userId}`);
       if (response.status === 200) {
         setIsIdUnique(true);
         setIdCheckMsg("");
@@ -314,6 +315,7 @@ const SignUp = () => {
     setIsPwMatch(input === password && input.length > 0);
   };
 
+  // 최종 제출 (수정됨: URL에서 /api 제거)
   const handleFinalSubmit = async () => {
     if (!isPwValid || !isPwMatch) return;
     const signupData = {
@@ -324,7 +326,8 @@ const SignUp = () => {
       pwd: password,
     };
     try {
-      const response = await api.post("/api/auth/join", signupData);
+      // [수정] /api 제거 -> /auth/join
+      const response = await api.post("/auth/join", signupData);
       if (response.status === 200 || response.status === 201) {
         setShowModal(true);
       }
