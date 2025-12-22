@@ -57,7 +57,7 @@ class ReviewServiceTest {
                 .purchase(purchase)
                 .scope(4L)
                 .title("좋네요")
-                .content("너뭊ㅎ네요")
+                .content("너무 좋네요")
                 .isRelease(true)
                 .build();
     }
@@ -86,7 +86,7 @@ class ReviewServiceTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         
-        assertEquals("너뭊ㅎ네요", result.get(0).getContent());
+        assertEquals("너무 좋네요", result.get(0).getContent());
         assertEquals(4, result.get(0).getScope());
         assertEquals("이상미", result.get(0).getWriter());
 
