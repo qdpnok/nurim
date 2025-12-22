@@ -43,7 +43,7 @@ const ContentWrapper = styled.div`
   align-items: center;
   font-family: "Poppins", sans-serif;
   border-radius: 8px;
-  padding: 40px; /* 내부 여백 추가 */
+  padding: 30px; /* 내부 여백 추가 */
   box-sizing: border-box;
 `;
 
@@ -54,7 +54,7 @@ const MainTextBox = styled.h2`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const TabWrapper = styled.div`

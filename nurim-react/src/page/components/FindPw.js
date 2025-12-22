@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"; // 로그인 페이지 이동용
-import api from "../../api/Axios"; // Axios 인스턴스
+import { useNavigate } from "react-router-dom";
+import api from "../../api/Axios"; // Axios 인스턴스 (baseURL이 /api로 설정되어 있다고 가정)
 import EmailVerification from "../components/EmailVerification";
 
-// --- 스타일 정의 (FindId, SignUp과 통일감 유지) ---
+// --- 스타일 정의 (기존과 동일) ---
 const FormSection = styled.div`
   width: 100%;
   height: 100%;
@@ -87,7 +87,6 @@ const NextButton = styled.button`
   }
 `;
 
-// 결과 화면 박스
 const ResultBox = styled.div`
   text-align: center;
   margin-top: 40px;
@@ -112,8 +111,8 @@ export default function FindPw() {
   // Step 1: 인증, 2: 비번 변경, 3: 완료
   const [step, setStep] = useState(1);
 
-  // 상태 관리
   const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState(""); // 아이디 상태 추가
   const [isVerified, setIsVerified] = useState(false);
 
   const [newPassword, setNewPassword] = useState("");
@@ -146,10 +145,12 @@ export default function FindPw() {
     if (!isPwValid || !isPwMatch) return;
 
     try {
-      // PwdDto 구조: { email, pwd } 라고 가정
-      await api.post("/api/auth/resetPwd", {
+      // [수정] URL에서 '/api' 제거 -> /auth/resetPwd
+      await api.post("/auth/resetPwd", {
+        // DTO 구조에 맞춰 데이터 전송 (email, pwd 필수)
         email: email,
         pwd: newPassword,
+        // 필요하다면 userId도 보낼 수 있음 (백엔드 DTO 확인 필요)
       });
 
       setStep(3); // 성공 화면으로 이동
@@ -165,16 +166,16 @@ export default function FindPw() {
       {step === 1 && (
         <>
           <Description>
-            Please enter your ID & email address.
+            Please verify your email address to
             <br />
-            We will send you a verification code to issue a
-            <b>change password.</b>
+            <b>Reset Password.</b>
           </Description>
 
           <EmailVerification
             mode="resetPwd"
             onSuccess={handleVerificationSuccess}
-            parentSetEmail={setEmail} // 이메일 상태 부모와 공유
+            parentSetEmail={setEmail}
+            parentSetId={setUserId}
           />
 
           <NextButton disabled={!isVerified} onClick={() => setStep(2)}>
