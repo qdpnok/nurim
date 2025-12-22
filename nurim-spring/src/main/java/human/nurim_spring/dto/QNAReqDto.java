@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class QnaReqDto {
+public class QNAReqDto {
     private Long memberNum;    // 작성자 번호
     private String title;      // 제목
     private String content;    // 내용

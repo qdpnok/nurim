@@ -2,6 +2,9 @@ package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,5 +31,10 @@ public class QNA {
 
     @Column
     private boolean isRelease;
+
+    // 이 부분 추가했음(문의 사항 작성 날짜)
+    @CreationTimestamp
+    @Column(name = "reg_date", updatable = false)
+    private LocalDateTime regDate;
 
 }

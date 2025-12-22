@@ -1,6 +1,6 @@
 package human.nurim_spring.controller;
 
-import human.nurim_spring.dto.QnaReqDto;
+import human.nurim_spring.dto.QNAReqDto;
 import human.nurim_spring.service.QNAService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class QNAController {
     // 문의 작성(POST)
     // URL: http://localhost:8080/api/qna
     @PostMapping("")
-    public ResponseEntity<String> writeQna(@RequestBody QnaReqDto dto) {
+    public ResponseEntity<String> writeQna(@RequestBody QNAReqDto dto) {
         String result = qnaService.createQna(dto);
         return ResponseEntity.ok(result);
     }

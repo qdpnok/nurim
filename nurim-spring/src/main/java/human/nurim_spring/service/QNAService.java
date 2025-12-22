@@ -1,6 +1,6 @@
 package human.nurim_spring.service;
 
-import human.nurim_spring.dto.QnaReqDto;
+import human.nurim_spring.dto.QNAReqDto;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.entity.QNA;
 import human.nurim_spring.entity.QNA;
@@ -23,7 +23,7 @@ public class QNAService {
 
     // 문의 작성 기능
     @Transactional
-    public String createQna(QnaReqDto dto) {
+    public String createQna(QNAReqDto dto) {
         // 작성자 확인 하기
         Member member = memberRepository.findById(dto.getMemberNum())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
