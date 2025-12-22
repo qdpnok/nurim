@@ -1,5 +1,6 @@
 package human.nurim_spring.controller;
 
+import human.nurim_spring.dto.ReviewReqDto;
 import human.nurim_spring.dto.ReviewResDto;
 import human.nurim_spring.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,9 @@ public class ReviewController {
     @GetMapping("/{productNum}")
     public ResponseEntity<List<ReviewResDto>> getProductReviews(@PathVariable Long productNum) {
         return ResponseEntity.ok(reviewService.getReviewsByProduct(productNum));
+    }
+    @PostMapping("")
+    public ResponseEntity<String> writeReview(@RequestBody ReviewReqDto dto) {
+        return ResponseEntity.ok(reviewService.createReview(dto));
     }
 }

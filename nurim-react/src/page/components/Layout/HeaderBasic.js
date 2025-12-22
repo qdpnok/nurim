@@ -21,7 +21,6 @@ const HeaderWrapper = styled.header`
   height: 78px;
   position: relative;
   width: 1440px;
-  border-bottom: 1px solid gray;
 `;
 
 // 검색창 관련
@@ -117,13 +116,12 @@ const Navbar = styled.div`
   align-items: center;
   justify-content: center; /* 가운데 정렬 */
   gap: 60px; /* 메뉴 사이 간격 */
-  border-bottom: 1px solid gray;
 `;
 
 const LineSeparator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
   position: absolute;
   top: 0;
 `;
@@ -185,16 +183,13 @@ export const HeaderBasic = () => {
       {/* 네비게이션 바 */}
       <Navbar>
         <LineSeparator />
-
-        {/* 순서대로 배치 (absolute 좌표 순서 참고: Home -> List1 -> List2 -> QA -> List3 -> Contact) */}
         <NavItem to="/" $bold>
           Home
         </NavItem>
-        <NavItem to="/list1">List 1</NavItem>
-        <NavItem to="/list2">List 2</NavItem>
-        <NavItem to="/qa">Q/A</NavItem>
-        <NavItem to="/list3">List 3</NavItem>
-        <NavItem to="/contact">Contact Us</NavItem>
+        <NavItem to="/list1">All product</NavItem>
+        <NavItem to="/list2">Subscriptions</NavItem>
+        <NavItem to="/qa">Purchase</NavItem>
+        <NavItem to="/list3">QnA</NavItem>
       </Navbar>
     </Container>
   );

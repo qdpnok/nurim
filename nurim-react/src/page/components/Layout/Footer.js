@@ -15,7 +15,7 @@ const FooterInner = styled.div`
   width: 1440px;
   height: 568px;
   position: relative; /* 자식들의 absolute 기준 */
-  border-top: 1px solid gray;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const GreenRectangle = styled.div`
