@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import api from "../../api/Axios";
+import api from "../../../api/Axios";
 
 // --- 스타일 정의 ---
 const InputGroup = styled.div`
@@ -234,7 +234,7 @@ export default function EmailVerification({
           <Label>ID</Label>
           <StyledInput
             type="text"
-            placeholder="Enter your ID"
+            placeholder="Please enter your ID"
             value={userId}
             onChange={handleIdChange}
             readOnly={isAuthVerified} // 인증 완료 후 수정 불가
@@ -246,7 +246,7 @@ export default function EmailVerification({
         <Label>Email Address</Label>
         <StyledInput
           type="email"
-          placeholder="Enter your email"
+          placeholder="Please enter your email address"
           value={email}
           onChange={handleEmailChange}
           readOnly={isAuthVerified}

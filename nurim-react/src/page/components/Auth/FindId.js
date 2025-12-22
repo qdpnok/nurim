@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import EmailVerification from "../components/EmailVerification";
+import EmailVerification from "./EmailVerification";
 
 const FormSection = styled.div`
   width: 100%;
