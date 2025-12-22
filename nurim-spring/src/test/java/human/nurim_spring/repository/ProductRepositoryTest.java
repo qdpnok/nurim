@@ -98,24 +98,25 @@ class ProductRepositoryTest {
         Pageable pageable = PageRequest.of(0,8);
 
         // 리뷰와 함께 조회: 카테고리
-        Page<ProductReviewSummaryDto> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
 
-        for(ProductReviewSummaryDto result: productWithReviewsStats){
-            product = result.product();
-            Long reviewCount = result.reviewCount();
-            Double avg = result.avgScope();
+        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
+
+        for(Object[] result: productWithReviewsStats){
+            product = (Product) result[0];
+            Long reviewCount = (Long) result[1];
+            Double avg = (Double) result[2];
 
             log.info("상품 정보: {}", product.getName());
             log.info("리뷰 정보: {}, {}", reviewCount, avg);
         }
 
         // 리뷰와 함께 조회: 전체
-        productWithReviewsStats = productRepository.findAllProduct(pageable);
+        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
 
-        for(ProductReviewSummaryDto result: productWithReviewsStats){
-            product = result.product();
-            Long reviewCount = result.reviewCount();
-            Double avg = result.avgScope();
+        for(Object[] result: productWithReviewsStats){
+            product = (Product) result[0];
+            Long reviewCount = (Long) result[1];
+            Double avg = (Double) result[2];
 
             log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
             log.info("리뷰 정보: {}, {}", reviewCount, avg);

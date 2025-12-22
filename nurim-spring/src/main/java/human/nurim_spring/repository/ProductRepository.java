@@ -19,33 +19,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // product join reviews (subcategory)
     @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r WHERE p.subCategory = :subCategory GROUP BY p")
-    Page<ProductReviewSummaryDto> findProductWithReviewStats(SubCategory subCategory, Pageable pageable);
+    List<Object[]> findProductWithReviewStats(SubCategory subCategory, Pageable pageable);
 
     // product join reviews (all)
-     @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r GROUP BY p")
+     @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p JOIN p.subCategory sc JOIN sc.mainCategory mc LEFT JOIN p.reviews r WHERE mc.num=2 GROUP BY p")
      List<Object[]> findAllProductWithReviewStats(Pageable pageable);
-
-    @Query(
-            value = """
-        SELECT new human.nurim_spring.dto.ProductReviewSummaryDto(
-            p,
-            COUNT(r),
-            AVG(r.scope)
-        )
-        FROM Product p
-        JOIN p.subCategory sc
-        JOIN sc.mainCategory mc
-        LEFT JOIN p.reviews r
-        WHERE mc.num = 2
-        GROUP BY p
-    """,
-            countQuery = """
-        SELECT COUNT(p)
-        FROM Product p
-        JOIN p.subCategory sc
-        JOIN sc.mainCategory mc
-        WHERE mc.num = 2
-    """
-    )
-    Page<ProductReviewSummaryDto> findAllProduct(Pageable pageable);
 }

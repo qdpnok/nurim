@@ -32,7 +32,7 @@ public class ProductService {
 
     // 상품 목록 조회: 상품 정보 + 리뷰
     public List<ProductListResDto> getList(Long id, Integer pageNum) {
-        Page<ProductReviewSummaryDto> results;
+        List<Object[]> results;
         List<ProductListResDto> list = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum-1, 9);
@@ -45,14 +45,14 @@ public class ProductService {
         } else {
 //            List<>
 
-            results = productRepository.findAllProduct(pageable);
+            results = productRepository.findAllProductWithReviewStats(pageable);
         }
 
         // product join reviews 해서 productListResDto로 convert
-        for(ProductReviewSummaryDto result: results) {
-            Product product = result.product();
-            Long count = result.reviewCount();
-            Double avg = result.avgScope();
+        for(Object[] result: results) {
+            Product product = (Product) result[0];
+            Long count = (Long) result[1];
+            Double avg = (Double) result[2];
 
             list.add(convertProductToProductListRes(product, count, avg == null ? 0 : avg));
         }
