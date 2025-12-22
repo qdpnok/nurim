@@ -5,7 +5,7 @@ import LogIn from "./page/Login";
 import SignUp from "./page/SignUp";
 import FindIP from "./page/FindPage";
 import "./App.css";
-import { AuthProvider } from "./page/AuthContext";
+import { AuthProvider } from "./page/components/AuthContext";
 import ScrollToTop from "./ScrollToTop";
 import React from "react";
 

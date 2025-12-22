@@ -5,7 +5,7 @@ import api from "../api/Axios";
 import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
 import nurimw from "../img/Logo.w.PNG";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./components/AuthContext";
 import ceye from "../img/Ceye.png";
 import oeye from "../img/Oeye.png";
 import { Link } from "react-router-dom";
@@ -95,25 +95,6 @@ const Description = styled.p`
   opacity: 0.9;
   font-family: "Zen Kaku Gothic Antique", sans-serif;
   margin-bottom: 60px;
-`;
-
-const SliderIndicators = styled.div`
-  display: flex;
-  gap: 8px;
-
-  div {
-    height: 4px;
-    background-color: white;
-    border-radius: 2px;
-  }
-  .active {
-    width: 40px;
-    opacity: 1;
-  }
-  .inactive {
-    width: 20px;
-    opacity: 0.5;
-  }
 `;
 
 // --- 우측 흰색 로그인 카드 ---

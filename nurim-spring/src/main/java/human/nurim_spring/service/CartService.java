@@ -14,7 +14,9 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
 
     // 카트 아이템 추가
+    public void add() {
 
+    }
     // 카트 내 아이템 조회
     // 카트 내 아이템 전체 삭제
     // 카트 아이템 선택 삭제

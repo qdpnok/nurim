@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./components/AuthContext";
 
-import HeaderBasic from "./HeaderBasic";
-import HeaderLogin from "./HeaderLogin";
-import Footer from "./Footer";
+import HeaderBasic from "./components/HeaderBasic";
+import HeaderLogin from "./components/HeaderLogin";
+import Footer from "./components/Footer";
 
 const Wrapper = styled.div`
   display: flex;

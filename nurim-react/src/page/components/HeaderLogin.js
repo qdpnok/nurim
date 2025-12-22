@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import MainLogo from "../img/MainLogo.png";
-import SearchIcon from "../img/search.png";
-import mypage from "../img/mypageicon.png";
-import heart from "../img/hearticon.png";
-import bell from "../img/bellicon.png";
-import cart from "../img/carticon.png";
+import MainLogo from "../../img/MainLogo.png";
+import SearchIcon from "../../img/search.png";
+import mypage from "../../img/mypageicon.png";
+import heart from "../../img/hearticon.png";
+import bell from "../../img/bellicon.png";
+import cart from "../../img/carticon.png";
 
 const Container = styled.div`
   width: 100%;
