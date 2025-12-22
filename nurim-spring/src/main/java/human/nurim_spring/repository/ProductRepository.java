@@ -36,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         JOIN p.subCategory sc
         JOIN sc.mainCategory mc
         LEFT JOIN p.reviews r
-        WHERE mc.mainCategoryNum = 2
+        WHERE mc.num = 2
         GROUP BY p
     """,
             countQuery = """
@@ -44,7 +44,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         FROM Product p
         JOIN p.subCategory sc
         JOIN sc.mainCategory mc
-        WHERE mc.mainCategoryNum = 2
+        WHERE mc.num = 2
     """
     )
     Page<ProductReviewSummaryDto> findAllProduct(Pageable pageable);
