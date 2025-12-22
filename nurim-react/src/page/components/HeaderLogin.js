@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import MainLogo from "../../img/MainLogo.png";
 import SearchIcon from "../../img/search.png";
 import mypage from "../../img/mypageicon.png";
@@ -215,7 +215,6 @@ const SearchImg = styled.img`
 
 export const HeaderLogin = () => {
   const [search, setSearch] = useState("");
-  const nav = useNavigate();
 
   // 로그아웃 핸들러
   const handleLogout = () => {
