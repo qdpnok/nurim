@@ -3,7 +3,7 @@ import Layout from "./page/Layout";
 import HOME from "./page/Home";
 import LogIn from "./page/Login";
 import SignUp from "./page/SignUp";
-import FindIP from "./page/Findidpa";
+import FindIP from "./page/FindPage";
 import "./App.css";
 import { AuthProvider } from "./page/AuthContext";
 import ScrollToTop from "./ScrollToTop";

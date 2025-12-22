@@ -146,3 +146,5 @@ INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, pric
 
 -- 6. [안전 모드]
 SET SQL_SAFE_UPDATES = 1;
+
+INSERT INTO member (member_num, next_pay, quit_date, reg_date, id, email, name, phone_num, pwd, sub_state, use_yn, status) VALUES (0, NULL, NULL, NULL, 'TestadminId', 'wjdehdrbs777@naver.com', '정동균', '010-9940-6408', '$2a$10$xBWL5bnFJ/5BCHQ0z60Uc.dDeNhr4Lx3OZULHJo0QPpM0O6oBh/T.', NULL, NULL, 'MEMBER');
