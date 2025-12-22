@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-// 사용할 아이콘 이미지들을 import 해주세요.
-import { Link, useNavigate } from "react-router-dom";
-import MainLogo from "../img/MainLogo.png";
-import SearchIcon from "../img/search.png";
-import mypage from "../img/mypageicon.png";
-import heart from "../img/hearticon.png";
-import bell from "../img/bellicon.png";
-import cart from "../img/carticon.png";
+import { Link } from "react-router-dom";
+import MainLogo from "../../../img/MainLogo.png";
+import SearchIcon from "../../../img/search.png";
+import mypage from "../../../img/mypageicon.png";
+import heart from "../../../img/hearticon.png";
+import bell from "../../../img/bellicon.png";
+import cart from "../../../img/carticon.png";
 
 const Container = styled.div`
   width: 100%;
@@ -216,7 +215,6 @@ const SearchImg = styled.img`
 
 export const HeaderLogin = () => {
   const [search, setSearch] = useState("");
-  const nav = useNavigate();
 
   // 로그아웃 핸들러
   const handleLogout = () => {

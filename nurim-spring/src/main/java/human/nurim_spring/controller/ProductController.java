@@ -1,7 +1,7 @@
 package human.nurim_spring.controller;
 
-import human.nurim_spring.dto.ProductResDto;
-import human.nurim_spring.entity.Product;
+import human.nurim_spring.dto.MainProductResDto;
+import human.nurim_spring.dto.ProductListResDto;
 import human.nurim_spring.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,30 +18,30 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    // 상품 목록 조회:
+    // 상품 조회:
     // 카테고리 번호가 있으면 해당 제품만, 없으면 전체
     // required = false 파라미터 없어도 된다
     @GetMapping("/list")
-    public ResponseEntity<List<ProductResDto>> list(@RequestParam(required = false) Long id) {
-        return ResponseEntity.ok(productService.getList(id));
+    public ResponseEntity<List<ProductListResDto>> list(@RequestParam(required = false) Long id, @RequestParam(required = false)Integer page) {
+        return ResponseEntity.ok(productService.getList(id, page));
     }
 
     // 상품 상세 조회
     @GetMapping("/detail/{num}")
-    public ResponseEntity<ProductResDto> get(@PathVariable Long num) {
+    public ResponseEntity<ProductListResDto> get(@PathVariable Long num) {
         return ResponseEntity.ok(productService.get(num));
     }
 
     // hotdeal 4개 조회
     @GetMapping("/hotdeal")
-    public ResponseEntity<List<ProductResDto>> listHotdeal() {
+    public ResponseEntity<List<ProductListResDto>> listHotdeal() {
         return ResponseEntity.ok(productService.getListTop4DiscountRate());
     }
 
     // 검색 API
-    // http://localhost:8080/api/product/search?keyword=삼성
+    // http://localhost:8080/api/product/search?keyword=비스포크
     @GetMapping("/search")
-    public ResponseEntity<List<ProductResDto>> search(@RequestParam(value = "keyword") String keyword) {
+    public ResponseEntity<List<ProductListResDto>> search(@RequestParam(value = "keyword") String keyword) {
         return ResponseEntity.ok(productService.searchProducts(keyword));
     }
 }

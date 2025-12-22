@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -73,14 +72,7 @@ public class AuthService {
         if(memberRepository.existsByEmail(email)) {
             throw new BusinessException("DUPLICATE_EMAIL", "이미 사용 중인 이메일입니다.");
         }
-
-        // 1. 번호 생성 및 Redis 저장 (즉시 처리)
-        String number = createNumber();
-        redisTemplate.opsForValue().set(email, number, 3, TimeUnit.MINUTES);
-        log.info("회원가입 인증번호 저장 완료: {} -> {}", email, number);
-
-        // 2. 메일 발송 위임 (비동기 - 기다리지 않음)
-        mailService.sendMail(email, number);
+        sendVerificationCodeInternal(email);
     }
 
     // [수정] 이메일 인증번호 검증: 회원 가입
@@ -88,7 +80,6 @@ public class AuthService {
         if (!verifyCode(email, code)) {
             throw new BusinessException("CODE_MISMATCH", "인증 코드가 일치하지 않거나 만료되었습니다.");
         }
-        // 인증 성공 후 Redis에서 바로 삭제할지, 만료되게 둘지는 선택 사항 (보통 재사용 방지를 위해 삭제)
         redisTemplate.delete(email);
     }
 
@@ -97,11 +88,7 @@ public class AuthService {
         if(!memberRepository.existsByEmail(email)){
             throw new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다.");
         }
-
-        String number = createNumber();
-        redisTemplate.opsForValue().set(email, number, 3, TimeUnit.MINUTES);
-
-        mailService.sendMail(email, number);
+        sendVerificationCodeInternal(email);
     }
 
     // [수정] 이메일 인증번호 검증: 아이디 찾기
@@ -117,31 +104,40 @@ public class AuthService {
         return member.getId();
     }
 
-    // [수정] 이메일 인증번호 전송: 비밀번호 재설정
-    public void resetPwdSend(String email, String id) {
-        if(!memberRepository.existsByIdAndEmail(id, email)){
+    // [기존] 이메일 인증번호 전송: 비밀번호 재설정 (이메일만 체크)
+    public void resetPwdSend(String email) {
+        if(!memberRepository.existsByEmail(email)){
             throw new BusinessException("NOT_EXIST_MEMBER", "회원 정보가 일치하지 않습니다.");
         }
-
-        String number = createNumber();
-        redisTemplate.opsForValue().set(email, number, 3, TimeUnit.MINUTES);
-
-        mailService.sendMail(email, number);
+        sendVerificationCodeInternal(email);
     }
 
-    // [수정] 이메일 인증번호 검증: 비밀번호 재설정
+    // [추가] 이메일 인증번호 전송: 비밀번호 재설정 (아이디 + 이메일 체크)
+    public void resetPwdSend(String email, String memberId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "회원 정보가 일치하지 않습니다."));
+
+        if (!member.getId().equals(memberId)) {
+            throw new BusinessException("NOT_EXIST_MEMBER", "아이디와 이메일 정보가 일치하지 않습니다.");
+        }
+
+        sendVerificationCodeInternal(email);
+    }
+
+    // ★★★ [누락된 부분 추가] 비밀번호 재설정 인증번호 검증 ★★★
     public void resetPwdValid(String email, String code) {
         if (!verifyCode(email, code)) {
             throw new BusinessException("CODE_MISMATCH", "인증 코드가 일치하지 않거나 만료되었습니다.");
         }
 
-        // 인증 성공 시 Redis에 "RESET_AUTH:이메일" 키 저장 (10분 유효)
+        // 인증 성공 시 Redis에 "RESET_AUTH:이메일" 키 저장 (10분간 비밀번호 변경 권한 부여)
         redisTemplate.opsForValue().set("RESET_AUTH:" + email, "TRUE", 10, TimeUnit.MINUTES);
         redisTemplate.delete(email); // 사용한 인증번호는 삭제
     }
 
-    // 비밀번호 재설정
+    // 비밀번호 재설정 (최종)
     public void resetPwd(String email, String pwd) {
+        // RESET_AUTH 토큰 확인
         String isAuth = redisTemplate.opsForValue().get("RESET_AUTH:" + email);
         if (isAuth == null) {
             throw new BusinessException("UNAUTHORIZED_ACCESS", "인증 시간이 만료되었거나 인증되지 않았습니다.");
@@ -149,13 +145,21 @@ public class AuthService {
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
         member.setPwd(passwordEncoder.encode(pwd));
         memberRepository.save(member);
 
-        redisTemplate.delete("RESET_AUTH:" + email);
+        redisTemplate.delete("RESET_AUTH:" + email); // 재설정 후 권한 삭제
     }
 
-    // ... (convert 메서드들은 그대로 유지)
+    // [공통 내부 메소드] 인증번호 생성 및 메일 발송
+    private void sendVerificationCodeInternal(String email) {
+        String number = createNumber();
+        redisTemplate.opsForValue().set(email, number, 3, TimeUnit.MINUTES);
+        log.info("인증번호 전송: {} -> {}", email, number);
+        mailService.sendMail(email, number);
+    }
+
     private Member convertSignUpReqToMember(SignUpReqDto dto) {
         return Member.builder()
                 .id(dto.getId())

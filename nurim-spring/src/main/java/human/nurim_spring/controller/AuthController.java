@@ -71,8 +71,17 @@ public class AuthController {
 
     // [변경] 인증 메일 전송: 비밀번호 재설정
     @PostMapping("/resetPwd-send-email")
-    public ResponseEntity<Void> resetPwdSend(@RequestParam String email, @RequestParam String id) {
-        authService.resetPwdSend(email, id);
+    public ResponseEntity<Void> resetPwdSend(
+            @RequestParam String email,
+            @RequestParam(required = false) String memberId // 아이디 추가 (선택적)
+    ) {
+        if (memberId != null && !memberId.isEmpty()) {
+            // 아이디와 이메일이 일치하는지 확인하는 로직 수행
+            authService.resetPwdSend(email, memberId);
+        } else {
+            // 기존 로직 (이메일만 확인)
+            authService.resetPwdSend(email);
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -87,12 +96,8 @@ public class AuthController {
     // [변경] 비밀번호 재설정
     // DTO에 email 필드가 포함되어 있어야 합니다.
     @PostMapping("/resetPwd")
-    public ResponseEntity<Boolean> resetPwd(@RequestBody PwdDto pwd) {
-        // PwdDto에 email 필드가 없다고 가정하면, DTO를 수정하거나 @RequestParam으로 받아야 함
-        // 여기서는 PwdDto 안에 email이 있다고 가정하거나, 프론트에서 email을 어떻게 줄지에 따라 수정 필요
-        // 예시: DTO 안에 email이 없다면 아래처럼 수정
-
-        // 주의: 이 부분은 PwdDto 구조에 따라 수정하세요. (email 필수)
+    public ResponseEntity<Void> resetPwd(@RequestBody PwdDto pwd) {
+        // PwdDto에 email, pwd가 있어야 함
         authService.resetPwd(pwd.getEmail(), pwd.getPwd());
         return ResponseEntity.ok().build();
     }

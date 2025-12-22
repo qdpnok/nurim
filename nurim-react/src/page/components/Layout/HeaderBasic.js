@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SearchIcon from "../img/search.png";
+import SearchIcon from "../../../img/search.png";
 import { Link } from "react-router-dom";
-import MainLogo from "../img/MainLogo.png";
+import MainLogo from "../../../img/MainLogo.png";
 
 const Container = styled.div`
   width: 100%; /* 화면 꽉 차게 설정 */

@@ -1,20 +1,18 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
-public class Cart {
+@Entity
+@Getter @Setter @NoArgsConstructor
+public class SubscriptionWishlist {
     @Id
-    @Column(name = "cart_num")
+    @Column(name = "subscription_wishlist_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long num;
 
@@ -23,6 +21,6 @@ public class Cart {
     @JoinColumn(name = "member_num")
     private Member member;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems = new ArrayList<>();
+    @OneToMany(mappedBy = "subscriptionWishlist", cascade = CascadeType.ALL)
+    private List<SubscriptionWishlistItem> subscriptionWishlistItems = new ArrayList<>();
 }

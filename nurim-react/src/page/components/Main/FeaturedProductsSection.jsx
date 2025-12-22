@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import acLg021 from "../../img/ac_lg_01.png";
-import washLg051 from "../../img/wash_lg_05.png";
-import refSam021 from "../../img/ref_sam_02.png";
-import tvsam01 from "../../img/sam_tv_01.png";
+import acLg021 from "../../../img/ac_lg_01.png";
+import washLg051 from "../../../img/wash_lg_05.png";
+import refSam021 from "../../../img/ref_sam_02.png";
+import tvsam01 from "../../../img/sam_tv_01.png";
 
 const Section = styled.section`
   margin-top: 90px;

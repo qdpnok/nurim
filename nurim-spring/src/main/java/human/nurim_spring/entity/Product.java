@@ -3,6 +3,8 @@ package human.nurim_spring.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity @Getter
 @Setter
 @ToString
@@ -46,4 +48,7 @@ public class Product {
 
     // 1219 할인률 컬럼 추가
     private Long discountRate;
+
+    @OneToMany(mappedBy = "product")
+    private List<Reviews> reviews;
 }
