@@ -148,4 +148,3 @@ INSERT INTO product (sub_category_num, brand, name, serial_num, img, price, pric
 SET SQL_SAFE_UPDATES = 1;
 
 INSERT INTO member (member_num, next_pay, quit_date, reg_date, id, email, name, phone_num, pwd, sub_state, use_yn, status) VALUES (0, NULL, NULL, NULL, 'TestadminId', 'wjdehdrbs777@naver.com', '정동균', '010-9940-6408', '$2a$10$xBWL5bnFJ/5BCHQ0z60Uc.dDeNhr4Lx3OZULHJo0QPpM0O6oBh/T.', NULL, NULL, 'MEMBER');
-INSERT INTO member (next_pay, quit_date, reg_date, id, email, name, phone_num, pwd, sub_state, use_yn, status) VALUES (NULL, NULL, NULL, 'TKDAL', 'nurim1210.test@gmail.com', '이상미', '010-1234-1234', '$10$Lko47Y9Yi5BeIjd2OcG8.uO9v15couHrbq.D1/eUlwbx7d6VtSoNS', NULL, NULL, 'MEMBER');
