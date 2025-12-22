@@ -32,7 +32,7 @@ public class ProductService {
 
 
 
-        Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum-1, 8);
+        Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum-1, 9);
 
         // 서브 카테고리 id가 있으면 서브카테고리로 검색, 아니면 전부 검색
         if(id != null) {
