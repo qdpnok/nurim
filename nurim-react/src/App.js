@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./page/Layout";
 import HOME from "./page/Home";
@@ -7,11 +8,15 @@ import FindIP from "./page/FindPage";
 import "./App.css";
 import { AuthProvider } from "./page/components/Auth/AuthContext";
 import ScrollToTop from "./ScrollToTop";
-import React from "react";
+
+// [수정 1] 경로 수정: ../styles -> ./styles
+import { GlobalStyle } from "./styles/AuthStyles";
 
 function App() {
   return (
     <AuthProvider>
+      <GlobalStyle />
+
       <Router>
         <ScrollToTop />
         <Routes>
