@@ -260,7 +260,7 @@ export const HeaderLogin = () => {
           Home
         </NavItem>
         <NavItem to="/list1">All product</NavItem>
-        <NavItem to="/list2">Subscriptions</NavItem>
+        <NavItem to="/Subscriptions"></NavItem>
         <NavItem to="/qa">Purchase</NavItem>
         <NavItem to="/list3">QnA</NavItem>
       </Navbar>
