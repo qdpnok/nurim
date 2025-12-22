@@ -18,10 +18,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findTop4ByOrderByDiscountRateDesc();
 
     // product join reviews (subcategory)
-    @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p LEFT JOIN p.reviews r WHERE p.subCategory = :subCategory GROUP BY p")
+    @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p JOIN p.subCategory sc JOIN sc.mainCategory mc LEFT JOIN p.reviews r WHERE p.subCategory = :subCategory AND mc.num=2 GROUP BY p")
     List<Object[]> findProductWithReviewStats(SubCategory subCategory, Pageable pageable);
 
-    // product join reviews (all)
+    // product join reviews (all) 구매가만 조회
      @Query("SELECT p, COUNT(r), AVG(r.scope) FROM Product p JOIN p.subCategory sc JOIN sc.mainCategory mc LEFT JOIN p.reviews r WHERE mc.num=2 GROUP BY p")
      List<Object[]> findAllProductWithReviewStats(Pageable pageable);
 }
