@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // product join reviews (subcategory)
     @Query("""
-            SELECT purchase.num, subscription.num, purchase.name, purchase.price,
+            SELECT purchase.num, subscription.num, purchase.name, purchase.price, subscription.price,
             purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
             subscription.discountRate, COALESCE(COUNT(r.product.serialNum), 0) AS count,
             COALESCE(AVG(r.scope), 0) AS avg
@@ -37,7 +37,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             WHERE pmc.name = '구매'
             AND smc.name = '구독'
             AND purchase.subCategory.name = :scName
-            GROUP BY purchase.num, subscription.num, purchase.name, purchase.price,
+            GROUP BY purchase.num, subscription.num, purchase.name, purchase.price, subscription.price,
                      purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
                      subscription.discountRate
             """)
@@ -45,7 +45,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // product join reviews (all) 구매가만 조회
     @Query("""
-            SELECT purchase.num, subscription.num, purchase.name, purchase.price,
+            SELECT purchase.num, subscription.num, purchase.name, purchase.price, subscription.price,
             purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
             subscription.discountRate, COALESCE(COUNT(r.product.serialNum), 0) AS count,
             COALESCE(AVG(r.scope), 0) AS avg
@@ -62,7 +62,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
             WHERE pmc.name = '구매'
             AND smc.name = '구독'
-            GROUP BY purchase.num, subscription.num, purchase.name, purchase.price,
+            GROUP BY purchase.num, subscription.num, purchase.name, purchase.price, subscription.price,
                      purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
                      subscription.discountRate
             """)
