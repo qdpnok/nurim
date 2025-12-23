@@ -97,7 +97,7 @@ class ProductServiceTest {
         List<ProductListResDto> productList = productService.searchProducts("비스포크");
         log.info("'비스포크' 이름으로 검색: {}", productList);
 
-        List<ProductListResDto> pList = productService.getList(1L, 0);
+        List<ProductListResDto> pList = productService.getList(7L, null);
         for (ProductListResDto e: pList) {
             log.info("상품 정보: {}, {}, {}", e.getName(), e.getScopeCount(), e.getScopeAvg());
         }

@@ -2,19 +2,14 @@ package human.nurim_spring.service;
 
 import human.nurim_spring.dto.MainProductResDto;
 import human.nurim_spring.dto.ProductListResDto;
-import human.nurim_spring.dto.ProductReviewSummaryDto;
-import human.nurim_spring.entity.MainCategory;
 import human.nurim_spring.entity.Product;
-import human.nurim_spring.entity.Reviews;
 import human.nurim_spring.entity.SubCategory;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.MainCategoryRepository;
 import human.nurim_spring.repository.ProductRepository;
-import human.nurim_spring.repository.ReviewsRepository;
 import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +21,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final MainCategoryRepository mainCategoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final ProductRepository productRepository;
 
@@ -35,16 +29,17 @@ public class ProductService {
         List<Object[]> results;
         List<ProductListResDto> list = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum-1, 9);
+        Pageable pageable = PageRequest.of(pageNum == null? 0 : pageNum-1, 9);
 
         // 서브 카테고리 id가 있으면 서브카테고리로 검색, 아니면 구매 상품 모두 검색
         if(id != null) {
+            // 상품 가격 모두 구매가로 표기되기 때문에 구독 카테고리 구매로 변경
+            if(id < 6) id +=5;
+
             SubCategory subCategory = subCategoryRepository.findById(id)
                     .orElseThrow(() -> new BusinessException("NOT_EXIST_SUBCATEGORY", "존재하지 않는 서브 카테고리입니다."));
             results = productRepository.findProductWithReviewStats(subCategory, pageable);
         } else {
-//            List<>
-
             results = productRepository.findAllProductWithReviewStats(pageable);
         }
 
