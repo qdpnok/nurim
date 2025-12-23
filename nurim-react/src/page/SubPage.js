@@ -14,6 +14,82 @@ import tv from "../img/C_tv.png";
 import wash from "../img/C_wt.png";
 import air from "../img/C_air.png";
 
+// --- 스타일 컴포넌트 ---
+const Container = styled.div`
+  width: 1440px;
+  margin: 0 auto;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ProductGrid = styled.div`
+  width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-bottom: 50px;
+`;
+
+const SearchBox = styled.div`
+  width: 1200px;
+  height: 90px;
+  background-color: #f3f3f5;
+  border-radius: 10px;
+  margin: 60px 0;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  box-sizing: border-box;
+  color: #999;
+  font-size: 16px;
+`;
+
+const ContentHeader = styled.div`
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+`;
+
+const Breadcrumb = styled.div`
+  font-size: 14px;
+  color: #888;
+  display: flex;
+  gap: 8px;
+
+  span.active {
+    color: #333;
+    font-weight: bold;
+  }
+`;
+
+const PageTitle = styled.h2`
+  width: 1200px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #000;
+  margin: 30px 0;
+  text-align: left;
+`;
+
+const LineSeparator = styled.div`
+  width: 1200px;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin-bottom: 0px;
+`;
+
+const EmptyMessage = styled.div`
+  width: 100%;
+  padding: 50px;
+  text-align: center;
+  color: #888;
+`;
+
 const CATEGORIES = [
   { name: "에어컨", img: ac },
   { name: "냉장고", img: ref },
@@ -43,18 +119,42 @@ const SubscribePage = ({ type }) => {
         `http://localhost:8222/api/product/list?category=${selectedCategory}`
       );
 
-      const mappedData = response.data.productListDtoList.map((item) => ({
-        id: type === "subscription" ? item.sNum : item.pNum,
-        category: item.category,
-        image: item.img,
-        alt: item.name,
-        name: item.name,
-        price: `${item.price.toLocaleString()}won`,
-        discount: item.pDiscountRate ? `-${item.pDiscountRate}% off` : null,
-        spec: item.spec,
-        reviewCount: item.scopeCount,
-        rating: item.scopeAvg,
-      }));
+      // [디버깅] 서버에서 실제 변수명이 어떻게 오는지 콘솔에서 확인해보세요!
+      console.log(
+        "🔥 서버 원본 데이터(첫번째):",
+        response.data.productListDtoList[0]
+      );
+
+      // 2. 데이터 변환 (매핑)
+      const mappedData = response.data.productListDtoList.map((item) => {
+        // [핵심 수정] 대소문자 혼용 방지: snum, sNum, pnum, pNum 모두 체크
+        // 구독 페이지면 snum, 구매 페이지면 pnum을 우선적으로 가져옵니다.
+        let targetId;
+        if (type === "subscription") {
+          targetId = item.snum || item.sNum || item.id;
+        } else {
+          targetId = item.pnum || item.pNum || item.id;
+        }
+
+        return {
+          id: targetId, // 여기서 undefined가 안 뜨게 잡아야 합니다.
+          category: item.category,
+          image: item.img,
+          alt: item.name,
+          name: item.name,
+          price: item.price ? `${item.price.toLocaleString()}won` : "0won",
+          // 할인율도 대소문자 체크
+          discount:
+            item.pdiscountrate || item.pDiscountRate
+              ? `-${item.pdiscountrate || item.pDiscountRate}% off`
+              : null,
+          spec: item.spec,
+          reviewCount: item.scopeCount || item.scopecount || 0,
+          rating: item.scopeAvg || item.scopeavg || 0,
+        };
+      });
+
+      setProducts(mappedData);
 
       // 3. 변환된 데이터를 state에 저장
       setProducts(mappedData);
@@ -154,79 +254,3 @@ const SubscribePage = ({ type }) => {
 };
 
 export default SubscribePage;
-
-// --- 스타일 컴포넌트 ---
-const Container = styled.div`
-  width: 1440px;
-  margin: 0 auto;
-  padding-top: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ProductGrid = styled.div`
-  width: 1200px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start;
-  margin-bottom: 50px;
-`;
-
-const SearchBox = styled.div`
-  width: 1200px;
-  height: 90px;
-  background-color: #f3f3f5;
-  border-radius: 10px;
-  margin: 60px 0;
-  display: flex;
-  align-items: center;
-  padding-left: 30px;
-  box-sizing: border-box;
-  color: #999;
-  font-size: 16px;
-`;
-
-const ContentHeader = styled.div`
-  width: 1200px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 10px;
-`;
-
-const Breadcrumb = styled.div`
-  font-size: 14px;
-  color: #888;
-  display: flex;
-  gap: 8px;
-
-  span.active {
-    color: #333;
-    font-weight: bold;
-  }
-`;
-
-const PageTitle = styled.h2`
-  width: 1200px;
-  font-size: 28px;
-  font-weight: 800;
-  color: #000;
-  margin: 30px 0;
-  text-align: left;
-`;
-
-const LineSeparator = styled.div`
-  width: 1200px;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin-bottom: 0px;
-`;
-
-const EmptyMessage = styled.div`
-  width: 100%;
-  padding: 50px;
-  text-align: center;
-  color: #888;
-`;
