@@ -97,7 +97,6 @@ class ProductRepositoryTest {
 
         Pageable pageable = PageRequest.of(0,8);
 
-        // 리뷰와 함께 조회: 카테고리
 
         List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
 

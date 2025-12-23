@@ -33,7 +33,8 @@ public class ReviewService {
         Product product = productRepository.findById(productNum)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
-        List<Reviews> reviewsList = reviewsRepository.findByProduct(product);
+        String serialNum = product.getSerialNum();
+        List<Reviews> reviewsList = reviewsRepository.findAllBySerialNum(serialNum);
         List<ReviewResDto> result = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
