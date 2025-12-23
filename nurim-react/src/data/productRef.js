@@ -1,4 +1,4 @@
-export const productRefrigerator = {
+export const productRef = {
   // [ID: 1] 삼성전자 양문형냉장고 (23년 3월형)
   1: [
     {
@@ -31,21 +31,15 @@ export const productRefrigerator = {
     },
     {
       category: "아이스메이커",
-      items: [
-        { label: "트레이", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "트레이", value: "O", fullWidth: true }],
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
-      items: [
-        { label: "탈취(교체형)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "탈취(교체형)", value: "O", fullWidth: true }],
     },
     {
       category: "수납",
@@ -58,9 +52,7 @@ export const productRefrigerator = {
     },
     {
       category: "선반특징",
-      items: [
-        { label: "접이식선반", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "접이식선반", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
@@ -112,9 +104,7 @@ export const productRefrigerator = {
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
@@ -145,7 +135,11 @@ export const productRefrigerator = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-LGE-M870SGS4512009", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-LGE-M870SGS4512009",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HM07003-20107A", fullWidth: true },
       ],
     },
@@ -173,15 +167,11 @@ export const productRefrigerator = {
     },
     {
       category: "AI기능",
-      items: [
-        { label: "AI절전모드", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "AI절전모드", value: "O", fullWidth: true }],
     },
     {
       category: "편의기능",
-      items: [
-        { label: "오토클로징", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "오토클로징", value: "O", fullWidth: true }],
     },
     {
       category: "냉각",
@@ -195,9 +185,7 @@ export const productRefrigerator = {
     },
     {
       category: "아이스메이커",
-      items: [
-        { label: "자동(직수형)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "자동(직수형)", value: "O", fullWidth: true }],
     },
     {
       category: "얼음모양",
@@ -228,9 +216,7 @@ export const productRefrigerator = {
     },
     {
       category: "선반특징",
-      items: [
-        { label: "접이식선반", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "접이식선반", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
@@ -246,7 +232,11 @@ export const productRefrigerator = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-LGE-W825GBB4822404", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-LGE-W825GBB4822404",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HM07003-24120", fullWidth: true },
       ],
     },
@@ -289,9 +279,7 @@ export const productRefrigerator = {
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
@@ -304,9 +292,7 @@ export const productRefrigerator = {
     },
     {
       category: "수납",
-      items: [
-        { label: "기본야채실", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "기본야채실", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
@@ -321,8 +307,16 @@ export const productRefrigerator = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "상세설명 / 판매 사이트 문의", fullWidth: true },
-        { label: "안전확인인증", value: "상세설명 / 판매 사이트 문의", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "상세설명 / 판매 사이트 문의",
+          fullWidth: true,
+        },
+        {
+          label: "안전확인인증",
+          value: "상세설명 / 판매 사이트 문의",
+          fullWidth: true,
+        },
       ],
     },
   ],
@@ -365,21 +359,15 @@ export const productRefrigerator = {
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
-      items: [
-        { label: "탈취(반영구)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "탈취(반영구)", value: "O", fullWidth: true }],
     },
     {
       category: "수납",
-      items: [
-        { label: "기본야채실", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "기본야채실", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
@@ -437,15 +425,11 @@ export const productRefrigerator = {
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
-      items: [
-        { label: "탈취(교체형)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "탈취(교체형)", value: "O", fullWidth: true }],
     },
     {
       category: "수납",
@@ -458,9 +442,7 @@ export const productRefrigerator = {
     },
     {
       category: "선반특징",
-      items: [
-        { label: "접이식선반", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "접이식선반", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
@@ -506,9 +488,7 @@ export const productRefrigerator = {
     },
     {
       category: "AI기능",
-      items: [
-        { label: "AI절전모드", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "AI절전모드", value: "O", fullWidth: true }],
     },
     {
       category: "냉각",
@@ -521,21 +501,15 @@ export const productRefrigerator = {
     },
     {
       category: "아이스메이커",
-      items: [
-        { label: "트레이", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "트레이", value: "O", fullWidth: true }],
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
-      items: [
-        { label: "항균핸들", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "항균핸들", value: "O", fullWidth: true }],
     },
     {
       category: "수납",
@@ -558,7 +532,11 @@ export const productRefrigerator = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-LGE-T873MWW1112205", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-LGE-T873MWW1112205",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HU071871-22012", fullWidth: true },
       ],
     },
@@ -611,9 +589,7 @@ export const productRefrigerator = {
     },
     {
       category: "선반특징",
-      items: [
-        { label: "접이식선반", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "접이식선반", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
@@ -625,9 +601,7 @@ export const productRefrigerator = {
     },
     {
       category: "편의기능",
-      items: [
-        { label: "오토오픈도어", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "오토오픈도어", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
@@ -673,9 +647,7 @@ export const productRefrigerator = {
     },
     {
       category: "아이스메이커",
-      items: [
-        { label: "미탑재", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "미탑재", value: "O", fullWidth: true }],
     },
     {
       category: "얼음모양",
@@ -686,9 +658,7 @@ export const productRefrigerator = {
     },
     {
       category: "정수기능",
-      items: [
-        { label: "오토필", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "오토필", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
@@ -717,7 +687,11 @@ export const productRefrigerator = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "상세설명 / 판매 사이트 문의", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "상세설명 / 판매 사이트 문의",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HM07003-16069C", fullWidth: true },
       ],
     },
@@ -770,9 +744,7 @@ export const productRefrigerator = {
     },
     {
       category: "얼음모양",
-      items: [
-        { label: "큐브(각얼음)", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "큐브(각얼음)", value: "O", fullWidth: true }],
     },
     {
       category: "위생",
@@ -793,9 +765,7 @@ export const productRefrigerator = {
     },
     {
       category: "선반특징",
-      items: [
-        { label: "접이식선반", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "접이식선반", value: "O", fullWidth: true }],
     },
     {
       category: "내부디자인",
