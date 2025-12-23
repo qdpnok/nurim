@@ -27,11 +27,15 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 상품 목록 조회: 상품 정보 + 리뷰
-    public ProductListResDto getList(String category, Integer pageNum) {
+    public ProductListResDto getList(String category, Integer pageNum, Integer size) {
         Page<Object[]> results;
         List<ProductListDto> list = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(pageNum == null? 0 : pageNum-1, 9);
+// size가 없으면 기본값 20으로 설정 (혹은 9)
+        int pageSize = (size == null) ? 20 : size;
+
+        // 고정된 9 대신 pageSize 변수 사용
+        Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum - 1, pageSize);
 
         // 서브 카테고리 이름이 있으면 서브 카테고리로 검색, 아니면 구매 상품 모두 검색
         if(category != null) {
@@ -48,7 +52,7 @@ public class ProductService {
             list.add(convertResultToProductListRes(result, category));
         }
 
-        return new ProductListResDto(list, results.getTotalPages(), results.getTotalElements(), pageNum == null? 1 : pageNum, 9);
+        return new ProductListResDto(list, results.getTotalPages(), results.getTotalElements(), pageNum == null? 1 : pageNum, pageSize);
     }
 
     // 상품 목록 조회: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
