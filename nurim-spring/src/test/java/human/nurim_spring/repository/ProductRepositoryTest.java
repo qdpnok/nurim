@@ -73,10 +73,8 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("상품 조회 테스트")
-    public void getListTest() {
-        initTest();
-
+    @DisplayName("상품 조회: 상품만 조회")
+    public void findProductTest() {
         SubCategory sc = subCategoryRepository.findById(1L).get();
         List<Product> list = productRepository.findBySubCategory(sc);
 
@@ -93,49 +91,42 @@ class ProductRepositoryTest {
         list = productRepository.findTop4ByOrderByDiscountRateDesc();
         log.info("할인률 top 4: {}", list.toString());
 
+    }
+
+    @Test
+    @DisplayName("상품 조회: 리뷰와 함께 조회")
+    public void findProductWithReviewTest() {
+        initTest();
+
         Pageable pageable = PageRequest.of(0,8);
 
         // 리뷰와 함께 조회: 카테고리
-//        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
-//
-//        for(Object[] result: productWithReviewsStats){
-//            product = (Product) result[0];
-//            Long reviewCount = (Long) result[1];
-//            Double avg = (Double) result[2];
-//
-//            log.info("상품 정보: {}", product.getName());
-//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-//        }
+        Page<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats("세탁기", pageable);
+
+        for(Object[] result: productWithReviewsStats.getContent()){
+            log.info("상품 정보: {}", result[2]);
+            log.info("리뷰 정보: {}, {}", result[11], result[12]);
+        }
 
         // 리뷰와 함께 조회: 전체
-//        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
-//
-//        for(Object[] result: productWithReviewsStats){
-//            product = (Product) result[0];
-//            Long reviewCount = (Long) result[1];
-//            Double avg = (Double) result[2];
-//
-//            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
-//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-//        }
+        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
 
-        // 구매 상품 id, 구독 상품 id 붙이기 + 리뷰 정보
-        Page<Object[]> pList = productRepository.findTest(sc.getName(), pageable);
-        int totalPages = pList.getTotalPages();
+        for(Object[] result: productWithReviewsStats.getContent()){
 
-        log.info("총 상품 리스트: {}", totalPages);
-
-        for (Object[] result : pList.getContent()) {
-            Long pNum = (Long) result[0];
-            Long sNum = (Long) result[1];
-            String name = (String) result[2];
-            Long price = (Long) result[3];
-            Long count = (Long) result[9];
-            Double scopeAvg = (Double) result[10];
-
-
-            log.info("구매 상품 id: {}, 구독 상품 id: {}, 상품 이름: {}, 가격: {}, 리뷰 개수: {}, 평균 리뷰 점수: {}", pNum, sNum, name, price, count, scopeAvg);
+            log.info("상품 정보: {}", result[2]);
+            log.info("리뷰 정보: {}, {}", result[11], result[12]);
         }
+
+        Object[] findTest = productRepository.findTest(3L)
+                .orElseThrow(() -> new RuntimeException("없음"));
+
+        log.info("조회 결과: {}", findTest);
+
+        Product product = (Product) findTest[0];
+        Double scopeAvg = (Double) findTest[1];
+
+        log.info("세부 정보 검색\n상품 이름: {}, 가격: {}", product.getName(), product.getPrice());
+        log.info("평균 별점: {}", scopeAvg);
     }
 
 }
