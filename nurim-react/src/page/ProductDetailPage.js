@@ -2,13 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import ProductSpecTable from "./components/ProductSpecTable"; // 위에서 만든 컴포넌트
 
-import { LGStandByMe } from "../data/productSpecs";
+import { LGRefrigerator } from "../data/productRef";
 
 const ProductDetailPage = () => {
   return (
     <PageContainer>
       <h2>제품 상세 스펙</h2>
-      <ProductSpecTable data={LGStandByMe} />
+      <ProductSpecTable data={LGRefrigerator} />
     </PageContainer>
   );
 };
