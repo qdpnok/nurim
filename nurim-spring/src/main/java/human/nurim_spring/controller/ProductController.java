@@ -22,7 +22,7 @@ public class ProductController {
     // 카테고리 번호가 있으면 해당 제품만, 없으면 전체
     // required = false 파라미터 없어도 된다
     @GetMapping("/list")
-    public ResponseEntity<List<ProductListResDto>> list(@RequestParam(required = false) String category, @RequestParam(required = false)Integer page) {
+    public ResponseEntity<ProductListResDto> list(@RequestParam(required = false) String category, @RequestParam(required = false)Integer page) {
         return ResponseEntity.ok(productService.getList(category, page));
     }
 

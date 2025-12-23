@@ -1,6 +1,7 @@
 package human.nurim_spring.service;
 
 import human.nurim_spring.dto.MainProductResDto;
+import human.nurim_spring.dto.ProductListDto;
 import human.nurim_spring.dto.ProductListResDto;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.SubCategory;
@@ -10,6 +11,7 @@ import human.nurim_spring.repository.ProductRepository;
 import human.nurim_spring.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,25 +27,28 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 상품 목록 조회: 상품 정보 + 리뷰
-    public List<ProductListResDto> getList(String scName, Integer pageNum) {
-        List<Object[]> results;
-        List<ProductListResDto> list = new ArrayList<>();
+    public ProductListResDto getList(String category, Integer pageNum) {
+        Page<Object[]> results;
+        List<ProductListDto> list = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(pageNum == null? 0 : pageNum-1, 9);
 
         // 서브 카테고리 이름이 있으면 서브 카테고리로 검색, 아니면 구매 상품 모두 검색
-        if(scName != null) {
+        if(category != null) {
+            String scName;
+            scName = category.equals("세탁기") ? "세탁기/건조기" : category;
+
             results = productRepository.findProductWithReviewStats(scName, pageable);
         } else {
             results = productRepository.findAllProductWithReviewStats(pageable);
         }
 
         // product join reviews 해서 productListResDto로 convert
-        for(Object[] result: results) {
-            list.add(convertResultToProductListRes(result));
+        for(Object[] result: results.getContent()) {
+            list.add(convertResultToProductListRes(result, category));
         }
 
-        return list;
+        return new ProductListResDto(list, results.getTotalPages(), results.getTotalElements(), pageNum == null? 1 : pageNum, 9);
     }
 
     // 상품 목록 조회: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
@@ -104,10 +109,11 @@ public class ProductService {
                 .build();
     }
 
-    private ProductListResDto convertResultToProductListRes(Object[] result) {
-        return ProductListResDto.builder()
+    private ProductListDto convertResultToProductListRes(Object[] result, String category) {
+        return ProductListDto.builder()
                 .pNum((Long) result[0])
                 .sNum((Long) result[1])
+                .category(category)
                 .name((String) result[2])
                 .price((Long) result[3])
                 .img((String) result[4])
