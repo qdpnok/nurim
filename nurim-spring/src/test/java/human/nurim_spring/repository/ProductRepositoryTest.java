@@ -1,6 +1,5 @@
 package human.nurim_spring.repository;
 
-import human.nurim_spring.dto.ProductListDto;
 import human.nurim_spring.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

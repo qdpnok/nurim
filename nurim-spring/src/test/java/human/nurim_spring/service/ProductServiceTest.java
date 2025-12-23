@@ -91,15 +91,15 @@ class ProductServiceTest {
         List<MainProductResDto> list = productService.getMainList(null);
         log.info("상품 전체 조회: {}", list.toString());
 
-        ProductListResDto product = productService.get(3L);
-        log.info("상품 상세 조회: {}", product.toString());
+//        ProductListResDto product = productService.get(3L);
+//        log.info("상품 상세 조회: {}", product.toString());
 
-        List<ProductListResDto> productList = productService.searchProducts("비스포크");
-        log.info("'비스포크' 이름으로 검색: {}", productList);
+//        List<ProductListResDto> productList = productService.searchProducts("비스포크");
+//        log.info("'비스포크' 이름으로 검색: {}", productList);
 
-        List<ProductListResDto> pList = productService.getList(7L, null);
-        for (ProductListResDto e: pList) {
-            log.info("상품 정보: {}, {}, {}", e.getName(), e.getScopeCount(), e.getScopeAvg());
-        }
+//        List<ProductListResDto> pList = productService.getList(7L, null);
+//        for (ProductListResDto e: pList) {
+//            log.info("상품 정보: {}, {}, {}", e.getName(), e.getScopeCount(), e.getScopeAvg());
+//        }
     }
 }

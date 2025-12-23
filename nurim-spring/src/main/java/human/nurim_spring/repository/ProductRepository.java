@@ -1,9 +1,7 @@
 package human.nurim_spring.repository;
 
-import human.nurim_spring.dto.ProductListDto;
 import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.SubCategory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // product join reviews (subcategory)
     @Query("""
             SELECT purchase.num, subscription.num, purchase.name, purchase.price,
-            purchase.img, purchase.serialNum, purchase.spec, purchase.discountRate,
+            purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
             subscription.discountRate, COALESCE(COUNT(r.product.serialNum), 0) AS count,
             COALESCE(AVG(r.scope), 0) AS avg
             FROM Product purchase
@@ -38,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             AND smc.name = '구독'
             AND purchase.subCategory.name = :scName
             GROUP BY purchase.num, subscription.num, purchase.name, purchase.price,
-                     purchase.img, purchase.serialNum, purchase.spec, purchase.discountRate,
+                     purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
                      subscription.discountRate
             """)
     List<Object[]> findProductWithReviewStats(String scName, Pageable pageable);
@@ -46,7 +44,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // product join reviews (all) 구매가만 조회
     @Query("""
             SELECT purchase.num, subscription.num, purchase.name, purchase.price,
-            purchase.img, purchase.serialNum, purchase.spec, purchase.discountRate,
+            purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
             subscription.discountRate, COALESCE(COUNT(r.product.serialNum), 0) AS count,
             COALESCE(AVG(r.scope), 0) AS avg
             FROM Product purchase
@@ -63,7 +61,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             WHERE pmc.name = '구매'
             AND smc.name = '구독'
             GROUP BY purchase.num, subscription.num, purchase.name, purchase.price,
-                     purchase.img, purchase.serialNum, purchase.spec, purchase.discountRate,
+                     purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
                      subscription.discountRate
             """)
      List<Object[]> findAllProductWithReviewStats(Pageable pageable);
@@ -93,26 +91,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             """)
      List<Object[]> findTest(String scName, Pageable pageable);
 
-
-//    @Query("""
-//    SELECT new human.nurim_spring.dto.product.ProductListDto(
-//        purchase.num,
-//        subscription.num,
-//        purchase.name,
-//        purchase.price,
-//        purchase.img
-//    )
-//    FROM Product purchase
-//    JOIN purchase.subCategory psc
-//    JOIN psc.mainCategory pmc
-//
-//    JOIN Product subscription
-//        ON purchase.serialNum = subscription.serialNum
-//    JOIN subscription.subCategory ssc
-//    JOIN ssc.mainCategory smc
-//
-//    WHERE pmc.name = '구매'
-//      AND smc.name = '구독'
-//""")
-//    List<ProductListDto> findPurchaseListWithSubscriptionId();
 }
