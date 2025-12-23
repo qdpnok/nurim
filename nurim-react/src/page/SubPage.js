@@ -105,7 +105,8 @@ const SubscribePage = ({ type }) => {
   const [products, setProducts] = useState([]); // 초기값은 빈 배열
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
-  const [page, setPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(10);
 
   const fetchProducts = async () => {
     try {
@@ -115,7 +116,7 @@ const SubscribePage = ({ type }) => {
 
       // 1. 서버 요청
       const response = await axios.get(
-        `http://localhost:8222/api/product/list?category=${selectedCategory}`
+        `http://localhost:8222/api/product/list?category=${selectedCategory}&page=${currentPage}`
       );
 
       const mappedData = response.data.productListDtoList.map((item) => ({
@@ -130,6 +131,9 @@ const SubscribePage = ({ type }) => {
         reviewCount: item.scopeCount,
         rating: item.scopeAvg,
       }));
+
+      setCurrentPage(response.data.currentPage);
+      setTotalPages(response.data.totalPages);
 
       // 3. 변환된 데이터를 state에 저장
       setProducts(mappedData);
@@ -147,12 +151,19 @@ const SubscribePage = ({ type }) => {
   }, []);
 
   useEffect(() => {
-    console.log(selectedCategory);
-    fetchProducts();
+    setCurrentPage(1);
   }, [selectedCategory]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage]);
 
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory(categoryName);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   // 로딩 중이거나 에러 발생 시 처리
@@ -223,7 +234,11 @@ const SubscribePage = ({ type }) => {
         )}
       </ProductGrid>
 
-      <Pagination />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </Container>
   );
 };
