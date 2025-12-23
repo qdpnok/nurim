@@ -165,7 +165,7 @@ const ProductItem = ({ product, type }) => {
     <ProductCard>
       {/* [수정] 이미지 래퍼에 onClick 추가 */}
       <ProductImageWrapper onClick={handleItemClick}>
-        <ProductImage src={product.image} alt={product.alt} />
+        <ProductImage src={`/images/${product.image}`} alt={product.alt} />
       </ProductImageWrapper>
 
       {/* [수정] 제목 텍스트에 onClick 추가 */}
