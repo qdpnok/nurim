@@ -3,7 +3,6 @@ import styled from "styled-components";
 import SearchIcon from "../../../img/search.png";
 import { Link } from "react-router-dom";
 import MainLogo from "../../../img/MainLogo.png";
-import SubscribePage from "../../SubscribePage";
 
 const Container = styled.div`
   width: 100%; /* 화면 꽉 차게 설정 */
@@ -188,7 +187,7 @@ export const HeaderBasic = () => {
           Home
         </NavItem>
         <NavItem to="/list1">All product</NavItem>
-        <NavItem to="/Subscriptions">Subscriptions</NavItem>
+        <NavItem to="/Subpage">Subscriptions</NavItem>
         <NavItem to="/qa">Purchase</NavItem>
         <NavItem to="/list3">QnA</NavItem>
       </Navbar>

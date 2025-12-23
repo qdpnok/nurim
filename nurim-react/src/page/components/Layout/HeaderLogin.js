@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import MainLogo from "../../../img/MainLogo.png";
 import SearchIcon from "../../../img/search.png";
 import mypage from "../../../img/mypageicon.png";
-import heart from "../../../img/hearticon.png";
 import bell from "../../../img/bellicon.png";
 import cart from "../../../img/carticon.png";
 
@@ -260,7 +259,7 @@ export const HeaderLogin = () => {
           Home
         </NavItem>
         <NavItem to="/list1">All product</NavItem>
-        <NavItem to="/Subscriptions"></NavItem>
+        <NavItem to="/Subpage"></NavItem>
         <NavItem to="/qa">Purchase</NavItem>
         <NavItem to="/list3">QnA</NavItem>
       </Navbar>
