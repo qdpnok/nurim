@@ -1,5 +1,7 @@
-export const productTv = {
-  // [ID: 1] LG 스탠바이미
+export const productTvSpecs = {
+  // --- [구독] TV (ID: 1 ~ 10) ---
+
+  // 1. LG 스탠바이미
   1: [
     {
       category: "기본 정보",
@@ -78,7 +80,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 2] LG 스탠바이미 GO
+  // 2. LG 스탠바이미 GO
   2: [
     {
       category: "기본 정보",
@@ -160,7 +162,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 3] 삼성 QLED TV (55인치)
+  // 3. Samsung 더 세리프 (55)
   3: [
     {
       category: "기본 정보",
@@ -232,7 +234,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 4] 삼성 QLED 65인치
+  // 4. Samsung 더 프레임 (65)
   4: [
     {
       category: "기본 정보",
@@ -309,7 +311,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 5] 삼성 더 세로
+  // 5. Samsung 더 세로 (43)
   5: [
     {
       category: "기본 정보",
@@ -385,7 +387,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 6] LG OLED 55인치
+  // 6. LG 올레드 포제 (55)
   6: [
     {
       category: "기본 정보",
@@ -465,7 +467,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 7] LG OLED Evo C3
+  // 7. LG 올레드 Evo (65)
   7: [
     {
       category: "기본 정보",
@@ -559,7 +561,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 8] 삼성 Neo QLED 8K
+  // 8. Samsung Neo QLED 8K (85)
   8: [
     {
       category: "기본 정보",
@@ -648,7 +650,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 9] 삼성 QLED 75인치
+  // 9. Samsung 더 프레임 (75)
   9: [
     {
       category: "기본 정보",
@@ -743,7 +745,7 @@ export const productTv = {
     },
   ],
 
-  // [ID: 10] LG QNED 75인치
+  // 10. LG QNED 75
   10: [
     {
       category: "기본 정보",
@@ -836,3 +838,16 @@ export const productTv = {
     },
   ],
 };
+
+// [추가] 구매 페이지용 데이터 매핑 (51~60번)
+// 구매용 상품 클릭 시에도 동일한 스펙 데이터를 보여주기 위해 키를 복사합니다.
+productTvSpecs[51] = productTvSpecs[1];
+productTvSpecs[52] = productTvSpecs[2];
+productTvSpecs[53] = productTvSpecs[3];
+productTvSpecs[54] = productTvSpecs[4];
+productTvSpecs[55] = productTvSpecs[5];
+productTvSpecs[56] = productTvSpecs[6];
+productTvSpecs[57] = productTvSpecs[7];
+productTvSpecs[58] = productTvSpecs[8];
+productTvSpecs[59] = productTvSpecs[9];
+productTvSpecs[60] = productTvSpecs[10];

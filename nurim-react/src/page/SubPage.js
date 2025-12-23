@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios"; // axios 추가
-// 컴포넌트
+import axios from "axios";
+
+// 컴포넌트 import
 import CategoryFilter from "./components/Sub/CategoryFilter";
 import ProductItem from "./components/Sub/ProductItem";
 import Pagination from "./components/Sub/Pagination";
-// 이미지
+
+// 이미지 import (경로 확인 필요)
 import ac from "../img/C_ac.png";
 import ref from "../img/C_ref.png";
 import tv from "../img/C_tv.png";
 import wash from "../img/C_wt.png";
 import air from "../img/C_air.png";
 
-// --- 페이지 레이아웃용 스타일 ---
+// --- 스타일 컴포넌트 ---
 const Container = styled.div`
   width: 1440px;
   margin: 0 auto;
@@ -22,7 +24,6 @@ const Container = styled.div`
   align-items: center;
 `;
 
-// 기존 SectionContainer.products 역할을 대체
 const ProductGrid = styled.div`
   width: 1200px;
   display: flex;
@@ -119,18 +120,42 @@ const SubscribePage = ({ type }) => {
         `http://localhost:8222/api/product/list?category=${selectedCategory}&page=${currentPage}`
       );
 
-      const mappedData = response.data.productListDtoList.map((item) => ({
-        id: type === "subscription" ? item.sNum : item.pNum,
-        category: item.category,
-        image: item.img,
-        alt: item.name,
-        name: item.name,
-        price: `${item.price.toLocaleString()}won`,
-        discount: item.pDiscountRate ? `-${item.pDiscountRate}% off` : null,
-        spec: item.spec,
-        reviewCount: item.scopeCount,
-        rating: item.scopeAvg,
-      }));
+      // [디버깅] 서버에서 실제 변수명이 어떻게 오는지 콘솔에서 확인해보세요!
+      console.log(
+        "🔥 서버 원본 데이터(첫번째):",
+        response.data.productListDtoList[0]
+      );
+
+      // 2. 데이터 변환 (매핑)
+      const mappedData = response.data.productListDtoList.map((item) => {
+        // [핵심 수정] 대소문자 혼용 방지: snum, sNum, pnum, pNum 모두 체크
+        // 구독 페이지면 snum, 구매 페이지면 pnum을 우선적으로 가져옵니다.
+        let targetId;
+        if (type === "subscription") {
+          targetId = item.snum || item.sNum || item.id;
+        } else {
+          targetId = item.pnum || item.pNum || item.id;
+        }
+
+        return {
+          id: targetId, // 여기서 undefined가 안 뜨게 잡아야 합니다.
+          category: item.category,
+          image: item.img,
+          alt: item.name,
+          name: item.name,
+          price: item.price ? `${item.price.toLocaleString()}won` : "0won",
+          // 할인율도 대소문자 체크
+          discount:
+            item.pdiscountrate || item.pDiscountRate
+              ? `-${item.pdiscountrate || item.pDiscountRate}% off`
+              : null,
+          spec: item.spec,
+          reviewCount: item.scopeCount || item.scopecount || 0,
+          rating: item.scopeAvg || item.scopeavg || 0,
+        };
+      });
+
+      setProducts(mappedData);
 
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
