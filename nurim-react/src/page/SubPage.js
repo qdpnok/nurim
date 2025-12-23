@@ -105,6 +105,7 @@ const SubscribePage = ({ type }) => {
   const [products, setProducts] = useState([]); // 초기값은 빈 배열
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
+  const [page, setPage] = useState(0);
 
   const fetchProducts = async () => {
     try {
@@ -116,8 +117,6 @@ const SubscribePage = ({ type }) => {
       const response = await axios.get(
         `http://localhost:8222/api/product/list?category=${selectedCategory}`
       );
-
-      console.log(response);
 
       const mappedData = response.data.productListDtoList.map((item) => ({
         id: type === "subscription" ? item.sNum : item.pNum,
@@ -155,12 +154,6 @@ const SubscribePage = ({ type }) => {
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory(categoryName);
   };
-
-  // [수정 4] 필터링 대상 변경 (productData -> products)
-  // const filteredProducts =
-  //   selectedCategory === "전체"
-  //     ? products
-  //     : products.filter((product) => product.category === selectedCategory);
 
   // 로딩 중이거나 에러 발생 시 처리
   if (loading)
