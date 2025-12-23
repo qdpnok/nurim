@@ -106,73 +106,61 @@ const SubscribePage = ({ type }) => {
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
 
+  const fetchProducts = async () => {
+    try {
+      setError(null);
+      setProducts([]);
+      setLoading(true);
+
+      // 1. 서버 요청
+      const response = await axios.get(
+        `http://localhost:8222/api/product/list?category=${selectedCategory}`
+      );
+
+      console.log(response);
+
+      const mappedData = response.data.productListDtoList.map((item) => ({
+        id: type === "subscription" ? item.sNum : item.pNum,
+        category: item.category,
+        image: item.img,
+        alt: item.name,
+        name: item.name,
+        price: `${item.price.toLocaleString()}won`,
+        discount: item.pDiscountRate ? `-${item.pDiscountRate}% off` : null,
+        spec: item.spec,
+        reviewCount: item.scopeCount,
+        rating: item.scopeAvg,
+      }));
+
+      // 3. 변환된 데이터를 state에 저장
+      setProducts(mappedData);
+    } catch (e) {
+      console.error("Error fetching data:", e);
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // [수정 3] 서버에서 데이터 가져오기 (useEffect)
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setError(null);
-        setProducts([]);
-        setLoading(true);
-
-        // 1. 서버 요청
-        const response = await axios.get(
-          `http://localhost:8222/api/product/list?${selectedCategory}`
-        );
-
-        console.log(response);
-
-        const mappedData = response.data.productListDtoList.map((item) => ({
-          id: item.pNum,
-          category: getCategoryName(item.sNum),
-          image: item.img,
-          alt: item.name,
-          name: item.name,
-          price: `${item.price.toLocaleString()}won`,
-          discount: item.pDiscountRate ? `-${item.pDiscountRate}% off` : null,
-          spec: item.spec,
-          reviewCount: item.scopeCount,
-          rating: item.scopeAvg,
-        }));
-
-        // 3. 변환된 데이터를 state에 저장
-        setProducts(mappedData);
-      } catch (e) {
-        console.error("Error fetching data:", e);
-        setError(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
   }, []);
 
-  const getCategoryName = (sNum) => {
-    switch (sNum) {
-      case 1:
-        return "TV";
-      case 2:
-        return "냉장고";
-      case 3:
-        return "세탁기";
-      case 4:
-        return "에어컨";
-      case 5:
-        return "공기청정기";
-      default:
-        return "기타"; // 매칭되는게 없을 때
-    }
-  };
+  useEffect(() => {
+    console.log(selectedCategory);
+    fetchProducts();
+  }, [selectedCategory]);
 
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory(categoryName);
   };
 
   // [수정 4] 필터링 대상 변경 (productData -> products)
-  const filteredProducts =
-    selectedCategory === "전체"
-      ? products
-      : products.filter((product) => product.category === selectedCategory);
+  // const filteredProducts =
+  //   selectedCategory === "전체"
+  //     ? products
+  //     : products.filter((product) => product.category === selectedCategory);
 
   // 로딩 중이거나 에러 발생 시 처리
   if (loading)
@@ -233,8 +221,8 @@ const SubscribePage = ({ type }) => {
 
       {/* 2. 상품 리스트 영역 */}
       <ProductGrid>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((data) => (
+        {products.length > 0 ? (
+          products.map((data) => (
             <ProductItem key={data.id} product={data} type={type} />
           ))
         ) : (
