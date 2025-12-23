@@ -1,20 +1,17 @@
 package human.nurim_spring.repository;
 
-import human.nurim_spring.dto.ProductReviewSummaryDto;
 import human.nurim_spring.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @SpringBootTest
 @Transactional
@@ -97,30 +94,43 @@ class ProductRepositoryTest {
 
         Pageable pageable = PageRequest.of(0,8);
 
-
-        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
-
-        for(Object[] result: productWithReviewsStats){
-            product = (Product) result[0];
-            Long reviewCount = (Long) result[1];
-            Double avg = (Double) result[2];
-
-            log.info("상품 정보: {}", product.getName());
-            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-        }
+        // 리뷰와 함께 조회: 카테고리
+//        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
+//
+//        for(Object[] result: productWithReviewsStats){
+//            product = (Product) result[0];
+//            Long reviewCount = (Long) result[1];
+//            Double avg = (Double) result[2];
+//
+//            log.info("상품 정보: {}", product.getName());
+//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+//        }
 
         // 리뷰와 함께 조회: 전체
-        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
+//        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
+//
+//        for(Object[] result: productWithReviewsStats){
+//            product = (Product) result[0];
+//            Long reviewCount = (Long) result[1];
+//            Double avg = (Double) result[2];
+//
+//            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
+//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+//        }
 
-        for(Object[] result: productWithReviewsStats){
-            product = (Product) result[0];
-            Long reviewCount = (Long) result[1];
-            Double avg = (Double) result[2];
+        // 구매 상품 id, 구독 상품 id 붙이기 + 리뷰 정보
+        List<Object[]> pList = productRepository.findTest(sc.getName(), pageable);
 
-            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
-            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+        for (Object[] result : pList) {
+            Long pNum = (Long) result[0];
+            Long sNum = (Long) result[1];
+            String name = (String) result[2];
+            Long price = (Long) result[3];
+            Long count = (Long) result[9];
+            Double scopeAvg = (Double) result[10];
+
+            log.info("구매 상품 id: {}, 구독 상품 id: {}, 상품 이름: {}, 가격: {}, 리뷰 개수: {}, 평균 리뷰 점수: {}", pNum, sNum, name, price, count, scopeAvg);
         }
-
     }
 
 }

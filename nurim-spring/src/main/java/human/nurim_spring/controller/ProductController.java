@@ -22,26 +22,26 @@ public class ProductController {
     // 카테고리 번호가 있으면 해당 제품만, 없으면 전체
     // required = false 파라미터 없어도 된다
     @GetMapping("/list")
-    public ResponseEntity<List<ProductListResDto>> list(@RequestParam(required = false) Long id, @RequestParam(required = false)Integer page) {
-        return ResponseEntity.ok(productService.getList(id, page));
+    public ResponseEntity<List<ProductListResDto>> list(@RequestParam(required = false) String category, @RequestParam(required = false)Integer page) {
+        return ResponseEntity.ok(productService.getList(category, page));
     }
 
     // 상품 상세 조회
     @GetMapping("/detail/{num}")
-    public ResponseEntity<ProductListResDto> get(@PathVariable Long num) {
+    public ResponseEntity<MainProductResDto> get(@PathVariable Long num) {
         return ResponseEntity.ok(productService.get(num));
     }
 
     // hotdeal 4개 조회
     @GetMapping("/hotdeal")
-    public ResponseEntity<List<ProductListResDto>> listHotdeal() {
+    public ResponseEntity<List<MainProductResDto>> listHotdeal() {
         return ResponseEntity.ok(productService.getListTop4DiscountRate());
     }
 
     // 검색 API
     // http://localhost:8080/api/product/search?keyword=비스포크
     @GetMapping("/search")
-    public ResponseEntity<List<ProductListResDto>> search(@RequestParam(value = "keyword") String keyword) {
+    public ResponseEntity<List<MainProductResDto>> search(@RequestParam(value = "keyword") String keyword) {
         return ResponseEntity.ok(productService.searchProducts(keyword));
     }
 }

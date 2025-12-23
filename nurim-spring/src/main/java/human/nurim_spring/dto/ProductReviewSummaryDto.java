@@ -1,5 +1,4 @@
 package human.nurim_spring.dto;
-
 import human.nurim_spring.entity.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
