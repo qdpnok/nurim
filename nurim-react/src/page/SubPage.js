@@ -12,8 +12,6 @@ import tv from "../img/C_tv.png";
 import wash from "../img/C_wt.png";
 import air from "../img/C_air.png";
 
-const tvimg = "https://placehold.co/256x256";
-
 // --- 페이지 레이아웃용 스타일 ---
 const Container = styled.div`
   width: 1440px;
@@ -121,37 +119,16 @@ const SubscribePage = ({ type }) => {
           "http://localhost:8222/api/product/list"
         );
 
-        // 2. 데이터 변환 (백엔드 DTO -> 프론트엔드 형식)
         const mappedData = response.data.map((item) => ({
-          // [ID 매핑] pNum -> id
           id: item.pNum,
-
-          // [카테고리 변환] sNum(숫자) -> category(문자열)
-          // sNum이 DB에서 몇 번인지에 따라 아래 숫자를 수정해주세요!
           category: getCategoryName(item.sNum),
-
-          // [이미지] img -> image
           image: item.img,
-
-          // [대체텍스트] 보통 이름과 같게 설정
           alt: item.name,
-
-          // [상품명] name -> name
           name: item.name,
-
-          // [가격 포맷팅] 1000000 -> "1,000,000won"
           price: `${item.price.toLocaleString()}won`,
-
-          // [할인율 포맷팅] 10 -> "-10% off"
           discount: item.pDiscountRate ? `-${item.pDiscountRate}% off` : null,
-
-          // [스펙] spec -> spec
           spec: item.spec,
-
-          // [리뷰 수] scopeCount -> reviewCount
           reviewCount: item.scopeCount,
-
-          // [별점] scopeAvg -> rating
           rating: item.scopeAvg,
         }));
 
@@ -168,8 +145,6 @@ const SubscribePage = ({ type }) => {
     fetchProducts();
   }, []);
 
-  // [중요] sNum(숫자)을 한글 카테고리명으로 바꿔주는 함수
-  // DB에 저장된 sNum 값에 맞춰서 숫자를 수정해주세요.
   const getCategoryName = (sNum) => {
     switch (sNum) {
       case 1:
