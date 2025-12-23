@@ -22,6 +22,82 @@ const CATEGORIES = [
   { name: "공기청정기", img: air },
 ];
 
+// --- 스타일 컴포넌트 ---
+const Container = styled.div`
+  width: 1440px;
+  margin: 0 auto;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const ProductGrid = styled.div`
+  width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-bottom: 50px;
+`;
+const SearchBox = styled.div`
+  width: 1200px;
+  height: 90px;
+  background-color: #f3f3f5;
+  border-radius: 10px;
+  margin: 60px 0;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  box-sizing: border-box;
+  color: #999;
+  font-size: 16px;
+`;
+const ContentHeader = styled.div`
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+`;
+const Breadcrumb = styled.div`
+  font-size: 14px;
+  color: #888;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  height: 24px;
+  line-height: 1;
+  span.active {
+    color: #333;
+    font-weight: bold;
+  }
+`;
+const PageTitle = styled.h2`
+  width: 1200px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #000;
+  margin: 30px 0;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  line-height: 1;
+`;
+
+const LineSeparator = styled.div`
+  width: 1200px;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin-bottom: 0px;
+`;
+const EmptyMessage = styled.div`
+  width: 100%;
+  padding: 50px;
+  text-align: center;
+  color: #888;
+`;
+
 const SubPage = ({ type }) => {
   const [selectedCategory, setSelectedCategory] = useState("에어컨");
   const [allProducts, setAllProducts] = useState([]);
@@ -223,71 +299,3 @@ const SubPage = ({ type }) => {
 };
 
 export default SubPage;
-
-// --- 스타일 컴포넌트 ---
-const Container = styled.div`
-  width: 1440px;
-  margin: 0 auto;
-  padding-top: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const ProductGrid = styled.div`
-  width: 1200px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start;
-  margin-bottom: 50px;
-`;
-const SearchBox = styled.div`
-  width: 1200px;
-  height: 90px;
-  background-color: #f3f3f5;
-  border-radius: 10px;
-  margin: 60px 0;
-  display: flex;
-  align-items: center;
-  padding-left: 30px;
-  box-sizing: border-box;
-  color: #999;
-  font-size: 16px;
-`;
-const ContentHeader = styled.div`
-  width: 1200px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 10px;
-`;
-const Breadcrumb = styled.div`
-  font-size: 14px;
-  color: #888;
-  display: flex;
-  gap: 8px;
-  span.active {
-    color: #333;
-    font-weight: bold;
-  }
-`;
-const PageTitle = styled.h2`
-  width: 1200px;
-  font-size: 28px;
-  font-weight: 800;
-  color: #000;
-  margin: 30px 0;
-  text-align: left;
-`;
-const LineSeparator = styled.div`
-  width: 1200px;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin-bottom: 0px;
-`;
-const EmptyMessage = styled.div`
-  width: 100%;
-  padding: 50px;
-  text-align: center;
-  color: #888;
-`;

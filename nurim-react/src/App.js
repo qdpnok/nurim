@@ -10,8 +10,6 @@ import ProductDetailPage from "./page/ProductDetailPage";
 import "./App.css";
 import { AuthProvider } from "./page/components/Auth/AuthContext";
 import ScrollToTop from "./ScrollToTop";
-
-// [수정 1] 경로 수정: ../styles -> ./styles
 import { GlobalStyle } from "./styles/AuthStyles";
 
 function App() {
