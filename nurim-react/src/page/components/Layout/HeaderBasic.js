@@ -186,10 +186,10 @@ export const HeaderBasic = () => {
         <NavItem to="/" $bold>
           Home
         </NavItem>
-        <NavItem to="/list1">All product</NavItem>
-        <NavItem to="/Subpage">Subscriptions</NavItem>
-        <NavItem to="/qa">Purchase</NavItem>
-        <NavItem to="/list3">QnA</NavItem>
+        <NavItem to="/product">All product</NavItem>
+        <NavItem to="/subscriptions">Subscriptions</NavItem>
+        <NavItem to="/purchase">Purchase</NavItem>
+        <NavItem to="/QnA">QnA</NavItem>
       </Navbar>
     </Container>
   );
