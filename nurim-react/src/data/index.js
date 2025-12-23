@@ -1,3 +1,6 @@
+// src/data/index.js (새로 만들기)
+
+// 1. 쪼개진 파일들을 import 합니다.
 import { productTv } from "./productTv";
 import { productRef } from "./productRef";
 import { productAc } from "./productAc";
