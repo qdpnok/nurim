@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import yellowStar from "../../../img/yellowstaricon.png"; // 경로 확인 필요
 import greyStar from "../../../img/graystaricon.png"; // 경로 확인 필요
+import { useNavigate } from "react-router-dom";
 
 // --- Styled Components (이 파일에서만 쓰이는 스타일) ---
 const ProductCard = styled.div`
@@ -110,11 +111,40 @@ const CompareButton = styled.button`
   }
 `;
 
-const ProductItem = ({ product }) => {
+const ProductItem = ({ product, type }) => {
+  const nav = useNavigate();
   const rating = product.rating || 0;
 
+  // [핵심] 한글 카테고리명 -> 데이터 파일 키값 매핑
+  const getCategoryKey = (koreanName) => {
+    switch (koreanName) {
+      case "TV":
+        return "productTv";
+      case "냉장고":
+        return "productRef";
+      case "에어컨":
+        return "productAc";
+      case "세탁기":
+        return "productWt";
+      case "공기청정기":
+        return "productAir";
+      default:
+        return "productTv"; // 기본값
+    }
+  };
+
+  const handleItemClick = () => {
+    const basePath = type === "subscription" ? "/subscriptions" : "/purchase";
+
+    // 여기서 영어 키값(productAc 등)을 가져옵니다.
+    const categoryKey = getCategoryKey(product.category);
+
+    // 최종 URL 이동: /subscriptions/productAc/1
+    nav(`${basePath}/${categoryKey}/${product.id}`);
+  };
+
   return (
-    <ProductCard>
+    <ProductCard onClick={handleItemClick}>
       <ProductImageWrapper>
         <ProductImage src={product.image} alt={product.alt} />
       </ProductImageWrapper>

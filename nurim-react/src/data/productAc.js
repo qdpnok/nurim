@@ -1,5 +1,5 @@
 // 1
-export const samsungAirCon17Specs = [
+export const productAc = [
   {
     category: "기본 정보",
     items: [

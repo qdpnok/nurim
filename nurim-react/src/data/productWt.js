@@ -1,4 +1,4 @@
-export const productWasher = {
+export const productWt = {
   // [ID: 1] LG전자 오브제컬렉션 워시타워 (23년 4월형)
   1: [
     {
@@ -50,9 +50,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -63,9 +61,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -111,7 +107,11 @@ export const productWasher = {
       category: "건조기 조작",
       items: [
         { label: "일체형조작부", value: "O" },
-        { label: "조작부", value: "올인원컨트롤(와이드터치스크롤)", fullWidth: true },
+        {
+          label: "조작부",
+          value: "올인원컨트롤(와이드터치스크롤)",
+          fullWidth: true,
+        },
       ],
     },
     {
@@ -138,9 +138,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -226,9 +224,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -239,9 +235,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -277,15 +271,17 @@ export const productWasher = {
     },
     {
       category: "주요기능",
-      items: [
-        { label: "세탁물케어", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "세탁물케어", value: "O", fullWidth: true }],
     },
     {
       category: "건조기 조작",
       items: [
         { label: "일체형조작부", value: "O" },
-        { label: "조작부", value: "원바디런드리컨트롤(풀터치)", fullWidth: true },
+        {
+          label: "조작부",
+          value: "원바디런드리컨트롤(풀터치)",
+          fullWidth: true,
+        },
       ],
     },
     {
@@ -304,15 +300,11 @@ export const productWasher = {
     },
     {
       category: "세탁 부가기능",
-      items: [
-        { label: "4방향터보샷", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "4방향터보샷", value: "O", fullWidth: true }],
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -371,7 +363,11 @@ export const productWasher = {
       category: "건조기 조작",
       items: [
         { label: "일체형조작부", value: "O" },
-        { label: "조작부", value: "올인원컨트롤(와이드터치스크롤)", fullWidth: true },
+        {
+          label: "조작부",
+          value: "올인원컨트롤(와이드터치스크롤)",
+          fullWidth: true,
+        },
       ],
     },
     {
@@ -398,9 +394,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -459,15 +453,17 @@ export const productWasher = {
     },
     {
       category: "자동문열림",
-      items: [
-        { label: "건조", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "건조", value: "O", fullWidth: true }],
     },
     {
       category: "건조기 조작",
       items: [
         { label: "일체형조작부", value: "O" },
-        { label: "조작부", value: "올인원컨트롤(다이얼+터치)", fullWidth: true },
+        {
+          label: "조작부",
+          value: "올인원컨트롤(다이얼+터치)",
+          fullWidth: true,
+        },
       ],
     },
     {
@@ -493,9 +489,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프+히터식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프+히터식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -506,9 +500,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -523,7 +515,11 @@ export const productWasher = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-SEC-WF8000CKO", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-SEC-WF8000CKO",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HU072172-23019", fullWidth: true },
       ],
     },
@@ -572,9 +568,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프+히터식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프+히터식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -585,9 +579,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -602,7 +594,11 @@ export const productWasher = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-SEC-WF90F27KO", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-SEC-WF90F27KO",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HU072172-25024", fullWidth: true },
       ],
     },
@@ -625,7 +621,11 @@ export const productWasher = {
       category: "건조기 조작",
       items: [
         { label: "일체형조작부", value: "O" },
-        { label: "조작부", value: "올인원컨트롤(다이얼+터치)", fullWidth: true },
+        {
+          label: "조작부",
+          value: "올인원컨트롤(다이얼+터치)",
+          fullWidth: true,
+        },
       ],
     },
     {
@@ -652,9 +652,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프+히터식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프+히터식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -664,9 +662,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -681,7 +677,11 @@ export const productWasher = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-SEC-WF8000CKO", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-SEC-WF8000CKO",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HE07020-23165", fullWidth: true },
       ],
     },
@@ -704,7 +704,11 @@ export const productWasher = {
       category: "건조기 조작",
       items: [
         { label: "일체형조작부", value: "O" },
-        { label: "조작부", value: "올인원컨트롤(다이얼+터치)", fullWidth: true },
+        {
+          label: "조작부",
+          value: "올인원컨트롤(다이얼+터치)",
+          fullWidth: true,
+        },
       ],
     },
     {
@@ -731,9 +735,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프+히터식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프+히터식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -743,9 +745,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -760,7 +760,11 @@ export const productWasher = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-SEC-WF8000CKO", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-SEC-WF8000CKO",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HE07020-23165", fullWidth: true },
       ],
     },
@@ -809,9 +813,7 @@ export const productWasher = {
     },
     {
       category: "건조방식",
-      items: [
-        { label: "히트펌프+히터식", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "히트펌프+히터식", value: "O", fullWidth: true }],
     },
     {
       category: "건조기능",
@@ -822,9 +824,7 @@ export const productWasher = {
     },
     {
       category: "건조 부가기능",
-      items: [
-        { label: "통살균", value: "O", fullWidth: true },
-      ],
+      items: [{ label: "통살균", value: "O", fullWidth: true }],
     },
     {
       category: "규격",
@@ -839,7 +839,11 @@ export const productWasher = {
     {
       category: "인증",
       items: [
-        { label: "적합성평가인증", value: "R-R-SEC-WF90F27KO", fullWidth: true },
+        {
+          label: "적합성평가인증",
+          value: "R-R-SEC-WF90F27KO",
+          fullWidth: true,
+        },
         { label: "안전확인인증", value: "HU072172-25024", fullWidth: true },
       ],
     },

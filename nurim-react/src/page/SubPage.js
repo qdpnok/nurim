@@ -62,7 +62,7 @@ const productData = [
 );
 
 // --- 메인 컴포넌트 ---
-const SubscribePage = () => {
+const SubscribePage = ({ type }) => {
   const [selectedCategory, setSelectedCategory] = useState("에어컨");
 
   const handleCategoryClick = (categoryName) => {
@@ -117,7 +117,8 @@ const SubscribePage = () => {
       <ProductGrid>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((data) => (
-            <ProductItem key={data.id} product={data} />
+            // [수정 2] 자식 컴포넌트(ProductItem)에게 type을 그대로 전달합니다.
+            <ProductItem key={data.id} product={data} type={type} />
           ))
         ) : (
           <EmptyMessage>해당 카테고리에 등록된 상품이 없습니다.</EmptyMessage>

@@ -1,5 +1,5 @@
 // 1
-export const lgAeroFurnitureSpecs = [
+export const productAir = [
   {
     category: "기본 정보",
     items: [

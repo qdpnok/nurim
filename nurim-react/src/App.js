@@ -32,8 +32,15 @@ function App() {
               element={<SubPage type="subscription" />}
             />
             <Route path="/purchase" element={<SubPage type="purchase" />} />
-            <Route path="/subscriptions/:id" element={<ProductDetailPage />} />
-            <Route path="/purchase/:id" element={<ProductDetailPage />} />
+
+            <Route
+              path="/subscriptions/:category/:id"
+              element={<ProductDetailPage />}
+            />
+            <Route
+              path="/purchase/:category/:id"
+              element={<ProductDetailPage />}
+            />
           </Route>
         </Routes>
       </Router>
