@@ -96,31 +96,31 @@ class ProductRepositoryTest {
         Pageable pageable = PageRequest.of(0,8);
 
         // 리뷰와 함께 조회: 카테고리
-        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
-
-        for(Object[] result: productWithReviewsStats){
-            product = (Product) result[0];
-            Long reviewCount = (Long) result[1];
-            Double avg = (Double) result[2];
-
-            log.info("상품 정보: {}", product.getName());
-            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-        }
+//        List<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats(sc, pageable);
+//
+//        for(Object[] result: productWithReviewsStats){
+//            product = (Product) result[0];
+//            Long reviewCount = (Long) result[1];
+//            Double avg = (Double) result[2];
+//
+//            log.info("상품 정보: {}", product.getName());
+//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+//        }
 
         // 리뷰와 함께 조회: 전체
-        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
+//        productWithReviewsStats = productRepository.findAllProductWithReviewStats(pageable);
+//
+//        for(Object[] result: productWithReviewsStats){
+//            product = (Product) result[0];
+//            Long reviewCount = (Long) result[1];
+//            Double avg = (Double) result[2];
+//
+//            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
+//            log.info("리뷰 정보: {}, {}", reviewCount, avg);
+//        }
 
-        for(Object[] result: productWithReviewsStats){
-            product = (Product) result[0];
-            Long reviewCount = (Long) result[1];
-            Double avg = (Double) result[2];
-
-            log.info("상품 정보: {}, {}", product.getName(), product.getSubCategory().getMainCategory());
-            log.info("리뷰 정보: {}, {}", reviewCount, avg);
-        }
-
-        // 구매 상품 id, 구독 상품 id 붙이기
-        List<Object[]> pList = productRepository.findTest();
+        // 구매 상품 id, 구독 상품 id 붙이기 + 리뷰 정보
+        List<Object[]> pList = productRepository.findTest(sc.getName(), pageable);
 
         for (Object[] result : pList) {
             Long pNum = (Long) result[0];
