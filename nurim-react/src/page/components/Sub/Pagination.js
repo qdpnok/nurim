@@ -100,31 +100,59 @@ const ArrowRight = () => (
 );
 
 // --- 컴포넌트 ---
-const Pagination = () => {
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  // 페이지 번호 목록 생성
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  console.log(pageNumbers);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (page) => {
+    if (page !== currentPage) {
+      onPageChange(page);
+    }
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
   return (
     <PaginationContainer>
       {/* Previous 버튼 */}
-      <NavButton>
-        <ArrowLeft />
+      <NavButton onClick={handlePrevious} disabled={currentPage === 1}>
+        <ArrowLeft>&lt;</ArrowLeft>
         Previous
       </NavButton>
 
       <PageNumberGroup>
-        <PageNumber $active={true}>1</PageNumber>
-        <PageNumber>2</PageNumber>
-        <PageNumber>3</PageNumber>
-        <PageNumber style={{ cursor: "default", pointerEvents: "none" }}>
-          ...
-        </PageNumber>
-        <PageNumber>8</PageNumber>
-        <PageNumber>9</PageNumber>
-        <PageNumber>10</PageNumber>
+        {pageNumbers.map((page) => (
+          <PageNumber
+            key={page}
+            $active={page === currentPage}
+            onClick={() => handlePageChange(page)}
+          >
+            {page}
+          </PageNumber>
+        ))}
       </PageNumberGroup>
 
       {/* Next 버튼 */}
-      <NavButton>
+      <NavButton onClick={handleNext} disabled={currentPage === totalPages}>
         Next
-        <ArrowRight />
+        <ArrowRight>&gt;</ArrowRight>
       </NavButton>
     </PaginationContainer>
   );

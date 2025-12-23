@@ -18,7 +18,6 @@ function App() {
   return (
     <AuthProvider>
       <GlobalStyle />
-
       <Router>
         <ScrollToTop />
         <Routes>

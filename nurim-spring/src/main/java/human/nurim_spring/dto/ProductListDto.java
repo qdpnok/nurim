@@ -9,7 +9,8 @@ public class ProductListDto {
     private Long sNum;
     private String category;
     private String name;
-    private Long price;
+    private Long pPrice;
+    private Long sPrice;
     private String img;
     private String serialNum;
     private String spec;

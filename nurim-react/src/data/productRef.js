@@ -1,6 +1,8 @@
-export const productRef = {
-  // [ID: 1] 삼성전자 양문형냉장고 (23년 3월형)
-  1: [
+export const productRefSpecs = {
+  // --- [구독] 냉장고 (ID: 11 ~ 20) ---
+
+  // 1. Samsung 비스포크 4도어 (키친핏)
+  11: [
     {
       category: "기본 정보",
       items: [
@@ -9,7 +11,7 @@ export const productRef = {
         { label: "품목", value: "양문형냉장고" },
         { label: "출시년도", value: "2023년" },
         { label: "제조국", value: "한국" },
-        { label: "본체모델명", value: "본체모델명" },
+        { label: "본체모델명", value: "RF85C9001AP" },
         { label: "도어", value: "4도어" },
         { label: "총용량", value: "875L" },
         { label: "냉장", value: "522L" },
@@ -74,8 +76,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 2] LG전자 양문형냉장고 (20년 10월형)
-  2: [
+  // 2. LG 오브제 무드업
+  12: [
     {
       category: "기본 정보",
       items: [
@@ -145,8 +147,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 3] LG전자 오브제컬렉션 STEM (24년 8월형)
-  3: [
+  // 3. LG 오브제컬렉션 STEM
+  13: [
     {
       category: "기본 정보",
       items: [
@@ -242,8 +244,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 4] LG전자 양문형냉장고 (21년 11월형)
-  4: [
+  // 4. LG 디오스 양문형
+  14: [
     {
       category: "기본 정보",
       items: [
@@ -321,8 +323,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 5] 삼성전자 양문형냉장고 (20년 5월형)
-  5: [
+  // 5. Samsung 양문형 냉장고
+  15: [
     {
       category: "기본 정보",
       items: [
@@ -388,8 +390,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 6] 삼성전자 양문형냉장고 (22년 3월형)
-  6: [
+  // 6. Samsung 비스포크 글램
+  16: [
     {
       category: "기본 정보",
       items: [
@@ -466,8 +468,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 7] LG전자 양문형냉장고 (22년 7월형)
-  7: [
+  // 7. LG 오브제 컬렉션
+  17: [
     {
       category: "기본 정보",
       items: [
@@ -542,8 +544,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 8] 삼성전자 비스포크 (22년 2월형 - 1도어)
-  8: [
+  // 8. Samsung 비스포크 인피니트 라인 (1도어)
+  18: [
     {
       category: "기본 정보",
       items: [
@@ -620,8 +622,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 9] LG전자 오브제컬렉션 노크온 (16년 12월형)
-  9: [
+  // 9. LG 오브제컬렉션 노크온
+  19: [
     {
       category: "기본 정보",
       items: [
@@ -697,8 +699,8 @@ export const productRef = {
     },
   ],
 
-  // [ID: 10] 삼성전자 비스포크 (21년 1월형)
-  10: [
+  // 10. Samsung 셰프컬렉션
+  20: [
     {
       category: "기본 정보",
       items: [
@@ -785,3 +787,16 @@ export const productRef = {
     },
   ],
 };
+
+// [추가] 구매 페이지용 데이터 매핑 (61~70번)
+// 구매용 상품 클릭 시에도 동일한 스펙 데이터를 보여주기 위해 키를 복사합니다.
+productRefSpecs[61] = productRefSpecs[11];
+productRefSpecs[62] = productRefSpecs[12];
+productRefSpecs[63] = productRefSpecs[13];
+productRefSpecs[64] = productRefSpecs[14];
+productRefSpecs[65] = productRefSpecs[15];
+productRefSpecs[66] = productRefSpecs[16];
+productRefSpecs[67] = productRefSpecs[17];
+productRefSpecs[68] = productRefSpecs[18];
+productRefSpecs[69] = productRefSpecs[19];
+productRefSpecs[70] = productRefSpecs[20];

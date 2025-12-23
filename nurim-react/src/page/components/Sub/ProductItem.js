@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import yellowStar from "../../../img/yellowstaricon.png"; // 경로 확인 필요
-import greyStar from "../../../img/graystaricon.png"; // 경로 확인 필요
+import yellowStar from "../../../img/yellowstaricon.png";
+import greyStar from "../../../img/graystaricon.png";
 import { useNavigate } from "react-router-dom";
 
-// --- Styled Components (이 파일에서만 쓰이는 스타일) ---
+// --- Styled Components ---
+
 const ProductCard = styled.div`
   width: 380px;
   height: 570px;
@@ -17,6 +18,7 @@ const ProductCard = styled.div`
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   align-items: flex-start;
+  /* 카드 전체 클릭 방지를 위해 cursor: pointer 제거 */
 `;
 
 const ProductImageWrapper = styled.div`
@@ -25,6 +27,12 @@ const ProductImageWrapper = styled.div`
   justify-content: center;
   margin-bottom: 20px;
   position: relative;
+  cursor: pointer; /* [수정] 이미지 위에 올리면 손가락 모양 */
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05); /* [옵션] 이미지 살짝 확대 효과 */
+  }
 `;
 
 const ProductImage = styled.img`
@@ -40,6 +48,12 @@ const TitleText = styled.h3`
   line-height: 1.3;
   white-space: pre-wrap;
   color: #000;
+  cursor: pointer; /* [수정] 제목 위에 올리면 손가락 모양 */
+
+  &:hover {
+    color: #356469; /* [옵션] 제목에 마우스 올리면 색상 변경 */
+    text-decoration: underline;
+  }
 `;
 
 const SpecText = styled.p`
@@ -115,41 +129,48 @@ const ProductItem = ({ product, type }) => {
   const nav = useNavigate();
   const rating = product.rating || 0;
 
-  // [핵심] 한글 카테고리명 -> 데이터 파일 키값 매핑
+  // [중요] index.js의 키값과 일치하도록 "Specs"를 제거했습니다.
   const getCategoryKey = (koreanName) => {
     switch (koreanName) {
       case "TV":
-        return "productTv";
+        return "productTvSpecs";
       case "냉장고":
-        return "productRef";
+        return "productRefSpecs";
       case "에어컨":
-        return "productAc";
+        return "productAcSpecs";
       case "세탁기":
-        return "productWt";
+        return "productWtSpecs";
       case "공기청정기":
-        return "productAir";
+        return "productAirSpecs";
       default:
-        return "productTv"; // 기본값
+        return "productTvSpecs";
     }
   };
 
   const handleItemClick = () => {
-    const basePath = type === "subscription" ? "/subscriptions" : "/purchase";
+    if (!product.id) {
+      console.error("상품 ID가 없습니다!", product);
+      alert("상품 정보를 불러오지 못했습니다.");
+      return;
+    }
 
-    // 여기서 영어 키값(productAc 등)을 가져옵니다.
+    const basePath = type === "subscription" ? "/subscriptions" : "/purchase";
     const categoryKey = getCategoryKey(product.category);
 
-    // 최종 URL 이동: /subscriptions/productAc/1
     nav(`${basePath}/${categoryKey}/${product.id}`);
   };
 
   return (
-    <ProductCard onClick={handleItemClick}>
-      <ProductImageWrapper>
-        <ProductImage src={product.image} alt={product.alt} />
+    // [수정] ProductCard에서 onClick 제거
+    <ProductCard>
+      {/* [수정] 이미지 래퍼에 onClick 추가 */}
+      <ProductImageWrapper onClick={handleItemClick}>
+        <ProductImage src={`/images/${product.image}`} alt={product.alt} />
       </ProductImageWrapper>
 
-      <TitleText>{product.name}</TitleText>
+      {/* [수정] 제목 텍스트에 onClick 추가 */}
+      <TitleText onClick={handleItemClick}>{product.name}</TitleText>
+
       <SpecText>{product.spec}</SpecText>
 
       <RatingWrapper>
@@ -162,7 +183,6 @@ const ProductItem = ({ product, type }) => {
             />
           ))}
         </StarContainer>
-        {/* <RatingScore>{rating}.0</RatingScore> */}
         <ReviewCount>({product.reviewCount})</ReviewCount>
       </RatingWrapper>
 

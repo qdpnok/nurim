@@ -1,6 +1,8 @@
-export const productWt = {
-  // [ID: 1] LG전자 오브제컬렉션 워시타워 (23년 4월형)
-  1: [
+export const productWtSpecs = {
+  // --- [구독] 세탁기/건조기 (ID: 21 ~ 30) ---
+
+  // 1. LG전자 오브제컬렉션 워시타워 (23년 4월형)
+  21: [
     {
       category: "기본 정보",
       items: [
@@ -82,8 +84,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 2] LG전자 오브제컬렉션 워시타워 (25년 4월형)
-  2: [
+  // 2. LG전자 오브제컬렉션 워시타워 (25년 4월형)
+  22: [
     {
       category: "기본 정보",
       items: [
@@ -174,8 +176,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 3] LG전자 트롬 워시타워 (21년 12월형 - 기본)
-  3: [
+  // 3. LG전자 트롬 워시타워 (21년 12월형 - 기본)
+  23: [
     {
       category: "기본 정보",
       items: [
@@ -256,8 +258,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 4] LG전자 오브제컬렉션 워시타워 컴팩트
-  4: [
+  // 4. LG전자 오브제컬렉션 워시타워 컴팩트
+  24: [
     {
       category: "기본 정보",
       items: [
@@ -338,8 +340,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 5] LG전자 오브제컬렉션 워시타워 (25년 5월형 - 네이처)
-  5: [
+  // 5. LG전자 오브제컬렉션 워시타워 (25년 5월형 - 네이처)
+  25: [
     {
       category: "기본 정보",
       items: [
@@ -430,8 +432,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 6] 삼성전자 비스포크 그랑데 AI 원바디 Top-Fit (25년 8월형)
-  6: [
+  // 6. 삼성전자 비스포크 그랑데 AI 원바디 Top-Fit (25년 8월형)
+  26: [
     {
       category: "기본 정보",
       items: [
@@ -525,8 +527,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 7] 삼성전자 비스포크 그랑데 AI (AI 홈 탑재형)
-  7: [
+  // 7. 삼성전자 비스포크 그랑데 AI (AI 홈 탑재형)
+  27: [
     {
       category: "기본 정보",
       items: [
@@ -604,8 +606,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 8] 삼성전자 비스포크 그랑데 AI (23년 4월형 - 화이트)
-  8: [
+  // 8. 삼성전자 비스포크 그랑데 AI (23년 4월형 - 화이트)
+  28: [
     {
       category: "기본 정보",
       items: [
@@ -687,8 +689,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 9] 삼성전자 비스포크 그랑데 AI (23년 4월형 - 블랙캐비어)
-  9: [
+  // 9. 삼성전자 비스포크 그랑데 AI (23년 4월형 - 블랙캐비어)
+  29: [
     {
       category: "기본 정보",
       items: [
@@ -770,8 +772,8 @@ export const productWt = {
     },
   ],
 
-  // [ID: 10] 삼성전자 비스포크 그랑데 AI (25년 9월형 - 실버스틸)
-  10: [
+  // 10. 삼성전자 비스포크 그랑데 AI (25년 9월형 - 실버스틸)
+  30: [
     {
       category: "기본 정보",
       items: [
@@ -849,3 +851,16 @@ export const productWt = {
     },
   ],
 };
+
+// [추가] 구매 페이지용 데이터 매핑 (71~80번)
+// 구매용 상품 클릭 시에도 동일한 스펙 데이터를 보여주기 위해 키를 복사합니다.
+productWtSpecs[71] = productWtSpecs[21];
+productWtSpecs[72] = productWtSpecs[22];
+productWtSpecs[73] = productWtSpecs[23];
+productWtSpecs[74] = productWtSpecs[24];
+productWtSpecs[75] = productWtSpecs[25];
+productWtSpecs[76] = productWtSpecs[26];
+productWtSpecs[77] = productWtSpecs[27];
+productWtSpecs[78] = productWtSpecs[28];
+productWtSpecs[79] = productWtSpecs[29];
+productWtSpecs[80] = productWtSpecs[30];
