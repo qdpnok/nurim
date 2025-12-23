@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios"; // axios 추가
 // 컴포넌트
 import CategoryFilter from "./components/Sub/CategoryFilter";
 import ProductItem from "./components/Sub/ProductItem";
@@ -12,125 +13,6 @@ import wash from "../img/C_wt.png";
 import air from "../img/C_air.png";
 
 const tvimg = "https://placehold.co/256x256";
-
-const CATEGORIES = [
-  { name: "에어컨", img: ac },
-  { name: "냉장고", img: ref },
-  { name: "TV", img: tv },
-  { name: "세탁기", img: wash },
-  { name: "공기청정기", img: air },
-];
-
-const productData = [
-  {
-    id: 1,
-    category: "TV",
-    image: tvimg,
-    alt: "LG 스탠바이미",
-    name: "LG전자 스탠바이미 |\n27ART10AKPL",
-    price: "1,150,000won",
-    discount: "-10% off",
-    spec: "해상도QHD | 인공지능 프로세서알파8 AI | 주요 기능\n돌비 애트모스,돌비 비전 | 운영체제webOS 24",
-    reviewCount: 324,
-    rating: 5,
-  },
-  {
-    id: 2,
-    category: "냉장고",
-    image: tvimg,
-    alt: "삼성 냉장고",
-    name: "삼성전자 양문형냉장고_RS84T5081SA",
-    price: "1,500,000won",
-    discount: "-34% off",
-    spec: "용량 846L | 푸드쇼케이스 | 메탈쿨링",
-    reviewCount: 120,
-    rating: 5,
-  },
-].concat(
-  Array.from({ length: 7 }).map((_, i) => ({
-    id: i + 3,
-    category: "TV",
-    image: tvimg,
-    alt: "삼성 더 세리프",
-    name: "삼성전자 더 세리프 55인치",
-    price: "1,450,000won",
-    discount: "-36% off",
-    spec: "해상도 4K QLED | 매직스크린",
-    reviewCount: 50,
-    rating: 5,
-  }))
-);
-
-// --- 메인 컴포넌트 ---
-const SubscribePage = ({ type }) => {
-  const [selectedCategory, setSelectedCategory] = useState("에어컨");
-
-  const handleCategoryClick = (categoryName) => {
-    setSelectedCategory(categoryName);
-  };
-
-  const filteredProducts =
-    selectedCategory === "전체"
-      ? productData
-      : productData.filter((product) => product.category === selectedCategory);
-
-  return (
-    <Container>
-      {/* 1. 카테고리 필터 컴포넌트 */}
-      <CategoryFilter
-        categories={CATEGORIES}
-        selectedCategory={selectedCategory}
-        onSelectCategory={handleCategoryClick}
-      />
-
-      <SearchBox>
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ marginRight: "10px" }}
-        >
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        Search Product Here
-      </SearchBox>
-
-      <ContentHeader>
-        <Breadcrumb>
-          <span>Home</span> <span>&gt;</span>
-          <span>Subscriptions</span> <span>&gt;</span>
-          <span className="active">{selectedCategory}</span>
-        </Breadcrumb>
-      </ContentHeader>
-
-      <LineSeparator />
-
-      <PageTitle>{selectedCategory} Products</PageTitle>
-
-      {/* 2. 상품 리스트 영역 */}
-      <ProductGrid>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((data) => (
-            // [수정 2] 자식 컴포넌트(ProductItem)에게 type을 그대로 전달합니다.
-            <ProductItem key={data.id} product={data} type={type} />
-          ))
-        ) : (
-          <EmptyMessage>해당 카테고리에 등록된 상품이 없습니다.</EmptyMessage>
-        )}
-      </ProductGrid>
-
-      <Pagination />
-    </Container>
-  );
-};
-
-export default SubscribePage;
 
 // --- 페이지 레이아웃용 스타일 ---
 const Container = styled.div`
@@ -208,3 +90,184 @@ const EmptyMessage = styled.div`
   text-align: center;
   color: #888;
 `;
+
+const CATEGORIES = [
+  { name: "에어컨", img: ac },
+  { name: "냉장고", img: ref },
+  { name: "TV", img: tv },
+  { name: "세탁기", img: wash },
+  { name: "공기청정기", img: air },
+];
+
+// --- 메인 컴포넌트 ---
+const SubscribePage = ({ type }) => {
+  const [selectedCategory, setSelectedCategory] = useState("에어컨");
+
+  // [수정 2] DB 데이터를 저장할 State 생성
+  const [products, setProducts] = useState([]); // 초기값은 빈 배열
+  const [loading, setLoading] = useState(false); // 로딩 상태 관리
+  const [error, setError] = useState(null); // 에러 상태 관리
+
+  // [수정 3] 서버에서 데이터 가져오기 (useEffect)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setError(null);
+        setProducts([]);
+        setLoading(true);
+
+        // 1. 서버 요청
+        const response = await axios.get(
+          "http://localhost:8222/api/product/list"
+        );
+
+        // 2. 데이터 변환 (백엔드 DTO -> 프론트엔드 형식)
+        const mappedData = response.data.map((item) => ({
+          // [ID 매핑] pNum -> id
+          id: item.pNum,
+
+          // [카테고리 변환] sNum(숫자) -> category(문자열)
+          // sNum이 DB에서 몇 번인지에 따라 아래 숫자를 수정해주세요!
+          category: getCategoryName(item.sNum),
+
+          // [이미지] img -> image
+          image: item.img,
+
+          // [대체텍스트] 보통 이름과 같게 설정
+          alt: item.name,
+
+          // [상품명] name -> name
+          name: item.name,
+
+          // [가격 포맷팅] 1000000 -> "1,000,000won"
+          price: `${item.price.toLocaleString()}won`,
+
+          // [할인율 포맷팅] 10 -> "-10% off"
+          discount: item.pDiscountRate ? `-${item.pDiscountRate}% off` : null,
+
+          // [스펙] spec -> spec
+          spec: item.spec,
+
+          // [리뷰 수] scopeCount -> reviewCount
+          reviewCount: item.scopeCount,
+
+          // [별점] scopeAvg -> rating
+          rating: item.scopeAvg,
+        }));
+
+        // 3. 변환된 데이터를 state에 저장
+        setProducts(mappedData);
+      } catch (e) {
+        console.error("Error fetching data:", e);
+        setError(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // [중요] sNum(숫자)을 한글 카테고리명으로 바꿔주는 함수
+  // DB에 저장된 sNum 값에 맞춰서 숫자를 수정해주세요.
+  const getCategoryName = (sNum) => {
+    switch (sNum) {
+      case 1:
+        return "TV";
+      case 2:
+        return "냉장고";
+      case 3:
+        return "세탁기";
+      case 4:
+        return "에어컨";
+      case 5:
+        return "공기청정기";
+      default:
+        return "기타"; // 매칭되는게 없을 때
+    }
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    setSelectedCategory(categoryName);
+  };
+
+  // [수정 4] 필터링 대상 변경 (productData -> products)
+  const filteredProducts =
+    selectedCategory === "전체"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
+
+  // 로딩 중이거나 에러 발생 시 처리
+  if (loading)
+    return (
+      <Container>
+        <div>Loading...</div>
+      </Container>
+    );
+  if (error)
+    return (
+      <Container>
+        <div>에러가 발생했습니다. 잠시 후 다시 시도해주세요.</div>
+      </Container>
+    );
+
+  return (
+    <Container>
+      {/* 1. 카테고리 필터 컴포넌트 */}
+      <CategoryFilter
+        categories={CATEGORIES}
+        selectedCategory={selectedCategory}
+        onSelectCategory={handleCategoryClick}
+      />
+
+      <SearchBox>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ marginRight: "10px" }}
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Search Product Here
+      </SearchBox>
+
+      <ContentHeader>
+        <Breadcrumb>
+          <span>Home</span> <span>&gt;</span>
+          {/* type에 따라 상단 텍스트 변경 */}
+          <span>
+            {type === "subscription" ? "Subscriptions" : "Purchase"}
+          </span>{" "}
+          <span>&gt;</span>
+          <span className="active">{selectedCategory}</span>
+        </Breadcrumb>
+      </ContentHeader>
+
+      <LineSeparator />
+
+      <PageTitle>{selectedCategory} Products</PageTitle>
+
+      {/* 2. 상품 리스트 영역 */}
+      <ProductGrid>
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((data) => (
+            <ProductItem key={data.id} product={data} type={type} />
+          ))
+        ) : (
+          <EmptyMessage>해당 카테고리에 등록된 상품이 없습니다.</EmptyMessage>
+        )}
+      </ProductGrid>
+
+      <Pagination />
+    </Container>
+  );
+};
+
+export default SubscribePage;
