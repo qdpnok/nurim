@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
@@ -119,15 +120,19 @@ class ProductRepositoryTest {
 //        }
 
         // 구매 상품 id, 구독 상품 id 붙이기 + 리뷰 정보
-        List<Object[]> pList = productRepository.findTest(sc.getName(), pageable);
+        Page<Object[]> pList = productRepository.findTest(sc.getName(), pageable);
+        int totalPages = pList.getTotalPages();
 
-        for (Object[] result : pList) {
+        log.info("총 상품 리스트: {}", totalPages);
+
+        for (Object[] result : pList.getContent()) {
             Long pNum = (Long) result[0];
             Long sNum = (Long) result[1];
             String name = (String) result[2];
             Long price = (Long) result[3];
             Long count = (Long) result[9];
             Double scopeAvg = (Double) result[10];
+
 
             log.info("구매 상품 id: {}, 구독 상품 id: {}, 상품 이름: {}, 가격: {}, 리뷰 개수: {}, 평균 리뷰 점수: {}", pNum, sNum, name, price, count, scopeAvg);
         }

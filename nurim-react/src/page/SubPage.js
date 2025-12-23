@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import api from "../api/Axios";
 // 컴포넌트
 import CategoryFilter from "./components/Sub/CategoryFilter";
 import ProductItem from "./components/Sub/ProductItem";
