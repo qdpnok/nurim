@@ -81,7 +81,8 @@ class ReviewsRepositoryTest {
         Product product = productRepository.findById(3L)
                 .orElseThrow(() -> new RuntimeException("조회 결과가 없음"));
 
-        List<Reviews> list = reviewsRepository.findByProduct(product);
+        String serialNum = product.getSerialNum();
+        List<Reviews> list = reviewsRepository.findAllBySerialNum(serialNum);
 
         log.info("리뷰 조회 결과: {}", list);
     }
