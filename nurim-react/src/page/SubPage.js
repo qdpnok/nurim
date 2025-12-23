@@ -63,7 +63,7 @@ const productData = [
 
 // --- 메인 컴포넌트 ---
 const SubscribePage = () => {
-  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [selectedCategory, setSelectedCategory] = useState("에어컨");
 
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory(categoryName);

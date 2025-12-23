@@ -6,6 +6,7 @@ import LogIn from "./page/Login";
 import SignUp from "./page/SignUp";
 import FindIP from "./page/FindPage";
 import SubPage from "./page/SubPage";
+import ProductDetailPage from "./page/ProductDetailPage";
 import "./App.css";
 import { AuthProvider } from "./page/components/Auth/AuthContext";
 import ScrollToTop from "./ScrollToTop";
@@ -26,7 +27,9 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<LogIn />} />
             <Route path="/findip" element={<FindIP />} />
-            <Route path="/Subpage" element={<SubPage />} />
+            <Route path="/Subpage" element={<SubPage type="subscription" />} />
+            <Route path="/Subpage" element={<SubPage type="purchase" />} />
+            <Route path="/test" element={<ProductDetailPage />} />
           </Route>
         </Routes>
       </Router>
