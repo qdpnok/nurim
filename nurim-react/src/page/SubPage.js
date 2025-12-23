@@ -137,13 +137,20 @@ const SubscribePage = ({ type }) => {
           targetId = item.pnum || item.pNum || item.id;
         }
 
+        let targetPrice;
+        if (type === "subscription") {
+          targetPrice = item.sprice || item.sPrice;
+        } else {
+          targetPrice = item.pprice || item.pPrice;
+        }
+
         return {
           id: targetId, // 여기서 undefined가 안 뜨게 잡아야 합니다.
           category: item.category,
           image: item.img,
           alt: item.name,
           name: item.name,
-          price: item.price ? `${item.price.toLocaleString()}won` : "0won",
+          price: targetPrice ? `${targetPrice.toLocaleString()}won` : "0won",
           // 할인율도 대소문자 체크
           discount:
             item.pdiscountrate || item.pDiscountRate
