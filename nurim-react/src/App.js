@@ -27,9 +27,13 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<LogIn />} />
             <Route path="/findip" element={<FindIP />} />
-            <Route path="/Subpage" element={<SubPage type="subscription" />} />
-            <Route path="/Subpage" element={<SubPage type="purchase" />} />
-            <Route path="/test" element={<ProductDetailPage />} />
+            <Route
+              path="/subscriptions"
+              element={<SubPage type="subscription" />}
+            />
+            <Route path="/purchase" element={<SubPage type="purchase" />} />
+            <Route path="/subscriptions/:id" element={<ProductDetailPage />} />
+            <Route path="/purchase/:id" element={<ProductDetailPage />} />
           </Route>
         </Routes>
       </Router>
