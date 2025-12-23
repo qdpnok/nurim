@@ -7,6 +7,7 @@ import lombok.*;
 public class ProductListDto {
     private Long pNum;
     private Long sNum;
+    private String category;
     private String name;
     private Long price;
     private String img;

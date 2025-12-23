@@ -27,14 +27,17 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     // 상품 목록 조회: 상품 정보 + 리뷰
-    public ProductListResDto getList(String scName, Integer pageNum) {
+    public ProductListResDto getList(String category, Integer pageNum) {
         Page<Object[]> results;
         List<ProductListDto> list = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(pageNum == null? 0 : pageNum-1, 9);
 
         // 서브 카테고리 이름이 있으면 서브 카테고리로 검색, 아니면 구매 상품 모두 검색
-        if(scName != null) {
+        if(category != null) {
+            String scName;
+            scName = category.equals("세탁기") ? "세탁기/건조기" : category;
+
             results = productRepository.findProductWithReviewStats(scName, pageable);
         } else {
             results = productRepository.findAllProductWithReviewStats(pageable);
@@ -42,7 +45,7 @@ public class ProductService {
 
         // product join reviews 해서 productListResDto로 convert
         for(Object[] result: results.getContent()) {
-            list.add(convertResultToProductListRes(result));
+            list.add(convertResultToProductListRes(result, category));
         }
 
         return new ProductListResDto(list, results.getTotalPages(), results.getTotalElements(), pageNum == null? 1 : pageNum, 9);
@@ -106,10 +109,11 @@ public class ProductService {
                 .build();
     }
 
-    private ProductListDto convertResultToProductListRes(Object[] result) {
+    private ProductListDto convertResultToProductListRes(Object[] result, String category) {
         return ProductListDto.builder()
                 .pNum((Long) result[0])
                 .sNum((Long) result[1])
+                .category(category)
                 .name((String) result[2])
                 .price((Long) result[3])
                 .img((String) result[4])

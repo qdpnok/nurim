@@ -116,10 +116,12 @@ const SubscribePage = ({ type }) => {
 
         // 1. 서버 요청
         const response = await axios.get(
-          "http://localhost:8222/api/product/list"
+          `http://localhost:8222/api/product/list?${selectedCategory}`
         );
 
-        const mappedData = response.data.map((item) => ({
+        console.log(response);
+
+        const mappedData = response.data.productListDtoList.map((item) => ({
           id: item.pNum,
           category: getCategoryName(item.sNum),
           image: item.img,
