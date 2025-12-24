@@ -67,9 +67,27 @@ public class PurchaseCartService {
     }
 
     // 장바구니 수량 수정
+    public void updateQty(Long cartItemNum, Long quantity) {
+        PurchaseCartItem purchaseCartItem = purchaseCartItemRepository.findById(cartItemNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니 안에 해당 상품이 존재하지 않습니다."));
 
+        // 수량이 0 이상이면 수정, 이하면 삭제
+        if(quantity > 0) {
+            purchaseCartItem.setQuantity(quantity);
+            purchaseCartItemRepository.save(purchaseCartItem);
+        } else {
+            purchaseCartItemRepository.delete(purchaseCartItem);
+        }
+    }
 
     // 장바구니 상품 삭제
+    public void deleteItem(Long cartItemNum) {
+        PurchaseCartItem purchaseCartItem = purchaseCartItemRepository.findById(cartItemNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니 안에 해당 상품이 존재하지 않습니다."));
+
+        purchaseCartItemRepository.delete(purchaseCartItem);
+    }
+
 
     private PurchaseCartDto buildCartDto(PurchaseCartItem purchaseCartItem) {
         return PurchaseCartDto.builder()
