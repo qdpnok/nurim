@@ -1,15 +1,14 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@Builder @AllArgsConstructor
 public class PurchaseCart {
     @Id
     @Column(name = "purchase_cart_num")

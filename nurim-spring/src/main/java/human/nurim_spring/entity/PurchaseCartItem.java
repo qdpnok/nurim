@@ -1,15 +1,14 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@Builder @AllArgsConstructor
 public class PurchaseCartItem {
     @Id
     @Column(name = "purchase_cart_item_num")
@@ -27,8 +26,6 @@ public class PurchaseCartItem {
     private Long quantity;
 
     private Long price;
-
-    private Long totalPrice;
 
     @CreationTimestamp
     @Column(updatable = false)
