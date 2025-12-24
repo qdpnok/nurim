@@ -1,12 +1,15 @@
 package human.nurim_spring.service;
 
 import human.nurim_spring.dto.PurchaseCartDto;
+import human.nurim_spring.dto.PurchaseCartItemReqDto;
 import human.nurim_spring.dto.PurchaseCartResDto;
 import human.nurim_spring.entity.Member;
+import human.nurim_spring.entity.Product;
 import human.nurim_spring.entity.PurchaseCart;
 import human.nurim_spring.entity.PurchaseCartItem;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.MemberRepository;
+import human.nurim_spring.repository.ProductRepository;
 import human.nurim_spring.repository.PurchaseCartItemRepository;
 import human.nurim_spring.repository.PurchaseCartRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +27,7 @@ public class PurchaseCartService {
     private final MemberRepository memberRepository;
     private final PurchaseCartRepository purchaseCartRepository;
     private final PurchaseCartItemRepository purchaseCartItemRepository;
+    private final ProductRepository productRepository;
 
     // 장바구니 조회
     public PurchaseCartResDto getCart(Long memberNum) {
@@ -45,6 +49,23 @@ public class PurchaseCartService {
         return new PurchaseCartResDto(true, list);
     }
 
+    // 장바구니에 아이템 삽입
+    public void saveItem(PurchaseCartItemReqDto dto) {
+        Member member = memberRepository.findById(dto.getMemberNum())
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        // 장바구니 없으면 생성하기
+        PurchaseCart purchaseCart = purchaseCartRepository.findByMember(member);
+        if(purchaseCart == null) purchaseCartRepository.save(buildCart(member));
+
+        Product product = productRepository.findById(dto.getProductNum())
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_PRODUCT", "해당 상품을 찾지 못했습니다."));
+
+        PurchaseCartItem item = purchaseCartItemRepository.save(buildCartItem(purchaseCart, product, dto.getQuantity(), product.getPrice()));
+
+        purchaseCartItemRepository.save(item);
+    }
+
     private PurchaseCartDto buildCartDto(PurchaseCartItem purchaseCartItem) {
         return PurchaseCartDto.builder()
                 .itemNum(purchaseCartItem.getNum())
@@ -61,6 +82,15 @@ public class PurchaseCartService {
     private PurchaseCart buildCart(Member member) {
         return PurchaseCart.builder()
                 .member(member)
+                .build();
+    }
+
+    private PurchaseCartItem buildCartItem(PurchaseCart purchaseCart, Product product, Long quantity, Long price) {
+        return PurchaseCartItem.builder()
+                .purchaseCart(purchaseCart)
+                .product(product)
+                .quantity(quantity)
+                .price(price)
                 .build();
     }
 }
