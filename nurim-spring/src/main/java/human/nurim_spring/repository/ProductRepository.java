@@ -67,9 +67,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                      purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
                      subscription.discountRate
             """)
-     Page<Object[]> findAllProductWithReviewStats(Pageable pageable);
+    Page<Object[]> findAllProductWithReviewStats(Pageable pageable);
 
-     @Query("SELECT p, COALESCE(AVG(r.scope), 0) AS avg FROM Product p LEFT JOIN p.reviews r WHERE p.num = :num GROUP BY p")
-     Optional<Object[]> findTest(Long num);
+    @Query("SELECT p, COALESCE(AVG(r.scope), 0) AS avg FROM Product p LEFT JOIN p.reviews r WHERE p.num = :num GROUP BY p")
+    List<Object[]> findDetail(Long num);
 
+    @Query("SELECT p, COALESCE(AVG(r.scope), 0) AS avg FROM Product p LEFT JOIN p.reviews r WHERE p.num = :num GROUP BY p")
+    List<Object[]> findTest(Long num);
 }

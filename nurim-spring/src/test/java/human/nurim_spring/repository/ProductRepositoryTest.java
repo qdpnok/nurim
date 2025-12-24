@@ -98,7 +98,7 @@ class ProductRepositoryTest {
     public void findProductWithReviewTest() {
         initTest();
 
-        Pageable pageable = PageRequest.of(0,8);
+        Pageable pageable = PageRequest.of(0,9);
 
         // 리뷰와 함께 조회: 카테고리
         Page<Object[]> productWithReviewsStats = productRepository.findProductWithReviewStats("세탁기", pageable);
@@ -117,16 +117,13 @@ class ProductRepositoryTest {
             log.info("리뷰 정보: {}, {}", result[11], result[12]);
         }
 
-        Object[] findTest = productRepository.findTest(3L)
-                .orElseThrow(() -> new RuntimeException("없음"));
+        // 리뷰와 함께 조회: 상품 번호, 단건
+        List<Object[]> findDetail = productRepository.findDetail(3L);
 
-        log.info("조회 결과: {}", findTest);
-
-        Product product = (Product) findTest[0];
-        Double scopeAvg = (Double) findTest[1];
-
-        log.info("세부 정보 검색\n상품 이름: {}, 가격: {}", product.getName(), product.getPrice());
-        log.info("평균 별점: {}", scopeAvg);
+        for (Object[] objects : findDetail) {
+            log.info("product: {}", objects[0]);
+            log.info("r.avg: {}", objects[1]);
+        }
     }
 
 }

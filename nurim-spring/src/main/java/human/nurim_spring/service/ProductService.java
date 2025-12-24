@@ -1,6 +1,7 @@
 package human.nurim_spring.service;
 
 import human.nurim_spring.dto.MainProductResDto;
+import human.nurim_spring.dto.ProductDetailResDto;
 import human.nurim_spring.dto.ProductListDto;
 import human.nurim_spring.dto.ProductListResDto;
 import human.nurim_spring.entity.Product;
@@ -51,7 +52,7 @@ public class ProductService {
         return new ProductListResDto(list, results.getTotalPages(), results.getTotalElements(), pageNum == null? 1 : pageNum, 9);
     }
 
-    // 상품 목록 조회: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
+    // 상품 목록 조회, 메인화면: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
     public List<MainProductResDto> getMainList(Long id) {
         List<Product> result;
         List<MainProductResDto> list = new ArrayList<>();
@@ -73,11 +74,28 @@ public class ProductService {
     }
 
     // 상품 상세 조회
-    public MainProductResDto get(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("NOT_EXIST_PRODUCT", "존재하지 않는 상품입니다."));
+    public ProductDetailResDto get(Long id) {
+        List<Object[]> results = productRepository.findDetail(id);
+        if (results.isEmpty()) {
+            throw new BusinessException("NOT_EXIST_PRODUCT", "해당 상품이 존재하지 않습니다.");
+        }
 
-        return convertProductToProductRes(product);
+        Object[] result = results.get(0);
+
+        Product product = (Product) result[0];
+        Double avg = (Double) result[1];
+        Long discount;
+
+        // 구독이면 할인률, 구매면 할인 금액
+        if(product.getSubCategory().getMainCategory().getNum() == 1) {
+            discount = product.getDiscountRate();
+        } else {
+            Long price = product.getPrice();
+            Long discountRate = product.getDiscountRate();
+            discount = price - (price*discountRate/100);
+        }
+
+        return convertResultToProductDetailRes(product, discount, avg);
     }
 
     // 할인율이 높은 상품 4개 검색
@@ -125,6 +143,20 @@ public class ProductService {
                 .sDiscountRate((Long) result[10])
                 .scopeCount((Long) result[11])
                 .scopeAvg((Double) result[12])
+                .build();
+    }
+
+    private ProductDetailResDto convertResultToProductDetailRes(Product product,Long discount, Double avg) {
+        return ProductDetailResDto.builder()
+                .num(product.getNum())
+                .brand(product.getBrand())
+                .serialNum(product.getSerialNum())
+                .scopeAvg(avg)
+                .spec(product.getSpec())
+                .price(product.getPrice())
+                .price48(product.getPrice48())
+                .price36(product.getPrice36())
+                .discount(discount)
                 .build();
     }
 

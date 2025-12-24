@@ -13,5 +13,5 @@ public class ProductDetailResDto {
     private Long price;
     private Long price48;
     private Long price36;
-    private Long discountRate;
+    private Long discount;
 }
