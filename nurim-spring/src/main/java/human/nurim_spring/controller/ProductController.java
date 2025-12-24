@@ -1,6 +1,7 @@
 package human.nurim_spring.controller;
 
 import human.nurim_spring.dto.MainProductResDto;
+import human.nurim_spring.dto.ProductDetailResDto;
 import human.nurim_spring.dto.ProductListResDto;
 import human.nurim_spring.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class ProductController {
 
     // 상품 상세 조회
     @GetMapping("/detail/{num}")
-    public ResponseEntity<MainProductResDto> get(@PathVariable Long num) {
+    public ResponseEntity<ProductDetailResDto> get(@PathVariable Long num) {
         return ResponseEntity.ok(productService.get(num));
     }
 

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -66,48 +67,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                      purchase.img, purchase.serialNum, purchase.spec, purchase.brand, purchase.discountRate,
                      subscription.discountRate
             """)
-     Page<Object[]> findAllProductWithReviewStats(Pageable pageable);
+    Page<Object[]> findAllProductWithReviewStats(Pageable pageable);
 
-    @Query("""
-    SELECT COUNT(purchase)
-    FROM Product purchase
-    JOIN purchase.subCategory psc
-    JOIN psc.mainCategory pmc
-    JOIN Product subscription
-        ON purchase.serialNum = subscription.serialNum
-    JOIN subscription.subCategory ssc
-    JOIN ssc.mainCategory smc
-    LEFT JOIN Reviews r
-        ON purchase.serialNum = r.product.serialNum
-    WHERE pmc.name = '구매'
-    AND smc.name = '구독'
-    AND purchase.subCategory.name = :scName
-""")
-    long countTotalProductsWithReviewStats(String scName);
+    @Query("SELECT p, COALESCE(AVG(r.scope), 0) AS avg FROM Product p LEFT JOIN p.reviews r WHERE p.num = :num GROUP BY p")
+    List<Object[]> findDetail(Long num);
 
-     @Query("""
-            SELECT purchase.num, subscription.num, purchase.name, purchase.price,
-            purchase.img, purchase.serialNum, purchase.spec, purchase.discountRate,
-            subscription.discountRate, COALESCE(COUNT(r.product.serialNum), 0) AS count,
-            COALESCE(AVG(r.scope), 0) AS avg
-            FROM Product purchase
-            JOIN purchase.subCategory psc
-            JOIN psc.mainCategory pmc
-
-            JOIN Product subscription
-                        ON purchase.serialNum = subscription.serialNum
-            JOIN subscription.subCategory ssc
-            JOIN ssc.mainCategory smc
-            LEFT JOIN Reviews r
-                        ON purchase.serialNum = r.product.serialNum
-
-            WHERE pmc.name = '구매'
-            AND smc.name = '구독'
-            AND purchase.subCategory.name = :scName
-            GROUP BY purchase.num, subscription.num, purchase.name, purchase.price,
-                     purchase.img, purchase.serialNum, purchase.spec, purchase.discountRate,
-                     subscription.discountRate
-            """)
-     Page<Object[]> findTest(String scName, Pageable pageable);
-
+    @Query("SELECT p, COALESCE(AVG(r.scope), 0) AS avg FROM Product p LEFT JOIN p.reviews r WHERE p.num = :num GROUP BY p")
+    List<Object[]> findTest(Long num);
 }
