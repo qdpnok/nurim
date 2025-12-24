@@ -67,16 +67,17 @@ public class PurchaseCartService {
     }
 
     // 장바구니 수량 수정
+    @Transactional
     public void updateQty(Long cartItemNum, Long quantity) {
         PurchaseCartItem purchaseCartItem = purchaseCartItemRepository.findById(cartItemNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니 안에 해당 상품이 존재하지 않습니다."));
 
-        // 수량이 0 이상이면 수정, 이하면 삭제
+        // 수량이 0 초과면 수정, 이하면 삭제
         if(quantity > 0) {
             purchaseCartItem.setQuantity(quantity);
             purchaseCartItemRepository.save(purchaseCartItem);
         } else {
-            purchaseCartItemRepository.delete(purchaseCartItem);
+            deleteItem(cartItemNum);
         }
     }
 
@@ -86,6 +87,12 @@ public class PurchaseCartService {
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니 안에 해당 상품이 존재하지 않습니다."));
 
         purchaseCartItemRepository.delete(purchaseCartItem);
+
+        PurchaseCart cart = purchaseCartRepository.findById(purchaseCartItem.getPurchaseCart().getNum())
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_CART", "장바구니가 존재하지 않습니다."));
+
+        // 장바구니 안에 아이템이 없다면 장바구니 삭제
+        if(cart.getPurchaseCartItems().isEmpty()) purchaseCartRepository.delete(cart);
     }
 
 

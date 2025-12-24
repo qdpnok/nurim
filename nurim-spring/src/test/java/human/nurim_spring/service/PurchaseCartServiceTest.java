@@ -16,5 +16,9 @@ class PurchaseCartServiceTest {
     @Autowired
     PurchaseCartService purchaseCartService;
 
+    // 장바구니에 아이템 삽입: saveItem
     // 장바구니 조회: getCart
+    // 장바구니 수량 수정: updateQty
+    // 장바구니 상품 삭제: deleteItem
+
 }
