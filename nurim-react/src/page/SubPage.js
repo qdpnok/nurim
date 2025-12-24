@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 // 컴포넌트 import
 import CategoryFilter from "./components/Sub/CategoryFilter";
 import ProductItem from "./components/Sub/ProductItem";
 import Pagination from "./components/Sub/Pagination";
+
+// [추가] 스펙 데이터 import
+import { productCardData } from "../data/productCardSpecs";
 
 // 이미지 import
 import ac from "../img/C_ac.png";
@@ -103,6 +107,7 @@ const SubPage = ({ type }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const location = useLocation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
@@ -123,9 +128,6 @@ const SubPage = ({ type }) => {
         setAllProducts([]);
         setLoading(true);
 
-        // [수정 포인트] 데이터를 더 많이 가져오기 위해 페이지 수를 늘립니다.
-        // 기존 5페이지(100개) -> 10페이지(200개)로 변경
-        // 이렇게 하면 중간에 빈 번호가 있거나 순서가 뒤섞여 있어도 snum 1~100번을 모두 확보할 수 있습니다.
         const pages = [
           1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
         ];
@@ -150,11 +152,14 @@ const SubPage = ({ type }) => {
         // 데이터 매핑
         const mappedData = flatData.map((item) => {
           const uniqueId = item.pnum || item.pNum || item.id;
+          const sNumVal = Number(item.snum || item.sNum);
 
-          // 카테고리 한글 변환 로직
+          const mappingKey = sNumVal;
+          const customData = productCardData[mappingKey];
+
+          // 카테고리 로직
           let fixedCategory = "기타";
           const imgName = (item.img || "").toLowerCase();
-
           if (imgName.includes("ac")) fixedCategory = "에어컨";
           else if (imgName.includes("ref")) fixedCategory = "냉장고";
           else if (imgName.includes("tv")) fixedCategory = "TV";
@@ -162,21 +167,61 @@ const SubPage = ({ type }) => {
             fixedCategory = "세탁기";
           else if (imgName.includes("air")) fixedCategory = "공기청정기";
 
-          const targetDiscount =
-            type === "subscription"
-              ? item.sdiscountRate || item.sDiscountRate
-              : item.pdiscountrate || item.pDiscountRate;
+          // [수정] 뱃지(할인율) 텍스트 결정 로직
+          let displayBadge = null;
+
+          if (type === "subscription") {
+            // 구독일 때는 "36개월 구독 기준" 텍스트 표시
+            displayBadge = "36개월 구독 기준";
+          } else {
+            // 구매일 때는 할인율 표시 (데이터가 있을 경우)
+            const rate = item.pdiscountrate || item.pDiscountRate;
+            if (rate) {
+              displayBadge = `-${rate}% off`;
+            }
+          }
+
+          // 가격 및 이름 결정 로직
+          let finalPrice = "0won";
+          let finalName = item.name;
+          let finalSpecs = item.spec;
+
+          if (customData) {
+            if (customData.name && customData.name.length > 0) {
+              finalName = customData.name[0];
+            }
+
+            if (type === "subscription") {
+              // 구독: 36개월 가격
+              if (customData.prices && customData.prices.rent) {
+                finalPrice = `월 ${customData.prices.rent[36].toLocaleString()}원`;
+              }
+            } else {
+              // 구매: 구매 가격
+              if (customData.prices && customData.prices.buy) {
+                finalPrice = `${customData.prices.buy.toLocaleString()}원`;
+              }
+            }
+
+            if (customData.specs && customData.specs.length > 0) {
+              finalSpecs = customData.specs.join(" | ");
+            }
+          } else {
+            finalPrice = item.price
+              ? `${item.price.toLocaleString()}원`
+              : "0원";
+          }
 
           return {
             id: uniqueId,
-            snum: Number(item.snum || item.sNum),
+            snum: sNumVal,
             category: fixedCategory,
             image: item.img,
-            alt: item.name,
-            name: item.name,
-            price: item.price ? `${item.price.toLocaleString()}won` : "0won",
-            discount: targetDiscount ? `-${targetDiscount}% off` : null,
-            spec: item.spec,
+            alt: finalName,
+            name: finalName,
+            price: finalPrice,
+            discount: displayBadge, // [수정] 결정된 뱃지 텍스트 할당
+            spec: finalSpecs,
             reviewCount: item.scopeCount || item.scopecount || 0,
             rating: item.scopeAvg || item.scopeavg || 0,
           };
@@ -187,20 +232,17 @@ const SubPage = ({ type }) => {
           (v, i, a) => a.findIndex((t) => t.id === v.id) === i
         );
 
-        // 필터링 적용 (구독: 1~50, 구매: 51~100)
+        // 필터링 적용
         const pageTypeFiltered = uniqueData.filter((product) => {
           if (!product.snum) return false;
 
           if (type === "subscription") {
-            // 구독 탭: snum 확인 (1 ~ 50)
             return product.snum >= 1 && product.snum <= 50;
           } else {
-            // 구매 탭: id(pnum) 확인 (51 ~ 100)
             return product.id >= 51 && product.id <= 100;
           }
         });
 
-        // [디버깅용] 실제로 몇 개가 들어왔는지 콘솔에서 확인해보세요!
         console.log(`📦 전체 확보된 데이터: ${uniqueData.length}개`);
         console.log(
           `🎯 현재 페이지(${type}) 필터링된 데이터: ${pageTypeFiltered.length}개`
@@ -217,6 +259,12 @@ const SubPage = ({ type }) => {
 
     fetchAllProducts();
   }, [type]);
+
+  useEffect(() => {
+    if (location.state?.category) {
+      setSelectedCategory(location.state.category);
+    }
+  }, [location.state]); // location.state가 바뀔 때마다 실행
 
   const filteredByCategory =
     selectedCategory === "전체"

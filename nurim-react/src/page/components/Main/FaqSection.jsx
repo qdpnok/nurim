@@ -13,14 +13,13 @@ const Section = styled.section`
   display: flex;
   justify-content: center;
   background-color: #ffffff;
-  padding: 100px 20px; /* 상하 여백 넉넉하게, 좌우 여백 추가 */
+  padding: 100px 20px;
   box-sizing: border-box;
-  margin-top: 90px;
 `;
 
 const ContentWrapper = styled.div`
   width: 100%;
-  max-width: 1000px; /* 너무 넓지 않게 최대 너비 제한 */
+  max-width: 1280px; /* Align max-width with other sections */
   display: flex;
   flex-direction: column;
   gap: 40px;

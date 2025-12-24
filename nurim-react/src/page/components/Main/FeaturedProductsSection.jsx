@@ -7,112 +7,84 @@ import refSam021 from "../../../img/ref_sam_02.png";
 import tvsam01 from "../../../img/sam_tv_01.png";
 
 const Section = styled.section`
-  margin-top: 90px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 90px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
   display: flex;
-  margin-left: 5rem; /* ml-20 */
-  width: 1280px;
-  height: 434px;
-  position: relative;
-  margin-top: 73px;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 auto;
-  flex-wrap: wrap;
+  flex-direction: column;
 `;
 
 const Header = styled.header`
-  display: flex;
-  margin-right: 46.9px;
-  flex: 1;
-  max-height: 3.5rem; /* h-14 */
-  position: relative;
-  width: 1280px;
-  height: 3.5rem;
-  align-items: center;
-  gap: 0.625rem; /* gap-2.5 */
-  padding: 0.625rem 0;
-  margin-top: 90px;
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
   font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
-  color: black;
+  font-weight: 600;
   font-size: 1.5rem;
-  letter-spacing: 0;
-  line-height: normal;
-  width: 1280px;
+`;
+
+const Grid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const Article = styled.article`
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem; /* gap-2.5 */
+  width: 23%; /* Approx 4 items per row */
+  min-width: 250px;
   padding: 15px;
-  position: relative;
-  flex: 0 0 auto;
+  box-sizing: border-box;
   border-radius: 10px;
+
+  @media (max-width: 1024px) {
+    width: 45%; /* 2 items per row */
+  }
+  @media (max-width: 600px) {
+    width: 100%; /* 1 item per row */
+  }
 `;
 
 const ProductImage = styled.img`
-  position: relative;
-  width: 235px;
-  height: 235px;
+  width: 100%;
+  height: auto;
   aspect-ratio: 1;
   object-fit: cover;
+  border-radius: 8px;
 `;
 
 const ProductName = styled.p`
-  position: relative;
-  width: 236px;
-  font-family: ${({ $id }) =>
-    $id === 3
-      ? "'Poppins', Helvetica, sans-serif"
-      : "'Poppins', Helvetica, sans-serif"};
-  font-weight: ${({ $fontWeight }) =>
-    $fontWeight === "font-medium" ? "500" : "400"};
-  color: black;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: normal;
+  font-family: "Poppins", Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  margin: 10px 0 5px 0;
 `;
 
 const InfoRow = styled.div`
   display: flex;
-  width: 235px;
-  align-items: flex-start;
   justify-content: space-between;
-  position: relative;
-  flex: 0 0 auto;
+  width: 100%;
 `;
 
 const Price = styled.div`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
   font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 400; /* Regular */
-  color: black;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: normal;
+  font-size: 1rem;
 `;
 
 const Discount = styled.div`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
   font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 400; /* Regular */
   color: #ff3232;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: normal;
+  font-size: 1rem;
 `;
 
 export const FeaturedProductsSection = () => {
@@ -124,7 +96,6 @@ export const FeaturedProductsSection = () => {
       name: "LG전자 트롬 AI 오브제컬렉션 워시타워_WL21WDU",
       price: "2,650,000won",
       discount: "-40% off",
-      fontWeight: "font-normal",
     },
     {
       id: 2,
@@ -133,7 +104,6 @@ export const FeaturedProductsSection = () => {
       name: "삼성전자 양문형냉장고_RS84T5081SA",
       price: "1,500,000won",
       discount: "-34% off",
-      fontWeight: "font-normal",
     },
     {
       id: 3,
@@ -142,7 +112,6 @@ export const FeaturedProductsSection = () => {
       name: "삼성전자 더 세리프 55인치_KQ55LST01BFXKR",
       price: "1,450,000won",
       discount: "-36% off",
-      fontWeight: "font-medium",
     },
     {
       id: 4,
@@ -151,7 +120,6 @@ export const FeaturedProductsSection = () => {
       name: "LG전자 오브제컬렉션 휘센 듀얼 히트_FQ18HDDHA1",
       price: "2,430,000won",
       discount: "-30% off",
-      fontWeight: "font-normal",
     },
   ];
 
@@ -160,19 +128,18 @@ export const FeaturedProductsSection = () => {
       <Header>
         <Title>Today’s hot deals</Title>
       </Header>
-      {products.map((product) => (
-        <Article key={product.id}>
-          <ProductImage src={product.image} alt={product.alt} />
-          <ProductName $id={product.id} $fontWeight={product.fontWeight}>
-            {product.name}
-          </ProductName>
-
-          <InfoRow>
-            <Price>{product.price}</Price>
-            <Discount>{product.discount}</Discount>
-          </InfoRow>
-        </Article>
-      ))}
+      <Grid>
+        {products.map((product) => (
+          <Article key={product.id}>
+            <ProductImage src={product.image} alt={product.alt} />
+            <ProductName>{product.name}</ProductName>
+            <InfoRow>
+              <Price>{product.price}</Price>
+              <Discount>{product.discount}</Discount>
+            </InfoRow>
+          </Article>
+        ))}
+      </Grid>
     </Section>
   );
 };

@@ -205,16 +205,18 @@ const ProductTopSection = ({ product, selectedPeriod, setSelectedPeriod }) => {
         <ThumbColumn>
           {[1, 2, 3].map((num) => (
             <ThumbItem key={num}>
+              {/* [수정] 이미지 주소 변경: via.placeholder.com -> placehold.co */}
               <img
-                src={`https://via.placeholder.com/152x187?text=View${num}`}
+                src={`https://placehold.co/152x187?text=View${num}`}
                 alt={`썸네일${num}`}
               />
             </ThumbItem>
           ))}
         </ThumbColumn>
         <MainImageItem>
+          {/* [수정] 이미지 주소 변경: via.placeholder.com -> placehold.co */}
           <img
-            src={product.img || "https://via.placeholder.com/443x592?text=Main"}
+            src={product.img || "https://placehold.co/443x592?text=Main"}
             alt={product.name}
             onError={(e) => {
               e.target.style.display = "none";
