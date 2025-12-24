@@ -1,5 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom"; // [필수] 이동을 위한 훅
+
+// [추가] 가격 데이터 import (경로 확인 필요)
+import { productCardData } from "../../../data/productCardSpecs";
 
 import acLg021 from "../../../img/ac_lg_01.png";
 import washLg051 from "../../../img/wash_lg_05.png";
@@ -47,6 +51,15 @@ const Article = styled.article`
   box-sizing: border-box;
   border-radius: 10px;
 
+  /* [추가] 클릭 가능 표시 및 호버 효과 */
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 살짝 그림자 추가 */
+  }
+
   @media (max-width: 1024px) {
     width: 45%; /* 2 items per row */
   }
@@ -88,40 +101,48 @@ const Discount = styled.div`
 `;
 
 export const FeaturedProductsSection = () => {
+  const navigate = useNavigate(); // [필수] 훅 선언
+
+  // [수정] ID를 실제 데이터 ID로 변경하고 path 추가
   const products = [
     {
-      id: 1,
+      id: 75, // 워시타워 (실제 데이터 ID 확인 필요)
       image: washLg051,
       alt: "Wash lg",
       name: "LG전자 트롬 AI 오브제컬렉션 워시타워_WL21WDU",
-      price: "2,650,000won",
       discount: "-40% off",
+      path: "/purchase/productWtSpecs/75",
     },
     {
-      id: 2,
+      id: 65, // 양문형 냉장고
       image: refSam021,
       alt: "Ref sam",
       name: "삼성전자 양문형냉장고_RS84T5081SA",
-      price: "1,500,000won",
       discount: "-34% off",
+      path: "/purchase/productRefSpecs/65",
     },
     {
-      id: 3,
+      id: 53, // 더 세리프
       image: tvsam01,
       alt: "Image",
       name: "삼성전자 더 세리프 55인치_KQ55LST01BFXKR",
-      price: "1,450,000won",
       discount: "-36% off",
+      path: "/purchase/productTvSpecs/53",
     },
     {
-      id: 4,
+      id: 84, // 오브제컬렉션 에어컨
       image: acLg021,
       alt: "Ac lg",
       name: "LG전자 오브제컬렉션 휘센 듀얼 히트_FQ18HDDHA1",
-      price: "2,430,000won",
       discount: "-30% off",
+      path: "/purchase/productAcSpecs/84",
     },
   ];
+
+  // 클릭 핸들러
+  const handleProductClick = (path) => {
+    navigate(path);
+  };
 
   return (
     <Section>
@@ -129,16 +150,29 @@ export const FeaturedProductsSection = () => {
         <Title>Today’s hot deals</Title>
       </Header>
       <Grid>
-        {products.map((product) => (
-          <Article key={product.id}>
-            <ProductImage src={product.image} alt={product.alt} />
-            <ProductName>{product.name}</ProductName>
-            <InfoRow>
-              <Price>{product.price}</Price>
-              <Discount>{product.discount}</Discount>
-            </InfoRow>
-          </Article>
-        ))}
+        {products.map((product) => {
+          // [수정] productCardData에서 가격 가져오기 (없으면 '0won')
+          const priceData = productCardData[product.id];
+          const displayPrice =
+            priceData && priceData.prices
+              ? `${priceData.prices.buy.toLocaleString()}won`
+              : "0won";
+
+          return (
+            <Article
+              key={product.id}
+              onClick={() => handleProductClick(product.path)} // 클릭 시 이동
+            >
+              <ProductImage src={product.image} alt={product.alt} />
+              <ProductName>{product.name}</ProductName>
+              <InfoRow>
+                {/* [수정] 가져온 가격 데이터 표시 */}
+                <Price>{displayPrice}</Price>
+                <Discount>{product.discount}</Discount>
+              </InfoRow>
+            </Article>
+          );
+        })}
       </Grid>
     </Section>
   );

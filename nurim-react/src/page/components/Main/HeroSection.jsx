@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import mainBanner1 from "../../../img/main_banner.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Section = styled.section`
   width: 100%;
@@ -70,6 +71,7 @@ const StartButton = styled.button`
 `;
 
 export const HeroSection = () => {
+  const nav = useNavigate();
   return (
     <Section>
       <BannerImg src={mainBanner1} alt="Banner" />
@@ -80,7 +82,9 @@ export const HeroSection = () => {
           lifestyle partner that allows customers to fully "enjoy" the value and
           experience they gain from these products.
         </Description>
-        <StartButton>Start Now</StartButton>
+        <StartButton onClick={() => nav("/subscriptions")}>
+          Start Now
+        </StartButton>
       </OverlayBox>
     </Section>
   );

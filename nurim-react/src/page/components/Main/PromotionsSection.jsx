@@ -1,5 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom"; // [필수] 이동을 위한 훅
+
+// [추가] 가격 데이터 import (경로 확인 필요)
+import { productCardData } from "../../../data/productCardSpecs";
 
 import acLg011 from "../../../img/ac_lg_01.png";
 import airDy011 from "../../../img/air_dy_01.png";
@@ -8,6 +12,7 @@ import refSam021 from "../../../img/ref_sam_02.png";
 import tvLg011 from "../../../img/tv_lg_01.png";
 import tvSam031 from "../../../img/tv_sam_03.png";
 
+// ... (스타일 컴포넌트들은 기존과 동일, 생략 없이 유지) ...
 const Section = styled.section`
   width: 100%;
   max-width: 1280px;
@@ -44,6 +49,12 @@ const Article = styled.article`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  cursor: pointer; /* [추가] 클릭 가능함을 표시 */
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px); /* [옵션] 호버 효과 */
+  }
 
   @media (max-width: 900px) {
     width: 45%;
@@ -65,7 +76,7 @@ const ProductName = styled.h3`
   font-family: "Poppins", sans-serif;
   font-size: 1rem;
   font-weight: 500;
-  min-height: 48px; /* Maintain height for alignment */
+  min-height: 48px;
 `;
 
 const InfoRow = styled.div`
@@ -88,56 +99,64 @@ const Discount = styled.div`
 `;
 
 export const PromotionsSection = () => {
+  const navigate = useNavigate(); // [필수] 훅 선언
+
+  // [수정] 제품별 이동 경로와 실제 데이터 ID를 매핑합니다.
   const allProducts = [
     {
-      id: 1,
+      id: 51, // 실제 데이터 ID
       image: tvLg011,
       alt: "Tv lg",
       name: "LG전자 스탠바이미 27ART10AKPL",
-      price: "1,150,000won",
       discount: "-10%",
+      path: "/purchase/productTvSpecs/51", // 이동할 경로
     },
     {
-      id: 2,
+      id: 53,
       image: image1,
       alt: "Image",
       name: "삼성전자 더 세리프 55인치_KQ55LST01BFXKR",
-      price: "1,450,000won",
       discount: "-36%",
+      path: "/purchase/productTvSpecs/53",
     },
     {
-      id: 3,
+      id: 84,
       image: acLg011,
       alt: "Ac lg",
       name: "LG전자 오브제컬렉션 휘센 위너 스탠드에어컨",
-      price: "1,492,000won",
       discount: "-10%",
+      path: "/purchase/productAcSpecs/84",
     },
     {
-      id: 4,
+      id: 55,
       image: tvSam031,
       alt: "Tv sam",
       name: "삼성전자 더 세로 QLED TV KQ43LST05BFXKR",
-      price: "1,450,000won",
       discount: "-16%",
+      path: "/purchase/productTvSpecs/55",
     },
     {
-      id: 5,
+      id: 95,
       image: airDy011,
       alt: "Air dy",
       name: "다이슨 쿨 공기청정기 TP07",
-      price: "494,000won",
       discount: "-13%",
+      path: "/purchase/productAirSpecs/95",
     },
     {
-      id: 6,
+      id: 65,
       image: refSam021,
       alt: "Ref sam",
       name: "삼성전자 양문형냉장고 RS84T5081SA",
-      price: "1,500,000won",
       discount: "-34%",
+      path: "/purchase/productRefSpecs/65",
     },
   ];
+
+  // 클릭 핸들러
+  const handleProductClick = (path) => {
+    navigate(path);
+  };
 
   return (
     <Section>
@@ -145,16 +164,29 @@ export const PromotionsSection = () => {
         <Title>BEST PRODUCT_All</Title>
       </Header>
       <Grid>
-        {allProducts.map((product) => (
-          <Article key={product.id}>
-            <ProductImage src={product.image} alt={product.alt} />
-            <ProductName>{product.name}</ProductName>
-            <InfoRow>
-              <Price>{product.price}</Price>
-              <Discount>{product.discount}</Discount>
-            </InfoRow>
-          </Article>
-        ))}
+        {allProducts.map((product) => {
+          // [수정] productCardData에서 가격 가져오기 (없으면 '0won')
+          const priceData = productCardData[product.id];
+          const displayPrice =
+            priceData && priceData.prices
+              ? `${priceData.prices.buy.toLocaleString()}won`
+              : "0won";
+
+          return (
+            <Article
+              key={product.id}
+              onClick={() => handleProductClick(product.path)} // 클릭 시 이동
+            >
+              <ProductImage src={product.image} alt={product.alt} />
+              <ProductName>{product.name}</ProductName>
+              <InfoRow>
+                {/* [수정] 가져온 가격 데이터 표시 */}
+                <Price>{displayPrice}</Price>
+                <Discount>{product.discount}</Discount>
+              </InfoRow>
+            </Article>
+          );
+        })}
       </Grid>
     </Section>
   );

@@ -218,7 +218,9 @@ const NavItem = styled(Link)`
   font-family: "Outfit-Regular", Helvetica, sans-serif;
   font-size: 15px;
   text-decoration: none;
+  /* $bold가 true면 700, false면 400 */
   font-weight: ${(props) => (props.$bold ? "700" : "400")};
+  /* $bold가 true면 불투명도 1, false면 0.6 */
   opacity: ${(props) => (props.$bold ? "1" : "0.6")};
   cursor: pointer;
   padding: 5px;
@@ -244,15 +246,14 @@ const BottomLine = styled.div`
 const Header = () => {
   const [search, setSearch] = useState("");
   const [isLogin, setIsLogin] = useState(false);
-  const location = useLocation();
+  const location = useLocation(); // 현재 경로 정보를 가져옴
 
-  // 로그인 상태 확인
+  // 로그인 상태 확인 (기존 로직 유지)
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsLogin(!!token);
   }, [location.pathname]);
 
-  // 로그아웃 핸들러
   const handleLogout = () => {
     if (!window.confirm("로그아웃 하시겠습니까?")) return;
     localStorage.removeItem("accessToken");
@@ -264,7 +265,7 @@ const Header = () => {
   return (
     <Container>
       <HeaderWrapper>
-        {/* 1. 검색창 (PC: 좌측 / 모바일: 중앙 하단) */}
+        {/* 1. 검색창 */}
         <SearchGroup>
           <SearchInput
             type="text"
@@ -275,38 +276,33 @@ const Header = () => {
           <SearchImg src={SearchIcon} alt="검색" />
         </SearchGroup>
 
-        {/* 2. 로고 (PC: 중앙 / 모바일: 상단) */}
+        {/* 2. 로고 */}
         <LogoLink to="/">
           <Logo src={MainLogo} alt="Main Logo" />
         </LogoLink>
 
-        {/* 3. 우측 그룹 (PC: 우측 / 모바일: 하단 우측) */}
+        {/* 3. 우측 그룹 */}
         <RightGroup>
           {isLogin ? (
-            // [로그인 상태]
             <>
               <Link to="/mypage">
                 <IconWrapper>
                   <img src={mypage} alt="mypage" />
                 </IconWrapper>
               </Link>
-
               <IconWrapper>
                 <img src={bell} alt="bell" />
                 <Badge color="#00a3ff">0</Badge>
               </IconWrapper>
-
               <Link to="/cart">
                 <IconWrapper>
                   <img src={cart} alt="cart" />
                   <Badge color="#00cc82">0</Badge>
                 </IconWrapper>
               </Link>
-
               <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>
             </>
           ) : (
-            // [비로그인 상태]
             <>
               <AuthButton to="/signup">Sign Up</AuthButton>
               <AuthButton to="/login" $primary>
@@ -317,18 +313,25 @@ const Header = () => {
         </RightGroup>
       </HeaderWrapper>
 
-      {/* 4. 네비게이션 바 */}
+      {/* 4. 네비게이션 바: 현재 경로(location.pathname)와 비교하여 $bold 전달 */}
       <Navbar>
-        <NavItem to="/" $bold>
+        <NavItem to="/" $bold={location.pathname === "/"}>
           Home
         </NavItem>
-        <NavItem to="/product">All product</NavItem>
-        <NavItem to="/subscriptions">Subscriptions</NavItem>
-        <NavItem to="/purchase">Purchase</NavItem>
-        <NavItem to="/QnA">QnA</NavItem>
+        <NavItem
+          to="/subscriptions"
+          $bold={location.pathname === "/subscriptions"}
+        >
+          Subscriptions
+        </NavItem>
+        <NavItem to="/purchase" $bold={location.pathname === "/purchase"}>
+          Purchase
+        </NavItem>
+        <NavItem to="/QnA" $bold={location.pathname === "/QnA"}>
+          QnA
+        </NavItem>
       </Navbar>
 
-      {/* 5. 하단 구분선 */}
       <BottomLine />
     </Container>
   );
