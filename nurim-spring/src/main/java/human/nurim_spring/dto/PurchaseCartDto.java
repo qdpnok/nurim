@@ -8,7 +8,7 @@ import lombok.*;
 @Builder @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PurchaseCartDto {
-    private Long itemNum;
+    private Long cartItemNum;
     private Long productNum;
     private String name;
     private String serialNum;

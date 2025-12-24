@@ -66,9 +66,14 @@ public class PurchaseCartService {
         purchaseCartItemRepository.save(item);
     }
 
+    // 장바구니 수량 수정
+
+
+    // 장바구니 상품 삭제
+
     private PurchaseCartDto buildCartDto(PurchaseCartItem purchaseCartItem) {
         return PurchaseCartDto.builder()
-                .itemNum(purchaseCartItem.getNum())
+                .cartItemNum(purchaseCartItem.getNum())
                 .productNum(purchaseCartItem.getProduct().getNum())
                 .name(purchaseCartItem.getProduct().getName())
                 .serialNum(purchaseCartItem.getProduct().getSerialNum())
