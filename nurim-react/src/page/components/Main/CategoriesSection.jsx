@@ -59,18 +59,22 @@ const Row = styled.div`
   margin-right: 80px;
 `;
 
+// [수정] CenterRow에 display: flex 추가 및 Row와 스타일 통일
 const CenterRow = styled.div`
-  width: 1280px;
+  width: 1120px;
   align-items: flex-start;
   margin-top: 32px;
   margin-bottom: 32px;
   margin-left: 80px;
+  display: flex; /* Row와 동일하게 flex 적용 */
+  position: relative;
 `;
 
 const Card = styled.div`
   flex: ${({ $layout }) => ($layout === "half" ? "1" : "none")};
   flex-grow: ${({ $layout }) => ($layout === "half" ? "1" : "0")};
-  width: ${({ $layout }) => ($layout === "full" ? "1280px" : "auto")};
+  /* [수정] full일 때 고정 픽셀 대신 100%를 사용하여 부모 컨테이너에 맞춤 */
+  width: ${({ $layout }) => ($layout === "full" ? "100%" : "auto")};
   position: relative;
   height: 453px;
   background-color: #f3f4f7;
@@ -95,7 +99,7 @@ const Content = styled.div`
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.75rem; /* gap-7 */
+  gap: 1.75rem;
   position: absolute;
   z-index: 10;
 `;
@@ -105,18 +109,18 @@ const Title = styled.h3`
   width: fit-content;
   margin-top: -1px;
   font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
+  font-weight: 600;
   color: var(--tokens-text-heading-main);
-  font-size: 1.875rem; /* 3xl */
+  font-size: 1.875rem;
   letter-spacing: 0;
   line-height: normal;
   white-space: nowrap;
 `;
 
 const ShopButton = styled.button`
-  height: 3.5rem; /* h-14 */
-  gap: 0.75rem; /* gap-3 */
-  padding: 0.625rem 1.25rem; /* px-5 py-2.5 */
+  height: 3.5rem;
+  gap: 0.75rem;
+  padding: 0.625rem 1.25rem;
   border: 1px solid #b3b3b3;
   display: inline-flex;
   align-items: center;
@@ -135,7 +139,7 @@ const ButtonText = styled.span`
   position: relative;
   width: fit-content;
   font-family: "Inter", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
+  font-weight: 600;
   color: var(--tokens-text-heading-main);
   font-size: 15px;
   text-align: center;
@@ -146,8 +150,8 @@ const ButtonText = styled.span`
 
 const StyledArrowRight = styled(ArrowRight)`
   position: relative !important;
-  width: 1.5rem !important; /* w-6 */
-  height: 1.5rem !important; /* h-6 */
+  width: 1.5rem !important;
+  height: 1.5rem !important;
 `;
 
 const ProductImage = styled.img`
@@ -163,20 +167,18 @@ const ProductImage = styled.img`
     height: 350px;
     aspect-ratio: 0.22;
   `}
-   /* Example for id:2 (null image logic handled in render but here just styles) */
   ${(props) =>
     props.$id === 2 &&
     `
-     top: 2rem; /* top-8 */
+     top: 2rem;
      left: 100px;
      width: 600px;
      height: 390px;
      aspect-ratio: 0.63;
-     background-image: url('/image-4.png'); /* Adjust path */
+     background-image: url('/image-4.png');
      background-size: cover;
      background-position: 50% 50%;
   `}
-   /* Example for id:3 */
   ${(props) =>
     props.$id === 3 &&
     `
@@ -186,18 +188,16 @@ const ProductImage = styled.img`
     height: 500px;
     aspect-ratio: 1.91;
   `}
-  /* Example for id:4 */
   ${(props) =>
     props.$id === 4 &&
     `
-    top: 5rem; /* top-20 */
+    top: 5rem; 
     left: 251px;
     width: 294px;
     height: 294px;
     aspect-ratio: 1;
     object-fit: cover;
   `}
-  /* Example for id:5 */
   ${(props) =>
     props.$id === 5 &&
     `
@@ -209,13 +209,13 @@ const ProductImage = styled.img`
     object-fit: cover;
   `}
 `;
-// Note: For id 2 which is a div bg image
+
 const ProductImageDiv = styled.div`
   position: absolute;
   ${(props) =>
     props.$id === 2 &&
     `
-     top: 2rem; /* top-8 */
+     top: 2rem; 
      left: 294px;
      width: 246px;
      height: 390px;

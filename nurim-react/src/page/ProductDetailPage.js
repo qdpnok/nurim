@@ -1,55 +1,88 @@
-// src/page/ProductDetailPage.js
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import ProductSpecTable from "./components/Sub/ProductSpecTable"; // 경로 확인
+import axios from "axios";
 
-// [중요] 1단계에서 만든 통합 데이터 가져오기
-import { allProductSpecs } from "../data/index";
+// 분리된 컴포넌트 임포트
+import ProductTopSection from "./components/ProductDetail/ProductTopSection";
+import RecommendSection from "./components/ProductDetail/RecommendSection";
+import DetailReviewSection from "./components/ProductDetail/DetailReviewSection";
+import SupportSection from "./components/ProductDetail/SupportSection";
+
+import { allProductSpecs } from "../data";
 
 const Container = styled.div`
-  width: 1200px;
+  width: 1240px;
   margin: 0 auto;
-  padding: 60px 0;
-  text-align: center;
+  padding-bottom: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const ProductDetailPage = () => {
-  // 1. URL 파라미터 추출
-  // 예: /subscriptions/productTv/1  => category="productTv", id="1"
-  const { category, id } = useParams();
-
-  // 2. 데이터 찾기
-  // allProductSpecs["productTv"] 를 통해 productTvSpecs 데이터를 가져옵니다.
-  const targetCategoryData = allProductSpecs[category];
-
-  // 가져온 카테고리 데이터 안에서 ID가 1인 제품을 찾습니다.
-  const specs = targetCategoryData ? targetCategoryData[id] : null;
-
-  // 데이터가 없을 경우 처리
-  if (!specs) {
-    return (
-      <Container>
-        <h2>상품 정보를 찾을 수 없습니다.</h2>
-        <p>
-          요청하신 카테고리({category})의 상품 ID({id})가 존재하지 않습니다.
-        </p>
-      </Container>
-    );
+const findSpecById = (id) => {
+  if (!allProductSpecs) return [];
+  const allCategories = Object.values(allProductSpecs);
+  for (const categoryData of allCategories) {
+    if (categoryData[id]) {
+      return categoryData[id];
+    }
   }
+  return [];
+};
 
-  // 3. 데이터가 있으면 스펙 테이블 출력
+const ProductDetailPage = () => {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState(36);
+
+  const staticSpecData = findSpecById(id);
+
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `http://localhost:8222/api/product/detail/${id}`
+        );
+        setProduct(response.data);
+      } catch (e) {
+        console.error("상세 정보 로딩 실패:", e);
+        setProduct({
+          id: id,
+          name: "LG 휘센 오브제컬렉션 (테스트용)",
+          img: "",
+          price: 2500000,
+          spec: null,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetchProductDetail();
+  }, [id]);
+
+  if (loading) return <Container>Loading...</Container>;
+  if (!product) return <Container>상품 정보를 불러오는 중입니다...</Container>;
+
   return (
     <Container>
-      {/* 필요하다면 여기에 상품 이미지나 이름을 추가로 보여줄 수 있습니다 */}
-      {/* <h1>상품 상세 정보</h1> */}
+      {/* 1. 상단 섹션 (이미지, 가격, 옵션) */}
+      <ProductTopSection
+        product={product}
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+      />
 
-      {/* 스펙 테이블 컴포넌트에 데이터 전달 */}
-      <ProductSpecTable data={specs} />
+      {/* 2. 추천 제품 섹션 */}
+      <RecommendSection />
+
+      {/* 3. 상세정보 & 리뷰 탭 섹션 */}
+      <DetailReviewSection product={product} staticSpecData={staticSpecData} />
+
+      {/* 4. 고객지원 & 유의사항 섹션 */}
+      <SupportSection />
     </Container>
   );
 };

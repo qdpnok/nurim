@@ -7,12 +7,20 @@ import CategoryFilter from "./components/Sub/CategoryFilter";
 import ProductItem from "./components/Sub/ProductItem";
 import Pagination from "./components/Sub/Pagination";
 
-// 이미지 import (경로 확인 필요)
+// 이미지 import
 import ac from "../img/C_ac.png";
 import ref from "../img/C_ref.png";
 import tv from "../img/C_tv.png";
 import wash from "../img/C_wt.png";
 import air from "../img/C_air.png";
+
+const CATEGORIES = [
+  { name: "에어컨", img: ac },
+  { name: "냉장고", img: ref },
+  { name: "TV", img: tv },
+  { name: "세탁기", img: wash },
+  { name: "공기청정기", img: air },
+];
 
 // --- 스타일 컴포넌트 ---
 const Container = styled.div`
@@ -23,7 +31,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
 const ProductGrid = styled.div`
   width: 1200px;
   display: flex;
@@ -32,7 +39,6 @@ const ProductGrid = styled.div`
   justify-content: flex-start;
   margin-bottom: 50px;
 `;
-
 const SearchBox = styled.div`
   width: 1200px;
   height: 90px;
@@ -46,7 +52,6 @@ const SearchBox = styled.div`
   color: #999;
   font-size: 16px;
 `;
-
 const ContentHeader = styled.div`
   width: 1200px;
   display: flex;
@@ -54,19 +59,19 @@ const ContentHeader = styled.div`
   align-items: flex-start;
   margin-bottom: 10px;
 `;
-
 const Breadcrumb = styled.div`
   font-size: 14px;
   color: #888;
   display: flex;
   gap: 8px;
-
+  align-items: center;
+  height: 24px;
+  line-height: 1;
   span.active {
     color: #333;
     font-weight: bold;
   }
 `;
-
 const PageTitle = styled.h2`
   width: 1200px;
   font-size: 28px;
@@ -74,6 +79,10 @@ const PageTitle = styled.h2`
   color: #000;
   margin: 30px 0;
   text-align: left;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  line-height: 1;
 `;
 
 const LineSeparator = styled.div`
@@ -82,7 +91,6 @@ const LineSeparator = styled.div`
   background-color: #e0e0e0;
   margin-bottom: 0px;
 `;
-
 const EmptyMessage = styled.div`
   width: 100%;
   padding: 50px;
@@ -90,131 +98,141 @@ const EmptyMessage = styled.div`
   color: #888;
 `;
 
-const CATEGORIES = [
-  { name: "에어컨", img: ac },
-  { name: "냉장고", img: ref },
-  { name: "TV", img: tv },
-  { name: "세탁기", img: wash },
-  { name: "공기청정기", img: air },
-];
-
-// --- 메인 컴포넌트 ---
-const SubscribePage = ({ type }) => {
+const SubPage = ({ type }) => {
   const [selectedCategory, setSelectedCategory] = useState("에어컨");
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // [수정 2] DB 데이터를 저장할 State 생성
-  const [products, setProducts] = useState([]); // 초기값은 빈 배열
-  const [loading, setLoading] = useState(false); // 로딩 상태 관리
-  const [error, setError] = useState(null); // 에러 상태 관리
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(10);
-
-  const fetchProducts = async () => {
-    try {
-      setError(null);
-      setProducts([]);
-      setLoading(true);
-
-      // 1. 서버 요청
-      const response = await axios.get(
-        `http://localhost:8222/api/product/list?category=${selectedCategory}&page=${currentPage}`
-      );
-
-      // [디버깅] 서버에서 실제 변수명이 어떻게 오는지 콘솔에서 확인해보세요!
-      console.log(
-        "🔥 서버 원본 데이터(첫번째):",
-        response.data.productListDtoList[0]
-      );
-
-      // 2. 데이터 변환 (매핑)
-      const mappedData = response.data.productListDtoList.map((item) => {
-        // [핵심 수정] 대소문자 혼용 방지: snum, sNum, pnum, pNum 모두 체크
-        // 구독 페이지면 snum, 구매 페이지면 pnum을 우선적으로 가져옵니다.
-        let targetId;
-        if (type === "subscription") {
-          targetId = item.snum || item.sNum || item.id;
-        } else {
-          targetId = item.pnum || item.pNum || item.id;
-        }
-
-        let targetPrice;
-        if (type === "subscription") {
-          targetPrice = item.sprice || item.sPrice;
-        } else {
-          targetPrice = item.pprice || item.pPrice;
-        }
-
-        return {
-          id: targetId, // 여기서 undefined가 안 뜨게 잡아야 합니다.
-          category: item.category,
-          image: item.img,
-          alt: item.name,
-          name: item.name,
-          price: targetPrice ? `${targetPrice.toLocaleString()}won` : "0won",
-          // 할인율도 대소문자 체크
-          discount:
-            item.pdiscountrate || item.pDiscountRate
-              ? `-${item.pdiscountrate || item.pDiscountRate}% off`
-              : null,
-          spec: item.spec,
-          reviewCount: item.scopeCount || item.scopecount || 0,
-          rating: item.scopeAvg || item.scopeavg || 0,
-        };
-      });
-
-      setProducts(mappedData);
-
-      setCurrentPage(response.data.currentPage);
-      setTotalPages(response.data.totalPages);
-
-      // 3. 변환된 데이터를 state에 저장
-      setProducts(mappedData);
-    } catch (e) {
-      console.error("Error fetching data:", e);
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // [수정 3] 서버에서 데이터 가져오기 (useEffect)
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    fetchProducts();
-  }, [currentPage]);
+  const itemsPerPage = 9;
 
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory(categoryName);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // 로딩 중이거나 에러 발생 시 처리
-  if (loading)
-    return (
-      <Container>
-        <div>Loading...</div>
-      </Container>
-    );
-  if (error)
-    return (
-      <Container>
-        <div>에러가 발생했습니다. 잠시 후 다시 시도해주세요.</div>
-      </Container>
-    );
+  useEffect(() => {
+    const fetchAllProducts = async () => {
+      try {
+        setError(null);
+        setAllProducts([]);
+        setLoading(true);
+
+        // [수정 포인트] 데이터를 더 많이 가져오기 위해 페이지 수를 늘립니다.
+        // 기존 5페이지(100개) -> 10페이지(200개)로 변경
+        // 이렇게 하면 중간에 빈 번호가 있거나 순서가 뒤섞여 있어도 snum 1~100번을 모두 확보할 수 있습니다.
+        const pages = [
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        ];
+
+        const requests = pages.map((page) =>
+          axios.get("http://localhost:8222/api/product/list", {
+            params: { page: page, size: 20 },
+          })
+        );
+
+        const results = await Promise.allSettled(requests);
+
+        const flatData = results
+          .filter(
+            (result) => result.status === "fulfilled" && result.value.data
+          )
+          .flatMap((result) => {
+            const data = result.value.data;
+            return Array.isArray(data) ? data : data.productListDtoList || [];
+          });
+
+        // 데이터 매핑
+        const mappedData = flatData.map((item) => {
+          const uniqueId = item.pnum || item.pNum || item.id;
+
+          // 카테고리 한글 변환 로직
+          let fixedCategory = "기타";
+          const imgName = (item.img || "").toLowerCase();
+
+          if (imgName.includes("ac")) fixedCategory = "에어컨";
+          else if (imgName.includes("ref")) fixedCategory = "냉장고";
+          else if (imgName.includes("tv")) fixedCategory = "TV";
+          else if (imgName.includes("wash") || imgName.includes("wt"))
+            fixedCategory = "세탁기";
+          else if (imgName.includes("air")) fixedCategory = "공기청정기";
+
+          const targetDiscount =
+            type === "subscription"
+              ? item.sdiscountRate || item.sDiscountRate
+              : item.pdiscountrate || item.pDiscountRate;
+
+          return {
+            id: uniqueId,
+            snum: Number(item.snum || item.sNum),
+            category: fixedCategory,
+            image: item.img,
+            alt: item.name,
+            name: item.name,
+            price: item.price ? `${item.price.toLocaleString()}won` : "0won",
+            discount: targetDiscount ? `-${targetDiscount}% off` : null,
+            spec: item.spec,
+            reviewCount: item.scopeCount || item.scopecount || 0,
+            rating: item.scopeAvg || item.scopeavg || 0,
+          };
+        });
+
+        // 중복 제거
+        const uniqueData = mappedData.filter(
+          (v, i, a) => a.findIndex((t) => t.id === v.id) === i
+        );
+
+        // 필터링 적용 (구독: 1~50, 구매: 51~100)
+        const pageTypeFiltered = uniqueData.filter((product) => {
+          if (!product.snum) return false;
+
+          if (type === "subscription") {
+            // 구독 탭: snum 확인 (1 ~ 50)
+            return product.snum >= 1 && product.snum <= 50;
+          } else {
+            // 구매 탭: id(pnum) 확인 (51 ~ 100)
+            return product.id >= 51 && product.id <= 100;
+          }
+        });
+
+        // [디버깅용] 실제로 몇 개가 들어왔는지 콘솔에서 확인해보세요!
+        console.log(`📦 전체 확보된 데이터: ${uniqueData.length}개`);
+        console.log(
+          `🎯 현재 페이지(${type}) 필터링된 데이터: ${pageTypeFiltered.length}개`
+        );
+
+        setAllProducts(pageTypeFiltered);
+      } catch (e) {
+        console.error("Error fetching products:", e);
+        setError(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllProducts();
+  }, [type]);
+
+  const filteredByCategory =
+    selectedCategory === "전체"
+      ? allProducts
+      : allProducts.filter((product) => product.category === selectedCategory);
+
+  const totalItems = filteredByCategory.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = filteredByCategory.slice(startIndex, endIndex);
+
+  if (loading) return <Container>Loading...</Container>;
 
   return (
     <Container>
-      {/* 1. 카테고리 필터 컴포넌트 */}
       <CategoryFilter
         categories={CATEGORIES}
         selectedCategory={selectedCategory}
@@ -242,7 +260,6 @@ const SubscribePage = ({ type }) => {
       <ContentHeader>
         <Breadcrumb>
           <span>Home</span> <span>&gt;</span>
-          {/* type에 따라 상단 텍스트 변경 */}
           <span>
             {type === "subscription" ? "Subscriptions" : "Purchase"}
           </span>{" "}
@@ -255,24 +272,29 @@ const SubscribePage = ({ type }) => {
 
       <PageTitle>{selectedCategory} Products</PageTitle>
 
-      {/* 2. 상품 리스트 영역 */}
       <ProductGrid>
-        {products.length > 0 ? (
-          products.map((data) => (
-            <ProductItem key={data.id} product={data} type={type} />
+        {currentProducts.length > 0 ? (
+          currentProducts.map((data, index) => (
+            <ProductItem
+              key={data.id ? `${data.id}-${index}` : index}
+              product={data}
+              type={type}
+            />
           ))
         ) : (
           <EmptyMessage>해당 카테고리에 등록된 상품이 없습니다.</EmptyMessage>
         )}
       </ProductGrid>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      {totalItems > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </Container>
   );
 };
 
-export default SubscribePage;
+export default SubPage;

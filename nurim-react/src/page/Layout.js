@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
-import { useAuth } from "./components/Auth/AuthContext";
 
-import HeaderBasic from "./components/Layout/HeaderBasic";
-import HeaderLogin from "./components/Layout/HeaderLogin";
+import Header from "./components/Layout/Header";
 import Footer from "./components/Layout/Footer";
 
 const Wrapper = styled.div`
@@ -26,11 +24,9 @@ const Main = styled.main`
 // --- Component ---
 
 const Layout = () => {
-  const { isLoggedIn } = useAuth();
-
   return (
     <Wrapper>
-      {isLoggedIn ? <HeaderLogin /> : <HeaderBasic />}
+      <Header />
       <Main>
         <Outlet />
       </Main>
