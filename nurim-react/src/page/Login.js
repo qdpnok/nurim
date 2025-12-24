@@ -12,9 +12,7 @@ import oeye from "../img/Oeye.png";
 // --- 스타일 정의 ---
 const Container = styled.div`
   width: 100%;
-  max-width: 1440px;
-  height: 900px;
-  margin: 0 auto;
+  min-height: 100vh; /* 화면 전체 높이 */
   position: relative;
   display: flex;
   justify-content: center;
@@ -23,6 +21,7 @@ const Container = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
   &::before {
     content: "";
     position: absolute;
@@ -41,33 +40,37 @@ const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* 기본 중앙 정렬 */
   align-items: center;
-  padding: 0 100px;
+  padding: 40px;
   box-sizing: border-box;
-  @media (max-width: 1024px) {
-    justify-content: center;
-    padding: 0 40px;
+
+  /* PC 화면에서는 좌우 분할 */
+  @media (min-width: 1025px) {
+    justify-content: space-between;
+    padding: 0 100px;
+    max-width: 1440px; /* 최대 너비 제한 */
   }
 `;
 
 const LeftSection = styled.div`
-  margin-left: 160px;
-  display: flex;
+  display: none; /* 기본 숨김 (모바일/태블릿) */
   flex-direction: column;
   justify-content: center;
   color: white;
   max-width: 500px;
-  height: 768px;
-  @media (max-width: 1024px) {
-    display: none;
+
+  /* PC 화면에서만 보임 */
+  @media (min-width: 1025px) {
+    display: flex;
+    margin-left: 60px; /* 간격 조정 */
   }
 `;
 
 const LogoArea = styled.h1`
   font-size: 40px;
   font-weight: bold;
-  margin-bottom: 120px;
+  margin-bottom: 80px;
   font-family: sans-serif;
   letter-spacing: 2px;
 `;
@@ -86,17 +89,27 @@ const Description = styled.p`
 `;
 
 const LoginCard = styled.div`
-  width: 460px;
-  height: 768px;
+  width: 100%;
+  max-width: 460px; /* 최대 너비 설정 */
   background-color: white;
-  border-radius: 20px 20px 0px 0px;
-  padding: 80px 50px;
+  border-radius: 20px; /* 전체 둥글게 */
+  padding: 60px 40px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 150px;
-  margin-top: 150px;
+
+  /* PC 화면 위치 조정 */
+  @media (min-width: 1025px) {
+    border-radius: 20px 20px 0px 0px; /* PC 디자인 유지 */
+    height: 768px; /* PC에서는 고정 높이 유지하거나 min-height 사용 */
+    margin-top: 100px; /* 상단 여백 */
+    margin-right: 60px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 40px 20px; /* 모바일 패딩 축소 */
+  }
 `;
 
 const CardHeader = styled.div`
@@ -115,6 +128,10 @@ const TitleText = styled.h2`
   color: #333;
   font-weight: 700;
   margin: 0;
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
 `;
 
 const Form = styled.form`
@@ -169,6 +186,12 @@ const OptionsRow = styled.div`
   align-items: center;
   font-size: 13px;
   margin-top: -10px;
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 `;
 const CheckboxLabel = styled.label`
   display: flex;
@@ -213,7 +236,7 @@ const SignupText = styled.div`
   }
 `;
 
-// [수정] 컴포넌트 밖으로 이동
+// 로고 스타일
 const LogoNurim = styled.img`
   width: 145px;
   height: 32px;
@@ -227,7 +250,6 @@ const LogoNR = styled.img`
 
 const LogIn = () => {
   const navigate = useNavigate();
-  // [삭제] AuthContext 사용 안 함
   // const { login } = useAuth();
 
   const [id, setId] = useState("");
@@ -241,18 +263,14 @@ const LogIn = () => {
       const response = await api.post("/auth/login", { id, pwd, rememberMe });
 
       if (response.status === 200) {
-        // 토큰 추출
         const token =
           response.headers["authorization"] ||
           response.data.token ||
-          "dummy-token"; // 백엔드 연결 전 테스트용 더미 토큰
+          "dummy-token";
 
-        // [수정] 로컬 스토리지에 직접 저장
         localStorage.setItem("accessToken", token);
 
         alert("로그인 되었습니다.");
-
-        // 홈으로 이동 (Header가 location 변경을 감지하여 로그인 상태 반영)
         navigate("/");
       }
     } catch (error) {
@@ -292,6 +310,7 @@ const LogIn = () => {
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 required
+                autoComplete="username"
               />
             </InputGroup>
             <InputGroup>
@@ -303,6 +322,7 @@ const LogIn = () => {
                   value={pwd}
                   onChange={(e) => setPwd(e.target.value)}
                   required
+                  autoComplete="current-password"
                 />
                 <EyeIcon onClick={() => setShowPassword(!showPassword)}>
                   <img src={showPassword ? oeye : ceye} alt="toggle" />

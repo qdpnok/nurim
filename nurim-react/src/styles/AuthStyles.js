@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 // ==========================================
 export const GlobalStyle = createGlobalStyle`
   :root {
+    /* --- Design Tokens (기존 설정 유지) --- */
     --primitives-color-brand-50: rgba(248, 247, 251, 1);
     --primitives-color-grey-50: rgba(255, 255, 255, 1);
     --primitives-color-grey-500: rgba(95, 105, 128, 1);
@@ -39,11 +40,28 @@ export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', 'Poppins', Helvetica, sans-serif; /* Poppins 추가 */
+    font-family: 'Inter', 'Poppins', Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* --- [추가] 텍스트 선택 방지 (커서 깜빡임 방지) --- */
+    user-select: none;
+    -webkit-user-select: none; /* 크롬/사파리 */
+    -moz-user-select: none;    /* 파이어폭스 */
+    -ms-user-select: none;     /* IE/엣지 */
   }
 
+  /* --- [추가] 입력창에서는 글씨 선택/입력 가능하도록 예외 처리 --- */
+  input,
+  textarea {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    cursor: text; /* 입력 커서 모양 유지 */
+  }
+
+  /* Form Elements Reset */
   button,
   input,
   select,
@@ -55,11 +73,16 @@ export const GlobalStyle = createGlobalStyle`
     font-family: inherit;
   }
 
+  /* Box Sizing Reset */
   *, *::before, *::after {
     box-sizing: border-box;
   }
-`;
 
+  /* --- [추가] 이미지 드래그 방지 (선택 사항) --- */
+  img {
+    -webkit-user-drag: none;
+  }
+`;
 // ==========================================
 // 2. Auth Page Components (로그인/회원가입 등)
 // ==========================================
@@ -71,7 +94,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -140px; /* 헤더 높이 고려 */
+  margin-top: -140px;
 `;
 
 export const Card = styled.div`

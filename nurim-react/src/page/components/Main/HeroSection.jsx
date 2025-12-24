@@ -1,125 +1,91 @@
 import React from "react";
 import styled from "styled-components";
 import mainBanner1 from "../../../img/main_banner.jpg";
-// const rectangle1 = "https://placehold.co/100x443"; 임시 이미지.
+import { useNavigate } from "react-router-dom";
 
 const Section = styled.section`
-  width: 1440px;
+  width: 100%;
   height: 800px;
   position: relative;
   background-color: white;
-  margin: 0 auto;
+  overflow: hidden; /* Prevent overflow */
+
+  @media (max-width: 768px) {
+    height: 600px;
+  }
 `;
 
 const BannerImg = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1440px;
-  height: 800px;
-  aspect-ratio: 1.5;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 `;
 
 const OverlayBox = styled.div`
   position: absolute;
-  top: 340px;
-  left: 140px;
-  width: 645px;
-  height: 306px;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%); /* Vertically center */
+  width: 45%;
+  max-width: 645px;
+  padding: 40px;
   background-color: #0000004c;
   border-radius: 20px;
-  backdrop-filter: blur(10px) brightness(100%);
-  -webkit-backdrop-filter: blur(10px) brightness(100%);
+  backdrop-filter: blur(10px);
+  color: white;
+
+  @media (max-width: 768px) {
+    width: 80%;
+    left: 10%;
+  }
 `;
 
 const Title = styled.h1`
-  position: absolute;
-  top: 377px;
-  left: 184px;
-  width: 574px;
   font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 700; /* Bold */
-  color: white;
-  font-size: 35px;
-  letter-spacing: 0;
-  line-height: 49px;
+  font-weight: 700;
+  font-size: clamp(24px, 4vw, 35px); /* Responsive font size */
+  margin-bottom: 20px;
 `;
 
 const Description = styled.p`
-  position: absolute;
-  top: 445px;
-  left: 184px;
-  width: 448px;
   font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 400; /* Regular */
-  color: white;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: 28.2px;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
 `;
 
 const StartButton = styled.button`
   all: unset;
-  box-sizing: border-box;
-  display: flex;
-  width: 114px;
-  height: 2rem; /* h-8 */
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem; /* gap-2.5 */
-  padding: 1.25rem 4.375rem; /* px-[70px] py-5 */
-  position: absolute;
-  top: 584px;
-  left: 184px;
+  padding: 15px 40px;
   background-color: white;
   border-radius: 15px;
   cursor: pointer;
-  transition: all 0.2s;
+  color: #2f6364;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.9);
   }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px transparent;
-  }
-`;
-
-const ButtonText = styled.span`
-  position: relative;
-  width: fit-content;
-  margin-top: -15.5px;
-  margin-bottom: -13.5px;
-  margin-left: -50px;
-  margin-right: -50px;
-  font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 600;
-  color: #2f6364;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: 21px;
-  white-space: nowrap;
 `;
 
 export const HeroSection = () => {
+  const nav = useNavigate();
   return (
     <Section>
-      <BannerImg
-        src={mainBanner1}
-        alt="Modern apartment interior showcasing rental lifestyle"
-      />
-      <OverlayBox />
-      <Title>Experiences beyond ownership</Title>
-      <Description>
-        NURIM is not simply a "rental service" that lends products; it's a
-        lifestyle partner that allows customers to fully "enjoy" the value and
-        experience they gain from these products.
-      </Description>
-      <StartButton aria-label="Start exploring NURIM rental services">
-        <ButtonText>Start Now</ButtonText>
-      </StartButton>
+      <BannerImg src={mainBanner1} alt="Banner" />
+      <OverlayBox>
+        <Title>Experiences beyond ownership</Title>
+        <Description>
+          NURIM is not simply a "rental service" that lends products; it's a
+          lifestyle partner that allows customers to fully "enjoy" the value and
+          experience they gain from these products.
+        </Description>
+        <StartButton onClick={() => nav("/subscriptions")}>
+          Start Now
+        </StartButton>
+      </OverlayBox>
     </Section>
   );
 };

@@ -10,27 +10,13 @@ import { PromotionsSection } from "./components/Main/PromotionsSection";
 const Main = styled.main`
   background-color: white;
   width: 100%;
-  min-width: 1440px;
-  min-height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center; /* Center content */
 `;
 
-const HotDealsSection = styled.section`
-  display: flex;
-  margin-left: 5rem; /* ml-20 */
-  margin-right: 5rem;
-  flex: 1;
-  max-height: 34px;
-  position: relative;
-  margin-top: 121.4px;
-  width: 1280px;
-  height: 34px;
-  align-items: center;
-  gap: 0.625rem; /* gap-2.5 */
-  padding: 0.625rem 0; /* px-0 py-2.5 */
-  margin: 0 auto;
-`;
+// Removed HotDealsSection as it was empty and causing spacing issues or replace content if needed.
+// If you need spacing, use margin in sections.
 
 export const Home = () => {
   return (
@@ -39,7 +25,6 @@ export const Home = () => {
       <ProductDisplaySection />
       <CategoriesSection />
       <PromotionsSection />
-      <HotDealsSection></HotDealsSection>
       <FeaturedProductsSection />
       <FaqSection />
     </Main>

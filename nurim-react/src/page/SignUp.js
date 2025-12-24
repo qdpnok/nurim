@@ -3,37 +3,36 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
 import EmailVerification from "./components/Auth/EmailVerification";
-// FindId, FindPw 등에서 사용하는 컴포넌트 경로 확인 필요
 
-// --- 스타일 정의 (한 파일에 포함) ---
+// --- 스타일 정의 ---
 const Container = styled.div`
-  width: 1440px;
-  height: 1024px;
+  width: 100%;
+  min-height: 100vh; /* 화면 전체 높이 사용 */
   background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Poppins", sans-serif;
-  margin-top: -140px;
+  padding: 20px; /* 모바일에서 테두리 여백 확보 */
+  box-sizing: border-box;
 `;
 
 const Card = styled.div`
   width: 100%;
-  max-width: 1440px;
-  position: relative;
+  max-width: 600px; /* 카드의 최대 너비 제한 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 0;
+  padding: 40px 0;
 `;
 
 const Content = styled.div`
-  width: 600px;
+  width: 100%; /* 부모(Card) 너비에 맞춤 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
-  margin-top: 60px;
+  gap: 40px;
+  margin-top: 40px;
 `;
 
 const Header = styled.div`
@@ -44,15 +43,22 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 36px;
+  font-size: 32px; /* 모바일 고려하여 폰트 사이즈 약간 축소 */
   font-weight: 600;
   color: #333;
   margin: 0;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
 `;
 
 const SubText = styled.div`
   font-size: 16px;
   color: #888;
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const LinkSpan = styled(Link)`
@@ -68,6 +74,8 @@ const StepperContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   margin-bottom: 10px;
+  padding: 0 10px; /* 좌우 여백 */
+  box-sizing: border-box;
 `;
 
 const StepperItem = styled.div`
@@ -97,6 +105,10 @@ const StepText = styled.span`
   font-size: 14px;
   color: ${(props) => (props.$active ? "#333" : "#aaa")};
   font-weight: ${(props) => (props.$active ? 600 : 400)};
+
+  @media (max-width: 480px) {
+    font-size: 12px; /* 모바일에서 텍스트 크기 줄임 */
+  }
 `;
 
 const Line = styled.div`
@@ -104,7 +116,7 @@ const Line = styled.div`
   height: 2px;
   background-color: ${(props) => (props.$active ? "#2f6364" : "#e0e0e0")};
   margin: 0 10px;
-  transform: translateY(-14px);
+  transform: translateY(-14px); /* 텍스트 높이 고려 위치 조정 */
   transition: background-color 0.3s;
 `;
 
@@ -178,6 +190,7 @@ const NextButton = styled.button`
   }
 `;
 
+// --- 모달 반응형 수정 ---
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -189,11 +202,13 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const ModalContent = styled.div`
-  width: 535px;
-  height: 428px;
+  width: 100%;
+  max-width: 535px; /* 최대 너비 설정 */
   background: white;
   border-radius: 20px;
   display: flex;
@@ -232,6 +247,7 @@ const ModalTitle = styled.h2`
   color: #333;
   margin: 0 0 10px 0;
   text-align: center;
+  word-break: keep-all; /* 모바일 줄바꿈 방지 */
 `;
 
 const ModalDesc = styled.p`
@@ -243,7 +259,8 @@ const ModalDesc = styled.p`
 `;
 
 const ModalButton = styled.button`
-  width: 200px;
+  width: 100%;
+  max-width: 200px;
   height: 50px;
   background-color: #2f6364;
   color: white;

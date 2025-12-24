@@ -1,5 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom"; // [필수] 이동을 위한 훅
+
+// [추가] 가격 데이터 import (경로 확인 필요)
+import { productCardData } from "../../../data/productCardSpecs";
 
 import acLg011 from "../../../img/ac_lg_01.png";
 import airDy011 from "../../../img/air_dy_01.png";
@@ -8,211 +12,150 @@ import refSam021 from "../../../img/ref_sam_02.png";
 import tvLg011 from "../../../img/tv_lg_01.png";
 import tvSam031 from "../../../img/tv_sam_03.png";
 
+// ... (스타일 컴포넌트들은 기존과 동일, 생략 없이 유지) ...
 const Section = styled.section`
-  margin-left: 5rem; /* ml-20 */
-  margin-right: 5rem;
-  flex: 1;
-  max-height: 786.57px;
-
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 1280px;
+  margin: 90px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 `;
 
 const Header = styled.header`
-  display: flex;
-  /* margin-left: 27.3px; */
-  margin-right: 46.9px;
-  flex: 1;
-  max-height: 3.5rem; /* h-14 */
-  position: relative;
-  width: 1205.75px;
-  height: 3.5rem;
-  align-items: center;
-  gap: 0.625rem; /* gap-2.5 */
-  padding: 0.625rem 0;
-  margin-top: 90px;
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
-  font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 600; /* SemiBold */
-  color: black;
-  font-size: 1.5rem; /* 2xl */
-  letter-spacing: 0;
-  line-height: normal;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
 `;
 
-const Row = styled.div`
+const Grid = styled.div`
   display: flex;
-  flex: 1;
-  max-height: 339.91px;
-  position: relative;
-  width: ${({ $isRow1 }) => ($isRow1 ? "1277.47px" : "1280px")};
-  height: 339.91px;
-  align-items: center;
-  justify-content: center;
-  gap: 200px;
-  padding: 0 1.25rem; /* px-5 */
-  margin-top: ${({ $isRow1 }) => ($isRow1 ? "40.7px" : "10.1px")};
-  margin-right: ${({ $isRow1 }) => ($isRow1 ? "2.5px" : "0")};
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const Article = styled.article`
-  display: inline-flex;
+  width: 30%;
+  min-width: 280px;
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 0.625rem; /* p-2.5 */
-  position: relative;
-  flex: 0 0 auto;
-  border-radius: 10px;
+  gap: 10px;
+  cursor: pointer; /* [추가] 클릭 가능함을 표시 */
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px); /* [옵션] 호버 효과 */
+  }
+
+  @media (max-width: 900px) {
+    width: 45%;
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const ProductImage = styled.img`
-  position: relative;
-  width: 235px;
-  height: 235px;
+  width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
+  border-radius: 10px;
+  background-color: #f9f9f9;
 `;
 
 const ProductName = styled.h3`
-  position: relative;
-  width: 236px;
-  font-family: ${({ $fontFamily }) =>
-    $fontFamily.includes("Poppins")
-      ? "'Poppins', Helvetica, sans-serif"
-      : "'Outfit', Helvetica, sans-serif"};
-  font-weight: ${({ $fontFamily }) =>
-    $fontFamily.includes("medium") ? "500" : "400"};
-  color: black;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: normal;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  min-height: 48px;
 `;
 
 const InfoRow = styled.div`
   display: flex;
-  width: 235px;
-  align-items: flex-start;
   justify-content: space-between;
-  position: relative;
-  flex: 0 0 auto;
+  align-items: center;
 `;
 
 const Price = styled.div`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
-  font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 400; /* Regular */
-  color: black;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: normal;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
 `;
 
 const Discount = styled.div`
-  position: relative;
-  width: fit-content;
-  margin-top: -1px;
-  font-family: "Poppins", Helvetica, sans-serif;
-  font-weight: 400; /* Regular */
+  font-family: "Poppins", sans-serif;
   color: #ff3232;
-  font-size: 1rem; /* text-base */
-  letter-spacing: 0;
-  line-height: normal;
+  background-color: #ffeaea;
+  padding: 2px 8px;
+  border-radius: 4px;
 `;
 
 export const PromotionsSection = () => {
-  const productsRow1 = [
+  const navigate = useNavigate(); // [필수] 훅 선언
+
+  // [수정] 제품별 이동 경로와 실제 데이터 ID를 매핑합니다.
+  const allProducts = [
     {
-      id: 1,
+      id: 51, // 실제 데이터 ID
       image: tvLg011,
       alt: "Tv lg",
       name: "LG전자 스탠바이미 27ART10AKPL",
-      price: "1,150,000won",
-      discount: "-10% off",
-      fontFamily: "[font-family:'Outfit-Regular',Helvetica]",
+      discount: "-10%",
+      path: "/purchase/productTvSpecs/51", // 이동할 경로
     },
     {
-      id: 2,
+      id: 53,
       image: image1,
       alt: "Image",
       name: "삼성전자 더 세리프 55인치_KQ55LST01BFXKR",
-      price: "1,450,000won",
-      discount: "-36% off",
-      fontFamily: "[font-family:'Poppins-Medium',Helvetica] font-medium",
+      discount: "-36%",
+      path: "/purchase/productTvSpecs/53",
     },
     {
-      id: 3,
+      id: 84,
       image: acLg011,
       alt: "Ac lg",
-      name: "LG전자 오브제컬렉션 휘센 위너\n스탠드에어컨_FQ17HDWHC1",
-      price: "1,492,000won",
-      discount: "-10% off",
-      fontFamily: "[font-family:'Poppins-Regular',Helvetica]",
+      name: "LG전자 오브제컬렉션 휘센 위너 스탠드에어컨",
+      discount: "-10%",
+      path: "/purchase/productAcSpecs/84",
     },
-  ];
-
-  const productsRow2 = [
     {
-      id: 4,
+      id: 55,
       image: tvSam031,
       alt: "Tv sam",
-      name: "삼성전자 더 세로 QLED TV\nKQ43LST05BFXKR",
-      price: "1,450,000won",
-      discount: "-16% off",
-      fontFamily: "[font-family:'Poppins-Medium',Helvetica] font-medium",
+      name: "삼성전자 더 세로 QLED TV KQ43LST05BFXKR",
+      discount: "-16%",
+      path: "/purchase/productTvSpecs/55",
     },
     {
-      id: 5,
+      id: 95,
       image: airDy011,
       alt: "Air dy",
-      name: "다이슨 쿨 공기청정기\nTP07",
-      price: "494,000won",
-      discount: "-13% off",
-      fontFamily: "[font-family:'Poppins-Medium',Helvetica] font-medium",
+      name: "다이슨 쿨 공기청정기 TP07",
+      discount: "-13%",
+      path: "/purchase/productAirSpecs/95",
     },
     {
-      id: 6,
+      id: 65,
       image: refSam021,
       alt: "Ref sam",
-      name: "삼성전자 양문형냉장고_RS84T5081SA",
-      price: "1,500,000won",
-      discount: "-34% off",
-      fontFamily: "[font-family:'Poppins-Regular',Helvetica]",
+      name: "삼성전자 양문형냉장고 RS84T5081SA",
+      discount: "-34%",
+      path: "/purchase/productRefSpecs/65",
     },
   ];
 
-  const renderProductCard = (product) => {
-    const nameLines = product.name.split("\n");
-
-    return (
-      <Article key={product.id}>
-        <ProductImage src={product.image} alt={product.alt} />
-        <ProductName $fontFamily={product.fontFamily}>
-          {nameLines.length > 1 ? (
-            <>
-              {nameLines[0]}
-              <br />
-              {nameLines[1]}
-            </>
-          ) : (
-            product.name
-          )}
-        </ProductName>
-        <InfoRow>
-          <Price>{product.price}</Price>
-          <Discount>{product.discount}</Discount>
-        </InfoRow>
-      </Article>
-    );
+  // 클릭 핸들러
+  const handleProductClick = (path) => {
+    navigate(path);
   };
 
   return (
@@ -220,8 +163,31 @@ export const PromotionsSection = () => {
       <Header>
         <Title>BEST PRODUCT_All</Title>
       </Header>
-      <Row $isRow1={true}>{productsRow1.map(renderProductCard)}</Row>
-      <Row $isRow1={false}>{productsRow2.map(renderProductCard)}</Row>
+      <Grid>
+        {allProducts.map((product) => {
+          // [수정] productCardData에서 가격 가져오기 (없으면 '0won')
+          const priceData = productCardData[product.id];
+          const displayPrice =
+            priceData && priceData.prices
+              ? `${priceData.prices.buy.toLocaleString()}won`
+              : "0won";
+
+          return (
+            <Article
+              key={product.id}
+              onClick={() => handleProductClick(product.path)} // 클릭 시 이동
+            >
+              <ProductImage src={product.image} alt={product.alt} />
+              <ProductName>{product.name}</ProductName>
+              <InfoRow>
+                {/* [수정] 가져온 가격 데이터 표시 */}
+                <Price>{displayPrice}</Price>
+                <Discount>{product.discount}</Discount>
+              </InfoRow>
+            </Article>
+          );
+        })}
+      </Grid>
     </Section>
   );
 };
