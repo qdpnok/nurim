@@ -5,7 +5,7 @@ import api from "../api/Axios";
 import bgimg from "../img/LoginBGImg.jpg";
 import nrw from "../img/NRWLOGO.png";
 import nurimw from "../img/Logo.w.PNG";
-import { useAuth } from "./components/Auth/AuthContext";
+
 import ceye from "../img/Ceye.png";
 import oeye from "../img/Oeye.png";
 
@@ -213,9 +213,23 @@ const SignupText = styled.div`
   }
 `;
 
+// [수정] 컴포넌트 밖으로 이동
+const LogoNurim = styled.img`
+  width: 145px;
+  height: 32px;
+  margin-bottom: 5px;
+`;
+const LogoNR = styled.img`
+  width: 75px;
+  height: 46px;
+  margin-right: 20px;
+`;
+
 const LogIn = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  // [삭제] AuthContext 사용 안 함
+  // const { login } = useAuth();
+
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -225,13 +239,20 @@ const LogIn = () => {
     e.preventDefault();
     try {
       const response = await api.post("/auth/login", { id, pwd, rememberMe });
+
       if (response.status === 200) {
+        // 토큰 추출
         const token =
           response.headers["authorization"] ||
           response.data.token ||
-          "dummy-token";
-        login(token);
+          "dummy-token"; // 백엔드 연결 전 테스트용 더미 토큰
+
+        // [수정] 로컬 스토리지에 직접 저장
+        localStorage.setItem("accessToken", token);
+
         alert("로그인 되었습니다.");
+
+        // 홈으로 이동 (Header가 location 변경을 감지하여 로그인 상태 반영)
         navigate("/");
       }
     } catch (error) {
@@ -239,17 +260,6 @@ const LogIn = () => {
       alert("로그인 실패: 아이디 또는 비밀번호를 확인하세요.");
     }
   };
-
-  const LogoNurim = styled.img`
-    width: 145px;
-    height: 32px;
-    margin-bottom: 5px;
-  `;
-  const LogoNR = styled.img`
-    width: 75px;
-    height: 46px;
-    margin-right: 20px;
-  `;
 
   return (
     <Container>

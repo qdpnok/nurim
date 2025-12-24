@@ -8,13 +8,13 @@ import FindIP from "./page/FindPage";
 import SubPage from "./page/SubPage";
 import ProductDetailPage from "./page/ProductDetailPage";
 import "./App.css";
-import { AuthProvider } from "./page/components/Auth/AuthContext";
+
 import ScrollToTop from "./ScrollToTop";
 import { GlobalStyle } from "./styles/AuthStyles";
 
 function App() {
   return (
-    <AuthProvider>
+    <>
       <GlobalStyle />
       <Router>
         <ScrollToTop />
@@ -41,7 +41,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    </AuthProvider>
+    </>
   );
 }
 

@@ -218,7 +218,6 @@ const SubPage = ({ type }) => {
     fetchAllProducts();
   }, [type]);
 
-  // --- 렌더링 로직 (기존과 동일) ---
   const filteredByCategory =
     selectedCategory === "전체"
       ? allProducts
