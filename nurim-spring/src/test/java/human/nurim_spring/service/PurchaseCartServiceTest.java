@@ -6,6 +6,7 @@ import human.nurim_spring.dto.PurchaseCartResDto;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.entity.PurchaseCartItem;
 import human.nurim_spring.repository.MemberRepository;
+import human.nurim_spring.repository.PurchaseCartItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +28,8 @@ class PurchaseCartServiceTest {
     PurchaseCartService purchaseCartService;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    PurchaseCartItemRepository purchaseCartItemRepository;
 
     private Member buildMember() {
         return Member.builder()
@@ -38,6 +43,10 @@ class PurchaseCartServiceTest {
 
     private void initTest() {
         Member member = buildMember();
+        memberRepository.save(member);
+        member.setId("alsdk");
+        member.setPhoneNum("010-5321-1891");
+        member.setEmail("alsdk@gmail.com");
         memberRepository.save(member);
     }
 
@@ -55,10 +64,18 @@ class PurchaseCartServiceTest {
         PurchaseCartItemReqDto purchaseCartItemReqDto = new PurchaseCartItemReqDto(1L, 2L, 3L);
         purchaseCartService.saveItem(purchaseCartItemReqDto);
 
-        // 장바구니 조회
-        PurchaseCartResDto purchaseCartResDto = purchaseCartService.getCart(1L);
+        List<PurchaseCartItem> items = purchaseCartItemRepository.findAll();
+        for (PurchaseCartItem item : items) {
+            log.info("삽입 후 구매 장바구니 아이템: {}, 장바구니 번호: {}", item.getNum(), item.getPurchaseCart().getNum());
+        }
 
+        // 장바구니 조회
+        PurchaseCartResDto purchaseCartResDto = purchaseCartService.getCart(2L);
         log.info("장바구니는 존재하는가: {}", purchaseCartResDto.isHasCart());
+
+        purchaseCartResDto = purchaseCartService.getCart(1L);
+        log.info("장바구니는 존재하는가: {}", purchaseCartResDto.isHasCart());
+
 
         PurchaseCartDto cartDto = purchaseCartResDto.getPurchaseCartDto().get(0);
 

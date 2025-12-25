@@ -56,7 +56,11 @@ public class PurchaseCartService {
 
         // 장바구니 없으면 생성하기
         PurchaseCart purchaseCart = purchaseCartRepository.findByMember(member);
-        if(purchaseCart == null) purchaseCartRepository.save(buildCart(member));
+        if(purchaseCart == null) {
+            purchaseCartRepository.save(buildCart(member));
+            purchaseCart = purchaseCartRepository.findByMember(member);
+        }
+
 
         Product product = productRepository.findById(dto.getProductNum())
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_PRODUCT", "해당 상품을 찾지 못했습니다."));
@@ -112,6 +116,8 @@ public class PurchaseCartService {
     private PurchaseCart buildCart(Member member) {
         return PurchaseCart.builder()
                 .member(member)
+                // 리스트 삽입할 때 빈 값이면 null, ArrayList를 생성해서 삽입하면 isEmpty 쓸 수 있음
+                .purchaseCartItems(new ArrayList<>())
                 .build();
     }
 
