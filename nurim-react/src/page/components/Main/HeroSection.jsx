@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import ReviewModal from "../Popup/ReviewPopUp";
 import styled from "styled-components";
 import mainBanner1 from "../../../img/main_banner.jpg";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +73,7 @@ const StartButton = styled.button`
 
 export const HeroSection = () => {
   const nav = useNavigate();
+
   return (
     <Section>
       <BannerImg src={mainBanner1} alt="Banner" />
