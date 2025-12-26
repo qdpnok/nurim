@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { AiFillStar } from "react-icons/ai";
 import carticon from "../../../img/carticon.png"; // 경로 확인 필요
+import CartModal from "../Modal/CartModal";
+import ConsultationModal from "../Modal/ConsultationModal";
 
 const Section = styled.div`
   width: 100%;
@@ -198,6 +200,16 @@ const PeriodBtn = styled.button`
 `;
 
 const ProductTopSection = ({ product, selectedPeriod, setSelectedPeriod }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Section>
       {/* 좌측 이미지 갤러리 */}
@@ -288,10 +300,14 @@ const ProductTopSection = ({ product, selectedPeriod, setSelectedPeriod }) => {
         </div>
 
         <div className="btn-group">
-          <button className="cart">
+          <button className="cart" onClick={openModal}>
             <img src={carticon} alt="장바구니" />
           </button>
-          <button className="consult">구독 상담 예약</button>
+          {isModalOpen && <CartModal onClose={closeModal} />}
+          <button className="consult" onClick={openModal}>
+            구독 상담 예약
+          </button>
+          {isModalOpen && <ConsultationModal onClose={closeModal} />}
           <button className="subscribe">구독 하기</button>
         </div>
       </InfoBox>
@@ -300,3 +316,7 @@ const ProductTopSection = ({ product, selectedPeriod, setSelectedPeriod }) => {
 };
 
 export default ProductTopSection;
+
+// 모달 사용을 위한 코드.
+
+//   <StartButton onClick={openModal}>asdasd</StartButton>

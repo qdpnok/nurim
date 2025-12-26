@@ -4,6 +4,7 @@ import { AiFillStar } from "react-icons/ai";
 import { FaCheckCircle, FaEllipsisH } from "react-icons/fa";
 import { BiSlider } from "react-icons/bi";
 import ProductSpecTable from "../Sub/ProductSpecTable"; // 경로 확인 필요
+import ReviewModal from "../Modal/ReviewModal";
 
 const Section = styled.div`
   width: 1240px;
@@ -29,7 +30,7 @@ const TabBtn = styled.button`
   background: none;
   border: none;
   border-bottom: ${(props) =>
-    props.$active ? "4px solid #000" : "1px solid #ddd"};
+    props.$active ? "1px solid #000" : "1px solid #ddd"};
   font-size: 20px;
   font-weight: bold;
   color: ${(props) => (props.$active ? "#000" : "#ccc")};
@@ -245,6 +246,15 @@ const dummyReviews = [
 
 const DetailReviewSection = ({ product, staticSpecData }) => {
   const [activeTab, setActiveTab] = useState("details");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Section>
@@ -282,7 +292,8 @@ const DetailReviewSection = ({ product, staticSpecData }) => {
                 <SortBtn>
                   최신순 <span style={{ fontSize: "12px" }}>▼</span>
                 </SortBtn>
-                <WriteBtn>리뷰 작성 하기</WriteBtn>
+                <WriteBtn onClick={openModal}>리뷰 작성 하기</WriteBtn>
+                {isModalOpen && <ReviewModal onClose={closeModal} />}
               </div>
             </ReviewHeader>
 

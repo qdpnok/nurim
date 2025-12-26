@@ -8,7 +8,6 @@ import ProductTopSection from "./components/ProductDetail/ProductTopSection";
 import RecommendSection from "./components/ProductDetail/RecommendSection";
 import DetailReviewSection from "./components/ProductDetail/DetailReviewSection";
 import SupportSection from "./components/ProductDetail/SupportSection";
-
 import { allProductSpecs } from "../data";
 
 const Container = styled.div`
