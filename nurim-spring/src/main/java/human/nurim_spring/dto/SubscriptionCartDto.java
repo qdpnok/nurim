@@ -6,9 +6,8 @@ import lombok.*;
 
 @Getter @Setter @NoArgsConstructor
 @Builder @AllArgsConstructor
-// 카멜 케이스를 스네이크 케이스로 자동 변환
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PurchaseCartDto {
+public class SubscriptionCartDto {
     private Long cartItemNum;
     private Long productNum;
     private String name;

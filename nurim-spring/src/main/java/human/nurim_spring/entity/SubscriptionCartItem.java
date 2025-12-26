@@ -1,15 +1,14 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@Builder @AllArgsConstructor
 public class SubscriptionCartItem {
     @Id
     @Column(name = "subscription_cart_item_num")
@@ -22,10 +21,8 @@ public class SubscriptionCartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_num")
     private Product product;
-
-    private Long quantity;
     private Long price;
-    private Long totalPrice;
+    private Long month;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -52,9 +52,6 @@ public class PurchaseCartService {
     // 장바구니에 아이템 삽입
     @Transactional
     public void saveItem(PurchaseCartItemReqDto dto) {
-        log.info("memberNum = {}", dto.getMemberNum());
-        log.info("productNum = {}", dto.getProductNum());
-
         Member member = memberRepository.findById(dto.getMemberNum())
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
