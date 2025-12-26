@@ -7,6 +7,7 @@ import SignUp from "./page/SignUp";
 import FindIP from "./page/FindPage";
 import SubPage from "./page/SubPage";
 import ProductDetailPage from "./page/ProductDetailPage";
+import CustomerSupportPage from "./page/CoustomerSuppoertPage";
 import "./App.css";
 
 import ScrollToTop from "./ScrollToTop";
@@ -38,6 +39,7 @@ function App() {
               path="/purchase/:category/:id"
               element={<ProductDetailPage />}
             />
+            <Route path="/support" element={<CustomerSupportPage />} />
           </Route>
         </Routes>
       </Router>
