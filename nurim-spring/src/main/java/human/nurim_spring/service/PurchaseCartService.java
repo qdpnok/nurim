@@ -50,24 +50,24 @@ public class PurchaseCartService {
     }
 
     // 장바구니에 아이템 삽입
+    @Transactional
     public void saveItem(PurchaseCartItemReqDto dto) {
+        log.info("memberNum = {}", dto.getMemberNum());
+        log.info("productNum = {}", dto.getProductNum());
+
         Member member = memberRepository.findById(dto.getMemberNum())
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
         // 장바구니 없으면 생성하기
         PurchaseCart purchaseCart = purchaseCartRepository.findByMember(member);
         if(purchaseCart == null) {
-            purchaseCartRepository.save(buildCart(member));
-            purchaseCart = purchaseCartRepository.findByMember(member);
+            purchaseCart = purchaseCartRepository.save(buildCart(member));
         }
-
 
         Product product = productRepository.findById(dto.getProductNum())
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_PRODUCT", "해당 상품을 찾지 못했습니다."));
 
-        PurchaseCartItem item = purchaseCartItemRepository.save(buildCartItem(purchaseCart, product, dto.getQuantity(), product.getPrice()));
-
-        purchaseCartItemRepository.save(item);
+        purchaseCartItemRepository.save(buildCartItem(purchaseCart, product, dto.getQuantity(), product.getPrice()));
     }
 
     // 장바구니 수량 수정

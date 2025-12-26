@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",     // 로그인, 회원가입, 토큰 재발급
-                                "/api/product/**"
+                                "/api/product/**", "api/purchase-cart/**"
                         ).permitAll()
                         .requestMatchers("/api/manager/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
