@@ -93,7 +93,8 @@ const Answer = styled.div`
 `;
 
 const FaqSection = () => {
-  const [activeTab, setActiveTab] = useState("구독/구매");
+  // 초기값을 탭 배열의 첫 번째 값과 일치시켰습니다.
+  const [activeTab, setActiveTab] = useState("서비스 및 구독/구매");
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleFaq = (index) => {
@@ -107,21 +108,30 @@ const FaqSection = () => {
     "취소 및 반납",
   ];
 
-  // 더미 데이터 (실제로는 API나 상수로 관리)
-  const faqData = [
-    {
-      q: "구독 서비스와 일반 구매의 차이점은 무엇인가요?",
-      a: "구독 서비스는 월 요금을 납부하며 제품을 이용하고 케어 서비스를 받는 방식이며, 일반 구매는 일시불로 소유권을 갖는 방식입니다.",
-    },
-    {
-      q: "구독 기간이 끝나면 제품은 어떻게 되나요?",
-      a: "계약 기간 종료 후 소유권이 고객님께 이전되거나, 반납 후 새로운 제품으로 재구독하실 수 있습니다.",
-    },
-    {
-      q: "중도 해지 시 위약금이 발생하나요?",
-      a: "네, 계약 기간 내 중도 해지 시 잔여 기간에 따라 소정의 위약금이 발생할 수 있습니다.",
-    },
-  ];
+  // 탭 별 데이터 정의 (객체 형태)
+  const allFaqData = {
+    "서비스 및 구독/구매": [
+      { q: "[구독] test제목 1", a: "[구독] test내용 1입니다." },
+      { q: "[구독] test제목 2", a: "[구독] test내용 2입니다." },
+      { q: "[구독] test제목 3", a: "[구독] test내용 3입니다." },
+    ],
+    "배송 및 설치": [
+      { q: "[배송] test제목 1", a: "[배송] test내용 1입니다." },
+      { q: "[배송] test제목 2", a: "[배송] test내용 2입니다." },
+    ],
+    "AS 및 관리": [
+      { q: "[AS] test제목 1", a: "[AS] test내용 1입니다." },
+      { q: "[AS] test제목 2", a: "[AS] test내용 2입니다." },
+      { q: "[AS] test제목 3", a: "[AS] test내용 3입니다." },
+    ],
+    "취소 및 반납": [
+      { q: "[반납] test제목 1", a: "[반납] test내용 1입니다." },
+      { q: "[반납] test제목 2", a: "[반납] test내용 2입니다." },
+    ],
+  };
+
+  // 현재 선택된 탭에 해당하는 데이터 가져오기
+  const currentFaqList = allFaqData[activeTab] || [];
 
   return (
     <Container>
@@ -134,7 +144,7 @@ const FaqSection = () => {
             $active={activeTab === tab}
             onClick={() => {
               setActiveTab(tab);
-              setOpenIndex(null);
+              setOpenIndex(null); // 탭 변경 시 열린 아코디언 닫기
             }}
           >
             {tab}
@@ -143,7 +153,7 @@ const FaqSection = () => {
       </TabContainer>
 
       <FaqList>
-        {faqData.map((item, index) => (
+        {currentFaqList.map((item, index) => (
           <FaqItem key={index}>
             <Question onClick={() => toggleFaq(index)}>
               <QNumber>{String(index + 1).padStart(2, "0")}</QNumber>
