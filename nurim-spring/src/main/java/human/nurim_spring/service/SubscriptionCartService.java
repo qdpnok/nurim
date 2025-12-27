@@ -26,21 +26,33 @@ public class SubscriptionCartService {
     private final SubscriptionCartItemRepository subscriptionCartItemRepository;
     private final ProductRepository productRepository;
 
-    // 장바구니 조회
+//     장바구니 조회
     public SubscriptionCartResDto getCart(Long memberNum) {
         List<SubscriptionCartDto> list = new ArrayList<>();
+        Long discountPrice = 0L;
+        Long totalPrice = 0L;
 
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
         SubscriptionCart cart = subscriptionCartRepository.findByMember(member);
+        // 카트가 존재하지 않으면 hasCart에 false를 담아 빈 dto를 전송
+        if(cart == null) {
+            SubscriptionCartResDto dto = new SubscriptionCartResDto();
+            dto.setHasCart(false);
+            return dto;
+        }
 
         List<SubscriptionCartItem> subscriptionCartItems = subscriptionCartItemRepository.findBySubscriptionCart(cart);
 
         for (SubscriptionCartItem subscriptionCartItem : subscriptionCartItems) {
-            list.add()
+            list.add(convertEntityToDto(subscriptionCartItem));
+            Long price = subscriptionCartItem.getPrice();
+            totalPrice += price;
+            discountPrice += price * subscriptionCartItem.getProduct().getDiscountRate() / 100;
         }
 
+        return new SubscriptionCartResDto(true, totalPrice, discountPrice, totalPrice-discountPrice, list);
     }
 
     // 장바구니에 아이템 삽입
@@ -70,7 +82,18 @@ public class SubscriptionCartService {
         subscriptionCartItemRepository.save(buildCartItem(subscriptionCart, product, price, dto.getMonth()));
     }
 
-    private SubscriptionCartDto convertEntityToDto(Sub)
+    private SubscriptionCartDto convertEntityToDto(SubscriptionCartItem cartItem) {
+        return SubscriptionCartDto.builder()
+                .cartItemNum(cartItem.getNum())
+                .productNum(cartItem.getProduct().getNum())
+                .name(cartItem.getProduct().getName())
+                .brand(cartItem.getProduct().getBrand())
+                .serialNum(cartItem.getProduct().getSerialNum())
+                .price(cartItem.getPrice())
+                .img(cartItem.getProduct().getImg())
+                .month(cartItem.getMonth())
+                .build();
+    }
 
     private SubscriptionCartItem buildCartItem(SubscriptionCart subscriptionCart, Product product, Long price, Long month) {
         return SubscriptionCartItem.builder()
