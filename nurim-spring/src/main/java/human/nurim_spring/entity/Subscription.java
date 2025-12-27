@@ -1,5 +1,6 @@
 package human.nurim_spring.entity;
 
+import human.nurim_spring.constant.SubscriptionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,10 @@ public class Subscription {
     @JoinColumn(name = "product_num")
     private Product product;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_num")
+    private Order order;
+
     @Column
     private LocalDateTime start_data;
 
@@ -42,5 +47,8 @@ public class Subscription {
 
     @Column
     private LocalDateTime remaining_cost;
+
+    @Enumerated(EnumType.STRING)
+    private SubscriptionStatus subscriptionStatus;
 
 }
