@@ -26,7 +26,7 @@ public class SubscriptionCartService {
     private final SubscriptionCartItemRepository subscriptionCartItemRepository;
     private final ProductRepository productRepository;
 
-//     장바구니 조회
+    // 장바구니 조회
     public SubscriptionCartResDto getCart(Long memberNum) {
         List<SubscriptionCartDto> list = new ArrayList<>();
         Long discountPrice = 0L;
@@ -80,6 +80,20 @@ public class SubscriptionCartService {
         }
 
         subscriptionCartItemRepository.save(buildCartItem(subscriptionCart, product, price, dto.getMonth()));
+    }
+
+    // 장바구니 상품 삭제
+    public void deleteItem(Long cartItemNum) {
+        SubscriptionCartItem subscriptionCartItem = subscriptionCartItemRepository.findById(cartItemNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니 안에 해당 상품이 존재하지 않습니다."));
+
+        subscriptionCartItemRepository.delete(subscriptionCartItem);
+
+        SubscriptionCart cart = subscriptionCartRepository.findById(subscriptionCartItem.getSubscriptionCart().getNum())
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_CART", "장바구니가 존재하지 않습니다."));
+
+        // 장바구니 안에 아이템이 없다면 장바구니 삭제
+        if(cart.getSubscriptionCartItems().isEmpty()) subscriptionCartRepository.delete(cart);
     }
 
     private SubscriptionCartDto convertEntityToDto(SubscriptionCartItem cartItem) {
