@@ -23,7 +23,7 @@ class MemberServiceTest {
     @Test
     @DisplayName("마이페이지 렌더링 정보 조회")
     public void mainTest() {
-        MyPageResDto dto = memberService.main(1L);
+        MyPageResDto dto = memberService.mainPage(1L);
         log.info("마이페이지 회원 조회: {}", dto);
     }
 

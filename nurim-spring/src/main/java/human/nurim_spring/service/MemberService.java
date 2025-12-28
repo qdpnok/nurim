@@ -1,5 +1,6 @@
 package human.nurim_spring.service;
 
+import human.nurim_spring.dto.ChangeInfoReqDto;
 import human.nurim_spring.dto.MyInfoResDto;
 import human.nurim_spring.dto.MyPageResDto;
 import human.nurim_spring.entity.Member;
@@ -9,6 +10,7 @@ import human.nurim_spring.repository.PurchaseRepository;
 import human.nurim_spring.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,9 +20,10 @@ public class MemberService {
     private final PurchaseRepository purchaseRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 마이페이지 메인 렌더링
-    public MyPageResDto main(Long memberNum) {
+    public MyPageResDto mainPage(Long memberNum) {
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
@@ -30,10 +33,35 @@ public class MemberService {
         return new MyPageResDto(member.getName(), subscriptionCount, purchaseCount);
     }
 
-    // 회원 정보 수정 페이지 렌더링
+    // 회원 정보 수정 페이지 렌더링, 회원 정보 수정 페이지 렌더링
     public MyInfoResDto myInfo(Long memberNum) {
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum());
+    }
+
+    // 회원 정보 수정: 비밀번호 변경
+    public void changePwd(Long memberNum, String pwd) {
+        Member member = memberRepository.findById(memberNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        member.setPwd(passwordEncoder.encode(pwd));
+        memberRepository.save(member);
+    }
+
+    // 회원 정보 수정: 회원 정보 변경
+    public MyInfoResDto changeInfo(Long memberNum, ChangeInfoReqDto dto) {
+        Member member = memberRepository.findById(memberNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        if(memberRepository.existsByPhoneNumAndIdNot(dto.getPhone(), memberNum))
+            throw new BusinessException("DUPLICATE_PHONE", "이미 사용 중인 번호입니다.");
+
+        member.setName(dto.getName());
+        member.setPhoneNum(dto.getPhone());
+
+        member = memberRepository.save(member);
 
         return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum());
     }

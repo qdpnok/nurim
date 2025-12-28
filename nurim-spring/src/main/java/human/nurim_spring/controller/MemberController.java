@@ -17,8 +17,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/{memberNum}")
-    public ResponseEntity<MyPageResDto> main(@PathVariable Long memberNum) {
-        return ResponseEntity.ok(memberService.main(memberNum));
+    public ResponseEntity<MyPageResDto> mainPage(@PathVariable Long memberNum) {
+        return ResponseEntity.ok(memberService.mainPage(memberNum));
     }
 
     @GetMapping("/my-info/{memberNum}")
