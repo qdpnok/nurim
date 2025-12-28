@@ -1,15 +1,11 @@
 package human.nurim_spring.service;
 
-import human.nurim_spring.dto.CreateOrderReqDto;
+import human.nurim_spring.dto.PaymentReqDto;
 import human.nurim_spring.dto.SubOrderPageRes;
 import human.nurim_spring.dto.SubscriptionCartDto;
 import human.nurim_spring.dto.SubscriptionCartItemReqDto;
 import human.nurim_spring.entity.Member;
-import human.nurim_spring.entity.SubscriptionCartItem;
-import human.nurim_spring.repository.DeliveryRepository;
 import human.nurim_spring.repository.MemberRepository;
-import human.nurim_spring.repository.OrderRepository;
-import human.nurim_spring.repository.SubscriptionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,19 +23,16 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @Slf4j
 @TestPropertySource(locations="classpath:application-test.properties")
-class SubscriptionOrdersServiceTest {
+class PaymentServiceTest {
+    @Autowired
+    PaymentService paymentService;
     @Autowired
     SubscriptionOrderService subscriptionOrderService;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
     SubscriptionCartService subscriptionCartService;
-    @Autowired
-    OrderRepository orderRepository;
-    @Autowired
-    SubscriptionRepository subscriptionRepository;
-    @Autowired
-    DeliveryRepository deliveryRepository;
+
 
     private Member buildMember() {
         return Member.builder()
@@ -59,12 +51,6 @@ class SubscriptionOrdersServiceTest {
         member.setPhoneNum("010-5321-1891");
         member.setEmail("alsdk@gmail.com");
         memberRepository.save(member);
-    }
-
-    @Test
-    @DisplayName("구독 주문 조회 및 데이터 추가")
-    public void orderTest() {
-        initTest();
 
         // 상품 페이지에서 주문으로 직접 접근
         SubOrderPageRes res = subscriptionOrderService.directOrderPage(1L, 2L, 60L);
@@ -86,14 +72,14 @@ class SubscriptionOrdersServiceTest {
         for (SubscriptionCartDto cartDto : res.getSubscriptionCartDtoList()) {
             log.info("주문 상품 리스트: {}", cartDto);
         }
+    }
 
-        CreateOrderReqDto createDto = new CreateOrderReqDto("이상미", "tkdal@gmail.com", "010-1234-1234",
-                itemIds, "구성동~", "집으로~", true, LocalDateTime.now());
+    @Test
+    @DisplayName("결제는 데이터 insert만 시도하려구요~")
+    public void paymentTest() {
+        initTest();
 
-        subscriptionOrderService.createOrder(1L, createDto);
 
-        log.info("주문 정보: {}", orderRepository.findAll().get(0));
-        log.info("구독 정보: {}", subscriptionRepository.findAll().get(0));
-        log.info("배송 정보: {}", deliveryRepository.findAll().get(0));
+        // paymentService.add(new PaymentReqDto(1L, ));
     }
 }
