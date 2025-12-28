@@ -7,7 +7,7 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor
 @Builder @AllArgsConstructor
 @ToString
-public class PurchasePageRes {
+public class PurchaseOrderPageRes {
     private String memberName;
     private String email;
     private String phoneNum;

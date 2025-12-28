@@ -5,7 +5,7 @@ import human.nurim_spring.constant.OrderType;
 import human.nurim_spring.dto.CreateOrderReqDto;
 import human.nurim_spring.dto.CreateOrderResDto;
 import human.nurim_spring.dto.PurchaseCartDto;
-import human.nurim_spring.dto.PurchasePageRes;
+import human.nurim_spring.dto.PurchaseOrderPageRes;
 import human.nurim_spring.entity.*;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.*;
@@ -30,7 +30,7 @@ public class PurchaseOrderService {
     private final DeliveryRepository deliveryRepository;
 
     // 상품에서 결제 화면으로 직접 접근 시, 화면 렌더링에 사용할 메서드
-    public PurchasePageRes directOrderPage(Long memberId, Long productId, Long quantity) {
+    public PurchaseOrderPageRes directOrderPage(Long memberId, Long productId, Long quantity) {
         List<PurchaseCartDto> list = new ArrayList<>();
         long discountPrice;
         long paymentPrice;
@@ -54,7 +54,7 @@ public class PurchaseOrderService {
         return convertEntityToDto(member, list, 1L, product.getPrice(), discountPrice, 3000L, paymentPrice);
     }
     // 장바구니에서 결제 화면으로 접근 시, 화면 렌더링에 사용할 메서드
-    public PurchasePageRes cartOrderPage(Long memberId, List<Long> cartItemIds) {
+    public PurchaseOrderPageRes cartOrderPage(Long memberId, List<Long> cartItemIds) {
         List<PurchaseCartDto> list = new ArrayList<>();
         long totalPrice = 0;
         long discountPrice = 0;
@@ -117,9 +117,9 @@ public class PurchaseOrderService {
                 .build();
     }
 
-    private PurchasePageRes convertEntityToDto(Member member, List<PurchaseCartDto> list, Long count,
-                                               Long totalPrice, Long discountPrice, Long deliveryPrice, Long paymentPrice) {
-        return PurchasePageRes.builder()
+    private PurchaseOrderPageRes convertEntityToDto(Member member, List<PurchaseCartDto> list, Long count,
+                                                    Long totalPrice, Long discountPrice, Long deliveryPrice, Long paymentPrice) {
+        return PurchaseOrderPageRes.builder()
                 .memberName(member.getName())
                 .email(member.getEmail())
                 .phoneNum(member.getPhoneNum())
