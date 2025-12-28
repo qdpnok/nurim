@@ -1,5 +1,6 @@
 package human.nurim_spring.repository;
 
+import human.nurim_spring.entity.Member;
 import human.nurim_spring.entity.Orders;
 import human.nurim_spring.entity.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ import java.util.List;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     List<Subscription> findByOrders(Orders orders);
+    Long countByMember(Member member);
 }
