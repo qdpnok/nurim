@@ -28,4 +28,7 @@ public class MemberService {
 
         return new MyPageResDto(member.getName(), subscriptionCount, purchaseCount);
     }
+
+    // 회원 정보 수정 페이지 렌더링
+
 }

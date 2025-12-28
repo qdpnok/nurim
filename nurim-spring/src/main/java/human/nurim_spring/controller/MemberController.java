@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/mypage")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
