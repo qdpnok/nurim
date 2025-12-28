@@ -26,7 +26,7 @@ public class Subscription {
     @JoinColumn(name = "product_num")
     private Product product;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num")
     private Orders orders;
 

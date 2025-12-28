@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter @Setter @NoArgsConstructor
 @Builder @AllArgsConstructor
+@ToString
 public class Orders {
     @Id
     @Column(name = "order_num")

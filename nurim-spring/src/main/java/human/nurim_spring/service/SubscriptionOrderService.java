@@ -126,10 +126,9 @@ public class SubscriptionOrderService {
                 .member(member)
                 .orders(orders)
                 .address(dto.getAddress())
-                .quantity(dto.getQuantity())
+                .quantity((long)dto.getCartItemList().size())
                 .delivery_message(dto.getDeliveryMessage())
                 .isAdvance_visit(dto.getIsVisit())
-                .invoice_num(dto.getInvoiceNum())
                 .deliveryDate(dto.getDeliveryDate())
                 .build();
     }
