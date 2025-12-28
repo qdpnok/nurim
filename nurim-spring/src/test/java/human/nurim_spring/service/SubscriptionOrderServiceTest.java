@@ -1,7 +1,10 @@
 package human.nurim_spring.service;
 
 import human.nurim_spring.dto.SubOrderPageRes;
+import human.nurim_spring.dto.SubscriptionCartDto;
+import human.nurim_spring.dto.SubscriptionCartItemReqDto;
 import human.nurim_spring.entity.Member;
+import human.nurim_spring.entity.SubscriptionCartItem;
 import human.nurim_spring.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -52,15 +55,26 @@ class SubscriptionOrderServiceTest {
     public void orderTest() {
         initTest();
 
+        // 상품 페이지에서 주문으로 직접 접근
         SubOrderPageRes res = subscriptionOrderService.directOrderPage(1L, 2L, 60L);
         log.info("주문 페이지 정보: {}", res);
         log.info("주문 상품 리스트: {}", res.getSubscriptionCartDtoList().get(0));
 
+        // 장바구니에 아이템 삽입
+        subscriptionCartService.saveItem(new SubscriptionCartItemReqDto(1L, 2L, 60L));
+        subscriptionCartService.saveItem(new SubscriptionCartItemReqDto(1L, 3L, 60L));
+        subscriptionCartService.saveItem(new SubscriptionCartItemReqDto(1L, 4L, 60L));
+
         List<Long> itemIds = new ArrayList<>();
-        for (long i = 1L; i<10L; i++) {
+        for (long i = 1L; i<4L; i++) {
             itemIds.add(i);
         }
 
         res = subscriptionOrderService.cartOrderPage(1L, itemIds);
+        log.info("주문 페이지 정보: {}", res);
+        for (SubscriptionCartDto cartDto : res.getSubscriptionCartDtoList()) {
+            log.info("주문 상품 리스트: {}", cartDto);
+        }
+
     }
 }

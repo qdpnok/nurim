@@ -50,6 +50,12 @@ public class SubscriptionOrderService {
             price = product.getPrice36();
         }
 
+        if(product.getDiscountRate() == null) {
+            discountPrice = 0;
+        } else {
+            discountPrice = price*product.getDiscountRate()/ 100;
+        }
+
         discountPrice = price*product.getDiscountRate()/100;
         paymentPrice = price - discountPrice + 3000L;
 
@@ -77,7 +83,12 @@ public class SubscriptionOrderService {
             long price = subscriptionCartItem.getPrice();
 
             totalPrice += price;
-            discountPrice += price*subscriptionCartItem.getProduct().getDiscountRate() / 100;
+            if(subscriptionCartItem.getProduct().getDiscountRate() == null) {
+                discountPrice = 0;
+            } else {
+                discountPrice += price*subscriptionCartItem.getProduct().getDiscountRate()/ 100;
+            }
+
         }
 
         Long count = (long) list.size();
