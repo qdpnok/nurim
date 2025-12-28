@@ -102,12 +102,20 @@ const EmptyMessage = styled.div`
   color: #888;
 `;
 
-const SubPage = ({ type }) => {
+// [수정 1] props로 받는 type 이름을 initialType으로 변경 (내부에서 재정의하기 위함)
+const SubPage = ({ type: initialType }) => {
+  const location = useLocation();
+
+  // [수정 2] URL을 분석하여 type을 확실하게 결정 (Router props 무시하고 URL 우선)
+  // URL에 'purchase'가 포함되어 있으면 구매 모드, 아니면 구독 모드
+  const type = location.pathname.toLowerCase().includes("purchase")
+    ? "purchase"
+    : "subscription";
+
   const [selectedCategory, setSelectedCategory] = useState("에어컨");
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const location = useLocation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
@@ -167,14 +175,12 @@ const SubPage = ({ type }) => {
             fixedCategory = "세탁기";
           else if (imgName.includes("air")) fixedCategory = "공기청정기";
 
-          // [수정] 뱃지(할인율) 텍스트 결정 로직
+          // 뱃지(할인율) 텍스트 결정 로직
           let displayBadge = null;
 
           if (type === "subscription") {
-            // 구독일 때는 "36개월 구독 기준" 텍스트 표시
             displayBadge = "36개월 구독 기준";
           } else {
-            // 구매일 때는 할인율 표시 (데이터가 있을 경우)
             const rate = item.pdiscountrate || item.pDiscountRate;
             if (rate) {
               displayBadge = `-${rate}% off`;
@@ -220,7 +226,7 @@ const SubPage = ({ type }) => {
             alt: finalName,
             name: finalName,
             price: finalPrice,
-            discount: displayBadge, // [수정] 결정된 뱃지 텍스트 할당
+            discount: displayBadge,
             spec: finalSpecs,
             reviewCount: item.scopeCount || item.scopecount || 0,
             rating: item.scopeAvg || item.scopeavg || 0,
@@ -232,7 +238,7 @@ const SubPage = ({ type }) => {
           (v, i, a) => a.findIndex((t) => t.id === v.id) === i
         );
 
-        // 필터링 적용
+        // 필터링 적용 (type 변수 사용)
         const pageTypeFiltered = uniqueData.filter((product) => {
           if (!product.snum) return false;
 
@@ -258,13 +264,13 @@ const SubPage = ({ type }) => {
     };
 
     fetchAllProducts();
-  }, [type]);
+  }, [type]); // [수정] type이 변경될 때마다 재실행 (URL이 바뀌면 type도 바뀜)
 
   useEffect(() => {
     if (location.state?.category) {
       setSelectedCategory(location.state.category);
     }
-  }, [location.state]); // location.state가 바뀔 때마다 실행
+  }, [location.state]);
 
   const filteredByCategory =
     selectedCategory === "전체"
@@ -309,6 +315,7 @@ const SubPage = ({ type }) => {
         <Breadcrumb>
           <span>Home</span> <span>&gt;</span>
           <span>
+            {/* [수정 3] type이 purchase면 'Purchase'로 대문자 표기 */}
             {type === "subscription" ? "Subscriptions" : "Purchase"}
           </span>{" "}
           <span>&gt;</span>
@@ -326,7 +333,7 @@ const SubPage = ({ type }) => {
             <ProductItem
               key={data.id ? `${data.id}-${index}` : index}
               product={data}
-              type={type}
+              type={type} // 결정된 type 전달
             />
           ))
         ) : (
