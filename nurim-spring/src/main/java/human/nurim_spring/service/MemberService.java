@@ -2,7 +2,6 @@ package human.nurim_spring.service;
 
 import human.nurim_spring.dto.MyPageResDto;
 import human.nurim_spring.entity.Member;
-import human.nurim_spring.entity.Purchase;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.MemberRepository;
 import human.nurim_spring.repository.PurchaseRepository;
@@ -27,6 +26,6 @@ public class MemberService {
         Long purchaseCount = purchaseRepository.countByMember(member);
         Long subscriptionCount = subscriptionRepository.countByMember(member);
 
-        return new MyPageResDto(subscriptionCount, purchaseCount);
+        return new MyPageResDto(member.getName(), subscriptionCount, purchaseCount);
     }
 }
