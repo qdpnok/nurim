@@ -6,6 +6,7 @@ import java.util.List;
 
 @Getter @Setter @NoArgsConstructor
 @Builder @AllArgsConstructor
+@ToString
 public class SubOrderPageRes {
     private String memberName;
     private String email;
