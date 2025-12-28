@@ -13,6 +13,7 @@ public class PurchaseCartDto {
     private Long productNum;
     private String name;
     private String serialNum;
+    private String brand;
     private Long price;
     private Long discountRate;
     private Long quantity;

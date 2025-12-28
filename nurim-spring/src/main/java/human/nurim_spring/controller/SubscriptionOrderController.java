@@ -20,16 +20,16 @@ import java.util.List;
 public class SubscriptionOrderController {
     private final SubscriptionOrderService subscriptionOrderService;
 
-    @GetMapping("/{memberId}/{type}")
-    public ResponseEntity<SubOrderPageRes> orderPage(@PathVariable Long memberId, @PathVariable String type,
+    @GetMapping("/{memberNum}/{type}")
+    public ResponseEntity<SubOrderPageRes> orderPage(@PathVariable Long memberNum, @PathVariable String type,
                                                      @RequestParam(required = false) Long month, @RequestParam(required = false) Long productId,
                                                      @RequestParam(required = false)List<Long> cartItemIds) {
-        if(type.equals("product")) return ResponseEntity.ok(subscriptionOrderService.directOrderPage(memberId, productId, month));
-        else return ResponseEntity.ok(subscriptionOrderService.cartOrderPage(memberId, cartItemIds));
+        if(type.equals("product")) return ResponseEntity.ok(subscriptionOrderService.directOrderPage(memberNum, productId, month));
+        else return ResponseEntity.ok(subscriptionOrderService.cartOrderPage(memberNum, cartItemIds));
     }
 
-    @PostMapping("/add/{memberId}")
-    public ResponseEntity<CreateOrderResDto> add(@PathVariable Long memberId, @RequestBody CreateOrderReqDto dto) {
-        return ResponseEntity.ok(subscriptionOrderService.createOrder(memberId, dto));
+    @PostMapping("/add/{memberNum}")
+    public ResponseEntity<CreateOrderResDto> add(@PathVariable Long memberNum, @RequestBody CreateOrderReqDto dto) {
+        return ResponseEntity.ok(subscriptionOrderService.createOrder(memberNum, dto));
     }
 }

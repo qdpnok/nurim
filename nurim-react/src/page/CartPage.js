@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { AiOutlineClose, AiOutlineCheck } from "react-icons/ai";
 import { CartContext } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 // --- 스타일 컴포넌트 ---
 
@@ -293,6 +294,7 @@ const EmptyState = styled.div`
 // --- Main Component ---
 const CartPage = () => {
   const [activeTab, setActiveTab] = useState("purchase");
+  const navigate = useNavigate();
 
   // Context에서 데이터와 함수 가져오기
   const {
@@ -322,6 +324,24 @@ const CartPage = () => {
 
   // 선택된 상품 수
   const selectedCount = currentItems.filter((item) => item.checked).length;
+
+  const handleOrder = () => {
+    // 1. 체크된 아이템 필터링
+    const selectedItems = currentItems.filter((item) => item.checked);
+
+    if (selectedItems.length === 0) {
+      alert("선택된 상품이 없습니다.");
+      return;
+    }
+
+    // 2. Checkout 페이지로 이동
+    navigate("/checkout", {
+      state: {
+        mode: activeTab, // 'purchase' or 'subscription'
+        items: selectedItems, // 선택된 아이템 배열 전체 전달
+      },
+    });
+  };
 
   return (
     <Container>
@@ -480,7 +500,10 @@ const CartPage = () => {
                 </span>
               </SummaryRow>
 
-              <OrderButton disabled={selectedCount === 0}>
+              <OrderButton
+                disabled={selectedCount === 0}
+                onClick={handleOrder} // 핸들러 연결
+              >
                 {activeTab === "purchase" ? "구매 하기" : "구독 하기"} →
               </OrderButton>
             </RightSection>
