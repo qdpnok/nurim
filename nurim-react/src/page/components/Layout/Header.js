@@ -150,26 +150,30 @@ const AuthButton = styled(Link)`
 // [로그인용] 아이콘 스타일
 const IconWrapper = styled.div`
   position: relative;
-  width: 36px;
-  height: 36px;
+  /* 클릭 영역 확보를 위해 36px -> 40px로 약간 확대 */
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 
   img {
-    width: 22px;
+    /* 아이콘 이미지 크기 확대: 22px -> 26px */
+    width: 26px;
     height: auto;
+    /* object-fit 추가하여 비율 유지 */
+    object-fit: contain;
   }
 `;
 
 const Badge = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 2px; /* 위치 미세 조정 */
+  right: 2px;
   background-color: ${(props) => props.color || "red"};
   color: white;
-  font-size: 9px;
+  font-size: 10px; /* 폰트 사이즈 미세 조정 */
   font-weight: bold;
   padding: 2px 5px;
   border-radius: 10px;
@@ -177,18 +181,24 @@ const Badge = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px; /* AuthButton과 동일한 패딩 */
   border-radius: 20px;
-  background-color: #2f6364;
-  border: 1px solid #ffffff;
-  color: #ffffff;
-  font-size: 12px;
+  font-size: 14px; /* 글자 크기 통일 */
   cursor: pointer;
   white-space: nowrap;
+
+  /* Log In 버튼과 동일한 색상 스타일 */
+  background-color: #2f6364;
+  color: #ffffff;
+  border: 1px solid #2f6364;
+
   margin-left: 10px;
 
   &:hover {
-    opacity: 0.9;
+    opacity: 0.8; /* hover 효과 통일 */
   }
 `;
 
