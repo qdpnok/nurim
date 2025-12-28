@@ -14,4 +14,5 @@ public class ProductDetailResDto {
     private Long price48;
     private Long price36;
     private Long discount;
+    private String img;
 }
