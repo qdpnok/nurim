@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @Slf4j
 @TestPropertySource(locations="classpath:application-test.properties")
-class SubscriptionOrderServiceTest {
+class SubscriptionOrdersServiceTest {
     @Autowired
     SubscriptionOrderService subscriptionOrderService;
     @Autowired

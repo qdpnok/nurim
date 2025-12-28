@@ -23,7 +23,7 @@ public class Delivery {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num")
-    private Order order;
+    private Orders orders;
 
     private String address;
 

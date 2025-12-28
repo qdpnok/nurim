@@ -55,8 +55,6 @@ public class SubscriptionOrderService {
         } else {
             discountPrice = price*product.getDiscountRate()/ 100;
         }
-
-        discountPrice = price*product.getDiscountRate()/100;
         paymentPrice = price - discountPrice + 3000L;
 
         list.add(convertProductToDto(product, price, month));
@@ -104,7 +102,7 @@ public class SubscriptionOrderService {
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
         // 주문 데이터 생성
-        Order order = orderRepository.save(buildOrder(member, dto.getName(), dto.getEmail(), dto.getPhoneNum()));
+        Orders orders = orderRepository.save(buildOrder(member, dto.getName(), dto.getEmail(), dto.getPhoneNum()));
 
         // 구독 데이터 생성
         for (Long num : dto.getCartItemList()) {
@@ -114,19 +112,19 @@ public class SubscriptionOrderService {
             long dDay = item.getMonth()*30;
             long totalCoast = item.getMonth()* item.getPrice();
 
-            subscriptionRepository.save(buildSubscription(member, item.getProduct(), order, item.getMonth(), item.getPrice(), totalCoast, dDay));
+            subscriptionRepository.save(buildSubscription(member, item.getProduct(), orders, item.getMonth(), item.getPrice(), totalCoast, dDay));
         }
 
         // 배송 데이터 생성
-        deliveryRepository.save(buildDelivery(member, order, dto));
+        deliveryRepository.save(buildDelivery(member, orders, dto));
 
-        return new CreateOrderResDto(order.getNum());
+        return new CreateOrderResDto(orders.getNum());
     }
 
-    private Delivery buildDelivery(Member member, Order order, CreateOrderReqDto dto) {
+    private Delivery buildDelivery(Member member, Orders orders, CreateOrderReqDto dto) {
         return Delivery.builder()
                 .member(member)
-                .order(order)
+                .orders(orders)
                 .address(dto.getAddress())
                 .quantity(dto.getQuantity())
                 .delivery_message(dto.getDeliveryMessage())
@@ -136,12 +134,12 @@ public class SubscriptionOrderService {
                 .build();
     }
 
-    private Subscription buildSubscription(Member member, Product product, Order order,
+    private Subscription buildSubscription(Member member, Product product, Orders orders,
                                            Long month, Long price, Long cost, Long dDay) {
         return Subscription.builder()
                 .member(member)
                 .product(product)
-                .order(order)
+                .orders(orders)
                 .start_data(LocalDateTime.now())
                 .end_data(LocalDateTime.now().plusMonths(month))
                 .next_pay(LocalDateTime.now().plusMonths(1).withDayOfMonth(20))
@@ -151,8 +149,8 @@ public class SubscriptionOrderService {
                 .build();
     }
 
-    private Order buildOrder(Member member, String name, String email, String phone) {
-        return Order.builder()
+    private Orders buildOrder(Member member, String name, String email, String phone) {
+        return Orders.builder()
                 .member(member)
                 .orderName(name)
                 .orderEmail(email)
