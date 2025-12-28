@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class SubscriptionCartItem {
     @Id
     @Column(name = "subscription_cart_item_num")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long num;
 
     @ManyToOne(fetch = FetchType.LAZY)

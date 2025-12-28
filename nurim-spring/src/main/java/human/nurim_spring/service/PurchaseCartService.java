@@ -32,21 +32,35 @@ public class PurchaseCartService {
     // 장바구니 조회
     public PurchaseCartResDto getCart(Long memberNum) {
         List<PurchaseCartDto> list = new ArrayList<>();
+        long total = 0L;
+        long discount = 0L;
+        long delivery = 0L;
+
         // 회원 번호로 회원 조회
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
         // 장바구니 조회, 없으면 빈 장바구니 상태가 감
         PurchaseCart cart = purchaseCartRepository.findByMember(member);
-        if(cart == null) return new PurchaseCartResDto(false, null);
+        if(cart == null) {
+            PurchaseCartResDto dto = new PurchaseCartResDto();
+            dto.setHasCart(false);
+            return dto;
+        }
 
         List<PurchaseCartItem> purchaseCartItems = purchaseCartItemRepository.findByPurchaseCart(cart);
 
         for (PurchaseCartItem purchaseCartItem : purchaseCartItems) {
+            long price = purchaseCartItem.getPrice();
+
+            delivery += 3000L;
+            total += price;
+            discount += price * purchaseCartItem.getProduct().getDiscountRate() / 100;
+
             list.add(buildCartDto(purchaseCartItem));
         }
 
-        return new PurchaseCartResDto(true, list);
+        return new PurchaseCartResDto(true, (long) list.size(), total, discount, delivery, total + delivery - discount, list);
     }
 
     // 장바구니에 아이템 삽입

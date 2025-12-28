@@ -2,10 +2,17 @@
 import React from "react";
 import styled from "styled-components";
 
+import SearchIcon from "../../../img/Searchg.png";
+
 const Container = styled.div`
   width: 1440px;
   height: 375px;
-  background-color: #e8f0f0; /* 배경색은 이미지 분위기에 맞춰 연한 민트/회색 톤 임의 지정 */
+  background: linear-gradient(
+    to bottom right,
+    rgba(47, 99, 100, 0.1) 0%,
+    rgba(47, 99, 100, 0.2) 54%,
+    rgba(47, 99, 100, 0.1) 100%
+  );
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,15 +22,15 @@ const Container = styled.div`
 
 const Title = styled.h1`
   font-size: 40px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+  font-weight: normal;
+  margin-bottom: 25px;
+  color: #2f2f2f;
 `;
 
 const SubText = styled.p`
   font-size: 16px;
-  color: #666;
-  margin-bottom: 30px;
+  color: #4a5565;
+  margin-bottom: 15px;
 `;
 
 const SearchBox = styled.div`
@@ -33,19 +40,46 @@ const SearchBox = styled.div`
   gap: 15px;
 `;
 
-const SearchInput = styled.input`
+const SearchGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: 580px;
   height: 50px;
-  border-radius: 25px;
+  border-radius: 13px;
   border: 1px solid #ddd;
-  padding: 0 20px;
-  font-size: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  padding: 0 14px;
+  font-size: 12px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0px 4px 6px -4px rgba(0, 0, 0, 0.1);
   outline: none;
+  gap: 10px;
+  margin-bottom: 16px;
 
   &::placeholder {
     color: #aaa;
   }
+`;
+
+const SearchInput = styled.input`
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  font-size: 12px;
+  color: black;
+  outline: none;
+
+  &::placeholder {
+    color: #1e1e1e;
+    opacity: 0.3;
+  }
+`;
+
+const SearchImg = styled.img`
+  height: 17.5px;
+  width: 17.5px;
+  cursor: pointer;
 `;
 
 const SearchButton = styled.button`
@@ -54,10 +88,11 @@ const SearchButton = styled.button`
   background-color: #2f6364;
   color: white;
   border: none;
-  border-radius: 16px;
+  border-radius: 8.75px;
   font-size: 14px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: normal;
+  font-family: "Poppins";
 
   &:hover {
     opacity: 0.9;
@@ -69,10 +104,14 @@ const SearchSection = () => {
     <Container>
       <Title>How can we help you?</Title>
       <SubText>
-        자주 묻는 질문과 운영 정책을 확인하여 궁금증을 해결해 보세요.
+        자주 묻는 질문에 대한 답변을 찾거나 지원팀에 문의하려면 여기를
+        클릭하세요.
       </SubText>
       <SearchBox>
-        <SearchInput placeholder="무엇을 도와드릴까요? 검색어를 입력하세요." />
+        <SearchGroup>
+          <SearchImg src={SearchIcon} alt="검색" />
+          <SearchInput placeholder="Search for help articles, topics, or questions..." />
+        </SearchGroup>
         <SearchButton>검색</SearchButton>
       </SearchBox>
     </Container>

@@ -29,18 +29,30 @@ public class SubscriptionCartService {
     // 장바구니 조회
     public SubscriptionCartResDto getCart(Long memberNum) {
         List<SubscriptionCartDto> list = new ArrayList<>();
+        Long discountPrice = 0L;
+        Long totalPrice = 0L;
 
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
         SubscriptionCart cart = subscriptionCartRepository.findByMember(member);
+        // 카트가 존재하지 않으면 hasCart에 false를 담아 빈 dto를 전송
+        if(cart == null) {
+            SubscriptionCartResDto dto = new SubscriptionCartResDto();
+            dto.setHasCart(false);
+            return dto;
+        }
 
         List<SubscriptionCartItem> subscriptionCartItems = subscriptionCartItemRepository.findBySubscriptionCart(cart);
 
         for (SubscriptionCartItem subscriptionCartItem : subscriptionCartItems) {
-            list.add()
+            list.add(convertEntityToDto(subscriptionCartItem));
+            Long price = subscriptionCartItem.getPrice();
+            totalPrice += price;
+            discountPrice += price * subscriptionCartItem.getProduct().getDiscountRate() / 100;
         }
 
+        return new SubscriptionCartResDto(true, totalPrice, discountPrice, totalPrice-discountPrice, list);
     }
 
     // 장바구니에 아이템 삽입
@@ -70,7 +82,32 @@ public class SubscriptionCartService {
         subscriptionCartItemRepository.save(buildCartItem(subscriptionCart, product, price, dto.getMonth()));
     }
 
-    private SubscriptionCartDto convertEntityToDto(Sub)
+    // 장바구니 상품 삭제
+    public void deleteItem(Long cartItemNum) {
+        SubscriptionCartItem subscriptionCartItem = subscriptionCartItemRepository.findById(cartItemNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니 안에 해당 상품이 존재하지 않습니다."));
+
+        subscriptionCartItemRepository.delete(subscriptionCartItem);
+
+        SubscriptionCart cart = subscriptionCartRepository.findById(subscriptionCartItem.getSubscriptionCart().getNum())
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_CART", "장바구니가 존재하지 않습니다."));
+
+        // 장바구니 안에 아이템이 없다면 장바구니 삭제
+        if(cart.getSubscriptionCartItems().isEmpty()) subscriptionCartRepository.delete(cart);
+    }
+
+    private SubscriptionCartDto convertEntityToDto(SubscriptionCartItem cartItem) {
+        return SubscriptionCartDto.builder()
+                .cartItemNum(cartItem.getNum())
+                .productNum(cartItem.getProduct().getNum())
+                .name(cartItem.getProduct().getName())
+                .brand(cartItem.getProduct().getBrand())
+                .serialNum(cartItem.getProduct().getSerialNum())
+                .price(cartItem.getPrice())
+                .img(cartItem.getProduct().getImg())
+                .month(cartItem.getMonth())
+                .build();
+    }
 
     private SubscriptionCartItem buildCartItem(SubscriptionCart subscriptionCart, Product product, Long price, Long month) {
         return SubscriptionCartItem.builder()

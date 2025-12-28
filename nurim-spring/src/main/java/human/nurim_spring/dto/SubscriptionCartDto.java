@@ -11,9 +11,9 @@ public class SubscriptionCartDto {
     private Long cartItemNum;
     private Long productNum;
     private String name;
+    private String brand;
     private String serialNum;
     private Long price;
-    private Long discountRate;
-    private Long quantity;
     private String img;
+    private Long month;
 }

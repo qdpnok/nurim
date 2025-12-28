@@ -5,10 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @AllArgsConstructor
-public class SubscriptionCartItemReqDto {
-    private Long memberNum;
-    private Long productNum;
-    private Long month;
+public class CreateOrderResDto {
+    private Long orderNum;
 }

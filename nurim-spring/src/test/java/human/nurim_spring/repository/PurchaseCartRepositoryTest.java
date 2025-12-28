@@ -1,6 +1,5 @@
 package human.nurim_spring.repository;
 
-import human.nurim_spring.entity.Cart;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.entity.PurchaseCart;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

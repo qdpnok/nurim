@@ -11,5 +11,10 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PurchaseCartResDto {
     private boolean hasCart;
+    private Long count;
+    private Long totalPrice;
+    private Long discountPrice;
+    private Long deliveryPrice;
+    private Long paymentPrice;
     private List<PurchaseCartDto> purchaseCartDto;
 }
