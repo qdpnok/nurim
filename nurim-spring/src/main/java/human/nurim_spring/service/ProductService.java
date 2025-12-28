@@ -152,6 +152,7 @@ public class ProductService {
                 .sDiscountRate((Long) result[10])
                 .scopeCount((Long) result[11])
                 .scopeAvg((Double) result[12])
+                .price_36((Long) result[13])
                 .build();
     }
 

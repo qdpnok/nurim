@@ -1,13 +1,14 @@
-import React, { useMemo } from "react"; // useMemo 추가
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import yellowStar from "../../../img/yellowstaricon.png";
 import greyStar from "../../../img/graystaricon.png";
 import { useNavigate } from "react-router-dom";
 
-// --- Styled Components (기존과 동일) ---
+// --- 스타일 컴포넌트 ---
 const ProductCard = styled.div`
   width: 380px;
-  height: 570px;
+  /* [수정] 높이를 고정하여 모든 카드가 동일한 크기를 갖도록 함 */
+  height: ${(props) => (props.$isRecommend ? "450px" : "570px")};
   border: 1px solid #e0e0e0;
   border-radius: 16px;
   padding: 30px;
@@ -17,6 +18,8 @@ const ProductCard = styled.div`
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   align-items: flex-start;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden; /* 내용이 넘치면 숨김 */
 `;
 
 const ProductImageWrapper = styled.div`
@@ -27,6 +30,9 @@ const ProductImageWrapper = styled.div`
   position: relative;
   cursor: pointer;
   transition: transform 0.2s;
+  /* 이미지 영역 높이 고정 */
+  height: 200px;
+  align-items: center; /* 이미지 세로 중앙 정렬 */
 
   &:hover {
     transform: scale(1.05);
@@ -34,8 +40,9 @@ const ProductImageWrapper = styled.div`
 `;
 
 const ProductImage = styled.img`
-  width: 200px;
-  height: auto;
+  /* 이미지 크기 제한 및 비율 유지 */
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
 `;
 
@@ -44,9 +51,19 @@ const TitleText = styled.h3`
   font-weight: bold;
   margin: 0 0 10px 0;
   line-height: 1.3;
-  white-space: pre-wrap;
   color: #000;
   cursor: pointer;
+
+  /* [수정] 추천 제품일 경우 한 줄 말줄임표(...) 처리 */
+  ${(props) =>
+    props.$isRecommend &&
+    `
+    white-space: nowrap;      /* 텍스트가 다음 줄로 넘어가지 않게 함 */
+    overflow: hidden;         /* 영역을 벗어나는 텍스트를 숨김 */
+    text-overflow: ellipsis;  /* 숨겨진 텍스트 끝에 말줄임표(...) 표시 */
+    display: block;           /* 블록 요소로 만들어 너비를 가득 채움 */
+    width: 100%;              /* 부모 요소 너비에 맞춤 */
+  `}
 
   &:hover {
     color: #356469;
@@ -60,7 +77,7 @@ const SpecText = styled.p`
   margin: 0 0 15px 0;
   line-height: 1.5;
   white-space: pre-wrap;
-  height: 60px;
+  height: 60px; /* 스펙 영역 높이 고정 */
   overflow: hidden;
 `;
 
@@ -68,6 +85,7 @@ const RatingWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  margin-top: auto; /* 내용이 적어도 하단으로 밀어줌 (선택 사항) */
 `;
 
 const StarContainer = styled.div`
@@ -90,14 +108,15 @@ const PriceWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 25px;
+  margin-bottom: ${(props) => (props.$isRecommend ? "0" : "25px")};
   width: 100%;
+  /* 추천 제품일 경우 버튼이 없으므로 하단 여백 조정 */
+  margin-top: ${(props) => (props.$isRecommend ? "auto" : "0")};
 `;
 
 const PriceText = styled.span`
   font-size: 24px;
   font-weight: bold;
-  /* [수정] type이 'subscription'이면 빨간색, 아니면 파란색 */
   color: ${(props) => (props.$type === "subscription" ? "#e74c3c" : "#1a5ce0")};
 `;
 
@@ -117,20 +136,17 @@ const CompareButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: auto;
+  margin-top: auto; /* 버튼을 항상 최하단으로 */
 
   &:hover {
     background-color: #2a5054;
   }
 `;
 
-const ProductItem = ({ product, type }) => {
+const ProductItem = ({ product, type, isRecommend = false }) => {
   const nav = useNavigate();
 
-  // [수정] 랜덤 별점 및 리뷰 수 생성 (useMemo로 값 고정)
-  // useMemo를 안 쓰면 리렌더링 될 때마다 별점이 바뀝니다.
   const { rating, reviewCount } = useMemo(() => {
-    // product.rating이 있으면 쓰고, 없으면(0이면) 랜덤 생성
     const randomRating =
       product.rating || (Math.random() * (5.0 - 3.5) + 3.5).toFixed(1);
     const randomReview =
@@ -157,28 +173,47 @@ const ProductItem = ({ product, type }) => {
   };
 
   const handleItemClick = () => {
-    if (!product.id) {
+    const id = product.id || product.pNum || product.num;
+    if (!id) {
       alert("상품 정보를 불러오지 못했습니다.");
       return;
     }
     const basePath = type === "subscription" ? "/subscriptions" : "/purchase";
-    const categoryKey = getCategoryKey(product.category);
-    nav(`${basePath}/${categoryKey}/${product.id}`);
+    const categoryKey = getCategoryKey(product.category || "TV");
+    nav(`${basePath}/${categoryKey}/${id}`);
+    window.scrollTo(0, 0);
   };
 
+  const getImageUrl = (img) => {
+    if (!img) return "https://placehold.co/200x200?text=NoImage";
+    if (img.startsWith("http")) return img;
+    if (img.startsWith("/")) return img;
+    return `/images/${img}`;
+  };
+
+  const imageUrl = getImageUrl(product.image);
+
   return (
-    <ProductCard>
+    <ProductCard $isRecommend={isRecommend}>
       <ProductImageWrapper onClick={handleItemClick}>
-        <ProductImage src={`/images/${product.image}`} alt={product.alt} />
+        <ProductImage
+          src={imageUrl}
+          alt={product.name}
+          onError={(e) =>
+            (e.target.src = "https://placehold.co/200x200?text=NoImage")
+          }
+        />
       </ProductImageWrapper>
 
-      <TitleText onClick={handleItemClick}>{product.name}</TitleText>
+      {/* TitleText에도 isRecommend 전달 */}
+      <TitleText onClick={handleItemClick} $isRecommend={isRecommend}>
+        {product.name}
+      </TitleText>
 
-      <SpecText>{product.spec}</SpecText>
+      {!isRecommend && <SpecText>{product.spec}</SpecText>}
 
       <RatingWrapper>
         <StarContainer>
-          {/* [수정] rating 값에 따라 노란별/회색별 렌더링 */}
           {[1, 2, 3, 4, 5].map((index) => (
             <StarIcon
               key={index}
@@ -187,19 +222,20 @@ const ProductItem = ({ product, type }) => {
             />
           ))}
         </StarContainer>
-        {/* [수정] 랜덤 생성된 리뷰 수 표시 */}
         <ReviewCount>
-          ({rating}) ({reviewCount} reviews)
+          {rating} / 5 ({reviewCount} reviews)
         </ReviewCount>
       </RatingWrapper>
 
-      <PriceWrapper>
-        {/* [수정] $type props 전달하여 색상 변경 */}
+      {/* PriceWrapper에도 isRecommend 전달하여 여백 조정 */}
+      <PriceWrapper $isRecommend={isRecommend}>
         <PriceText $type={type}>{product.price}</PriceText>
         <DiscountText>{product.discount}</DiscountText>
       </PriceWrapper>
 
-      <CompareButton>비교 하기</CompareButton>
+      {!isRecommend && (
+        <CompareButton onClick={handleItemClick}>자세히 보기</CompareButton>
+      )}
     </ProductCard>
   );
 };
