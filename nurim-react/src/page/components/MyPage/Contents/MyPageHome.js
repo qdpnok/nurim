@@ -1,19 +1,30 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
+// [수정] 너비를 100%로 변경하여 부모 레이아웃에 맞춤
 const MainContainer = styled.div`
-  width: 1074px;
+  width: 100%;
+`;
+
+// [추가] 상단 경로 스타일
+const Breadcrumb = styled.div`
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 30px; /* 모든 페이지 30px로 통일 */
 `;
 
 const PageTitle = styled.h1`
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 10px;
+  color: #333;
+  margin-bottom: 10px; /* 홈은 바로 밑에 인사말이 오므로 간격 좁게 */
 `;
 
 const Greeting = styled.p`
   font-size: 16px;
-  margin-bottom: 30px;
+  color: #333;
+  margin-bottom: 40px; /* 본문 시작 전 간격 확보 */
   span {
     font-weight: bold;
   }
@@ -36,6 +47,7 @@ const MemberInfoHeader = styled.div`
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
+  color: #333;
 `;
 
 const StatsGrid = styled.div`
@@ -161,8 +173,13 @@ const WhiteButton = styled.button`
 `;
 
 const MyPageHome = () => {
+  const navigate = useNavigate();
+
   return (
     <MainContainer>
+      {/* [추가] 상단 경로 표시 */}
+      <Breadcrumb>Home &gt; My Page</Breadcrumb>
+
       <PageTitle>마이페이지</PageTitle>
       <Greeting>
         <span>정동균님 안녕하세요.</span> 누림과 함께 스마트한 가전 생활을
@@ -171,7 +188,9 @@ const MyPageHome = () => {
 
       {/* 1. 회원 정보 */}
       <SectionCard>
-        <MemberInfoHeader>회원 정보 &gt;</MemberInfoHeader>
+        <MemberInfoHeader onClick={() => navigate("info")}>
+          회원 정보 &gt;
+        </MemberInfoHeader>
         <StatsGrid>
           <StatBox>
             구독 관리 <span className="count">0 개</span>

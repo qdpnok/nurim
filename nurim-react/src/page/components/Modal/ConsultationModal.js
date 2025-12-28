@@ -4,12 +4,12 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import axios from "axios";
 
-// [추가] URL 파싱 및 데이터 조회를 위한 import
+// URL parsing and data lookup imports
 import { useLocation } from "react-router-dom";
-// 경로가 정확한지 확인해주세요 (예: ../../../data/productCardSpecs)
+// Make sure this path is correct
 import { productCardData } from "../../../data/productCardSpecs";
 
-// --- Styled Components (기존과 동일, 생략 없이 전체 포함) ---
+// --- Styled Components (Same as before) ---
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -68,7 +68,7 @@ const SubTitle = styled.h3`
   color: #333;
 `;
 
-/* 제품 정보 박스 */
+/* Product Info Box */
 const ProductBox = styled.div`
   width: 505px;
   height: 165px;
@@ -105,7 +105,7 @@ const ProductInfoText = styled.div`
   }
 `;
 
-/* 상담 메뉴 박스 */
+/* Menu Box */
 const MenuBox = styled.div`
   width: 372px;
   height: 96px;
@@ -225,7 +225,7 @@ const TimeSelectionBox = styled.div`
   position: relative;
 `;
 
-/* 지난 날짜 오버레이 */
+/* Disabled Date Overlay */
 const DisabledOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -365,68 +365,50 @@ const TIME_SLOTS_PM = [
 ];
 
 const ConsultationModal = ({ onClose }) => {
-  // 1. URL에서 ID 추출
+  // [Added] 1. Extract ID from URL
   const location = useLocation();
   const pathSegments = location.pathname.split("/");
-  const productId = pathSegments[pathSegments.length - 1]; // URL에서 ID 추출
+  const productId = pathSegments[pathSegments.length - 1];
 
-  // 2. [로컬 데이터] 제품 이름 가져오기
+  // [Added] 2. Name mapping from local data (Optional, can also come from DB)
   const productInfo = productCardData[productId];
   const productName = productInfo?.name?.[0] || "상품명 없음";
 
-  // 3. [상태] DB에서 가져올 정보 (이미지, 시리얼 넘버)
+  // [State] Info from DB (Image, Serial Number)
   const [dbProductInfo, setDbProductInfo] = useState({
     img: "",
     serialNum: "",
   });
 
-  // 4. [API 호출] 상세 조회 API
+  // [Efficient API Call] Get everything with one detail API call
   useEffect(() => {
     const fetchProductDetail = async () => {
       if (!productId) return;
 
       try {
+        // Calling the detail API (assuming backend now returns 'img' field)
         const response = await axios.get(
           `http://localhost:8222/api/product/detail/${productId}`
         );
 
-        // [중요] 콘솔 로그로 데이터 확인
-        console.log("🔥 [상담모달] API 응답 데이터:", response.data);
-        console.log("🔥 [상담모달] DB 이미지 값:", response.data.img);
-
         const data = response.data;
 
         setDbProductInfo({
-          serialNum: data.serialNum || "시리얼 번호 없음",
-          img: data.img || "", // 백엔드 DTO에 img가 있어야 함
+          serialNum: data.serialNum || "",
+          img: data.img || "", // Uses the newly added img field
         });
       } catch (error) {
-        console.error("❌ 제품 상세 정보를 가져오는데 실패했습니다:", error);
+        console.error("Failed to load product detail:", error);
       }
     };
 
     fetchProductDetail();
   }, [productId]);
 
-  // [중요] 이미지 경로 처리 (DB에 파일명만 있다면 경로 추가)
-  const getImageUrl = (imgFromDb) => {
-    if (!imgFromDb) return null;
-
-    // 만약 DB 값이 "http"로 시작하면 그대로 사용 (완전한 URL인 경우)
-    if (imgFromDb.startsWith("http")) return imgFromDb;
-
-    // 만약 DB 값이 파일명(ex: tv_lg_01.jpg)만 있다면 public/img/ 경로 붙이기
-    // (프로젝트 구조에 따라 /img/ 경로는 달라질 수 있습니다.)
-    return `/images/${imgFromDb}`;
-  };
-
-  // 최종 이미지 URL 결정
-  const finalImage =
-    getImageUrl(dbProductInfo.img) ||
-    `https://placehold.co/100x100?text=${productName.substring(0, 2)}`;
-
-  // 확인용 로그
-  console.log("🖼️ 최종 렌더링될 이미지 URL:", finalImage);
+  // Image URL processing (Use placeholder if DB image is missing)
+  const finalImage = dbProductInfo.img
+    ? dbProductInfo.img
+    : `https://placehold.co/100x100?text=${productName.substring(0, 2)}`;
 
   const [consultType, setConsultType] = useState("subscription");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -485,28 +467,26 @@ const ConsultationModal = ({ onClose }) => {
         <InnerWrapper>
           <SectionTitle>상담 예약</SectionTitle>
 
-          {/* 제품 정보 표시 */}
+          {/* Product Info Display */}
           <div>
             <SubTitle>제품 정보</SubTitle>
             <ProductBox>
-              {/* API에서 가져온 이미지 사용 */}
               <ProductImg
                 src={finalImage}
                 alt={productName}
-                onError={(e) => {
-                  console.log("❌ 이미지 로드 실패:", e.target.src);
-                  e.target.src = `https://placehold.co/100x100?text=NoImage`;
-                }}
+                onError={(e) =>
+                  (e.target.src = `https://placehold.co/100x100?text=NoImage`)
+                }
               />
               <ProductInfoText>
                 <h4>{productName}</h4>
-                {/* API에서 가져온 시리얼 넘버 사용 */}
-                <span>{dbProductInfo.serialNum}</span>
+                {/* Display Serial Number from API */}
+                <span>{dbProductInfo.serialNum || "Loading..."}</span>
               </ProductInfoText>
             </ProductBox>
           </div>
 
-          {/* 상담 메뉴 */}
+          {/* Consultation Menu */}
           <div>
             <SubTitle>상담 메뉴</SubTitle>
             <MenuBox>
@@ -525,7 +505,7 @@ const ConsultationModal = ({ onClose }) => {
             </MenuBox>
           </div>
 
-          {/* 상담 희망 일시 */}
+          {/* Consultation Date/Time */}
           <div>
             <SubTitle>상담 희망 일시</SubTitle>
             <DateTimeWrapper>
@@ -608,7 +588,7 @@ const ConsultationModal = ({ onClose }) => {
             </DateTimeWrapper>
           </div>
 
-          {/* 신청자 정보 */}
+          {/* Applicant Info */}
           <div>
             <SubTitle>신청자 정보</SubTitle>
             <ApplicantBox>
@@ -651,7 +631,7 @@ const ConsultationModal = ({ onClose }) => {
             </ApplicantBox>
           </div>
 
-          {/* 상담 내용 */}
+          {/* Consultation Content */}
           <div>
             <TextAreaBox>
               <SubTitle>(필수) 상담 내용을 입력해 주세요.</SubTitle>
