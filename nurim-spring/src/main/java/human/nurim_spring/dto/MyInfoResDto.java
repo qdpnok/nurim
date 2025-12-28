@@ -1,12 +1,9 @@
 package human.nurim_spring.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor @ToString
 public class MyInfoResDto {
     private String id;
     private String email;

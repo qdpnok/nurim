@@ -1,5 +1,6 @@
 package human.nurim_spring.service;
 
+import human.nurim_spring.dto.MyInfoResDto;
 import human.nurim_spring.dto.MyPageResDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -24,5 +25,12 @@ class MemberServiceTest {
     public void mainTest() {
         MyPageResDto dto = memberService.main(1L);
         log.info("마이페이지 회원 조회: {}", dto);
+    }
+
+    @Test
+    @DisplayName("회원 정보 렌더링 정보 조회")
+    public void myInfoTest() {
+        MyInfoResDto dto = memberService.myInfo(1L);
+        log.info("마이페이지 회원 정보 조회: {}", dto);
     }
 }
