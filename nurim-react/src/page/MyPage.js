@@ -11,6 +11,8 @@ import OrderManage from "./components/MyPage/Contents/OrderManage";
 
 import ReviewManage from "./components/MyPage/Contents/ReviewManage";
 import MemberInfo from "./components/MyPage/Contents/MemberInfo";
+import Acquisition from "./components/MyPage/Contents/Acquisition"; // [추가]
+import Return from "./components/MyPage/Contents/Return";
 
 const PageContainer = styled.div`
   width: 1440px;
@@ -32,6 +34,8 @@ const MyPage = () => {
           <Route path="subscriptions" element={<SubscriptionManage />} />
           <Route path="orders" element={<OrderManage />} />
           <Route path="reviews" element={<ReviewManage />} />
+          <Route path="acquisition" element={<Acquisition />} /> {/* [추가] */}
+          <Route path="return" element={<Return />} />
         </Routes>
       </div>
     </PageContainer>
