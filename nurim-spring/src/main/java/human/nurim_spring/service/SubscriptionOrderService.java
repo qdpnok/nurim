@@ -93,7 +93,7 @@ public class SubscriptionOrderService {
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
         // 주문 데이터 생성
-        Order order = orderRepository.save(buildOrder(member, dto.getName(), dto.getEmail(), dto.getPhoneNum()));
+        Orders order = orderRepository.save(buildOrder(member, dto.getName(), dto.getEmail(), dto.getPhoneNum()));
 
         // 구독 데이터 생성
         for (Long num : dto.getCartItemList()) {
@@ -112,7 +112,7 @@ public class SubscriptionOrderService {
         return new CreateOrderResDto(order.getNum());
     }
 
-    private Delivery buildDelivery(Member member, Order order, CreateOrderReqDto dto) {
+    private Delivery buildDelivery(Member member, Orders order, CreateOrderReqDto dto) {
         return Delivery.builder()
                 .member(member)
                 .order(order)
@@ -125,7 +125,7 @@ public class SubscriptionOrderService {
                 .build();
     }
 
-    private Subscription buildSubscription(Member member, Product product, Order order,
+    private Subscription buildSubscription(Member member, Product product, Orders order,
                                            Long month, Long price, Long cost, Long dDay) {
         return Subscription.builder()
                 .member(member)
@@ -140,8 +140,8 @@ public class SubscriptionOrderService {
                 .build();
     }
 
-    private Order buildOrder(Member member, String name, String email, String phone) {
-        return Order.builder()
+    private Orders buildOrder(Member member, String name, String email, String phone) {
+        return Orders.builder()
                 .member(member)
                 .orderName(name)
                 .orderEmail(email)

@@ -28,7 +28,7 @@ public class Subscription {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num")
-    private Order order;
+    private Orders order;
 
     @Column
     private LocalDateTime start_data;
