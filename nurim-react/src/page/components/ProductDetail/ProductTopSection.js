@@ -4,11 +4,10 @@ import { AiFillStar, AiOutlineHeart } from "react-icons/ai";
 import carticon from "../../../img/carticon.png";
 import CartModal from "../Modal/CartModal";
 import ConsultationModal from "../Modal/ConsultationModal";
-
-// [추가] URL 확인을 위해 useLocation 추가
 import { useLocation } from "react-router-dom";
+import { productCardData } from "../../../data/productCardSpecs";
 
-// --- 스타일 컴포넌트 (기존과 동일) ---
+// --- 스타일 컴포넌트 ---
 const Container = styled.div`
   width: 1200px;
   margin: 0 auto;
@@ -43,38 +42,20 @@ const Section = styled.div`
 `;
 
 const GallerySection = styled.div`
-  width: 610px;
+  width: 610px; /* 전체 갤러리 너비 유지 */
   height: 592px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center;
 `;
 
-const ThumbColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-`;
-
-const ThumbItem = styled.div`
-  width: 152px;
-  height: 187px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid #eee;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
+// [수정] 썸네일 컬럼 삭제됨
+// const ThumbColumn = styled.div` ... `;
+// const ThumbItem = styled.div` ... `;
 
 const MainImageItem = styled.div`
-  width: 443px;
-  height: 592px;
+  width: 100%; /* 갤러리 섹션 너비에 꽉 차게 변경 */
+  height: 100%;
   background-color: #f9f9f9;
   border-radius: 20px;
   overflow: hidden;
@@ -83,7 +64,7 @@ const MainImageItem = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* 이미지가 꽉 차게 */
   }
 `;
 
@@ -95,6 +76,7 @@ const InfoBox = styled.div`
   flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
+  margin-left: 30px;
 
   .header {
     margin-bottom: 10px;
@@ -306,27 +288,88 @@ const ProductTopSection = ({
   product,
   selectedPeriod,
   setSelectedPeriod,
-  // props로 오는 type을 사용하지 않고 내부에서 다시 계산합니다.
   selectedCategory,
 }) => {
-  const location = useLocation(); // [수정] 현재 URL 정보 가져오기
+  const location = useLocation();
 
-  // [수정] URL에 'purchase'가 있으면 구매 모드, 아니면 구독 모드 (props 무시)
   const currentType = location.pathname.toLowerCase().includes("purchase")
     ? "purchase"
     : "subscription";
-
   const isSubscription = currentType === "subscription";
+
+  const isLoggedIn = !!localStorage.getItem("accessToken");
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isConsultOpen, setIsConsultOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  // --- productCardData 매핑 로직 ---
+  const sNum = product.sNum || product.snum || product.num;
+  const mappingKey = sNum;
+  const customData = productCardData[mappingKey];
+
+  const displayName = customData?.name?.[0] || product.name;
+  const displaySpecs =
+    customData?.specs?.join(" | ") || product.spec || "상세 정보가 없습니다.";
+
+  let displayMonthlyPrice = 0;
+  let displayTotalPrice = 0;
+
+  if (isSubscription) {
+    if (customData?.prices?.rent) {
+      displayMonthlyPrice = customData.prices.rent[selectedPeriod] || 0;
+      displayTotalPrice = displayMonthlyPrice * selectedPeriod;
+    } else {
+      displayTotalPrice = product.price || 0;
+      displayMonthlyPrice = selectedPeriod
+        ? Math.floor(displayTotalPrice / selectedPeriod)
+        : 0;
+    }
+  } else {
+    const unitPrice = customData?.prices?.buy || product.price || 0;
+    displayTotalPrice = unitPrice * quantity;
+  }
+
+  // --- 이미지 경로 처리 로직 ---
+  const getImageUrl = (img) => {
+    if (!img) return null;
+    if (img.startsWith("http")) return img;
+    return `/images/${img}`;
+  };
+
+  const finalImage =
+    getImageUrl(product.img) || `https://placehold.co/443x592?text=NoImage`;
+
+  // --- 핸들러 ---
   const openCartModal = () => setIsCartOpen(true);
   const closeCartModal = () => setIsCartOpen(false);
 
   const openConsultModal = () => setIsConsultOpen(true);
   const closeConsultModal = () => setIsConsultOpen(false);
+
+  const handleCartClick = () => {
+    if (!isLoggedIn) {
+      alert("로그인 후 이용 가능한 서비스 입니다");
+      return;
+    }
+    openCartModal();
+  };
+
+  const handleConsultClick = () => {
+    if (!isLoggedIn) {
+      alert("로그인 후 이용 가능한 서비스 입니다");
+      return;
+    }
+    openConsultModal();
+  };
+
+  const handleMainActionClick = () => {
+    if (!isLoggedIn) {
+      alert("로그인 후 이용 가능한 서비스 입니다");
+      return;
+    }
+    alert(`${isSubscription ? "구독" : "구매"} 신청을 진행합니다.`);
+  };
 
   const handleQuantityChange = (delta) => {
     setQuantity((prev) => Math.max(1, prev + delta));
@@ -337,45 +380,35 @@ const ProductTopSection = ({
       <ContentHeader>
         <Breadcrumb>
           <span>Home</span> <span>&gt;</span>
-          <span>
-            {/* [수정] 계산된 currentType 사용 */}
-            {isSubscription ? "Subscriptions" : "Purchase"}
-          </span>{" "}
+          <span>{isSubscription ? "Subscriptions" : "Purchase"}</span>
           <span>&gt;</span>
           <span>{selectedCategory || "Category"}</span>
           <span>&gt;</span>
-          <span className="active">{product.name}</span>
+          <span className="active">{displayName}</span>
         </Breadcrumb>
       </ContentHeader>
 
       <Section>
+        {/* 좌측 이미지 갤러리 (썸네일 삭제, 메인만 표시) */}
         <GallerySection>
-          <ThumbColumn>
-            {[1, 2, 3].map((num) => (
-              <ThumbItem key={num}>
-                <img
-                  src={`https://placehold.co/152x187?text=View${num}`}
-                  alt={`썸네일${num}`}
-                />
-              </ThumbItem>
-            ))}
-          </ThumbColumn>
+          {/* ThumbColumn 삭제됨 */}
+
           <MainImageItem>
             <img
-              src={product.img || "https://placehold.co/443x592?text=Main"}
-              alt={product.name}
+              src={finalImage}
+              alt={displayName}
               onError={(e) => {
-                e.target.style.display = "none";
+                e.target.src = "https://placehold.co/443x592?text=Main";
               }}
             />
           </MainImageItem>
         </GallerySection>
 
-        {/* [수정] styled-component에 전달하는 props도 계산된 값 사용 */}
+        {/* 우측 정보 박스 */}
         <InfoBox $isPurchase={!isSubscription}>
           <div className="header">
             <div className="title-row">
-              <h2>{product.name}</h2>
+              <h2>{displayName}</h2>
             </div>
 
             <div className="sub-info">
@@ -385,10 +418,7 @@ const ProductTopSection = ({
                 <AiFillStar color="#FFD700" /> 4.5 / 5
               </span>
             </div>
-            <div className="specs">
-              해상도: QHD | 인공지능 프로세서 알파8 AI | 주요 기능 : 돌비
-              애트모스, 돌비 비전 | 운영체제: webOS 24
-            </div>
+            <div className="specs">{displaySpecs}</div>
           </div>
 
           <Divider />
@@ -405,7 +435,6 @@ const ProductTopSection = ({
 
           <Divider />
 
-          {/* 구독 vs 구매 분기 */}
           {isSubscription ? (
             <div className="option-group">
               <label>계약 기간</label>
@@ -425,9 +454,7 @@ const ProductTopSection = ({
             <>
               <div className="purchase-info-row">
                 <span className="label">제품 구매가</span>
-                <span>
-                  {product.price ? product.price.toLocaleString() : 0}원
-                </span>
+                <span>{(displayTotalPrice / quantity).toLocaleString()}원</span>
               </div>
               <div className="purchase-info-row">
                 <span className="label">할인</span>
@@ -450,10 +477,7 @@ const ProductTopSection = ({
               <div className="row">
                 <span>월 별 구독료</span>
                 <span className="price">
-                  {product.price
-                    ? Number(product.price / selectedPeriod).toLocaleString()
-                    : 0}
-                  원
+                  {displayMonthlyPrice.toLocaleString()}원
                 </span>
               </div>
             ) : null}
@@ -461,30 +485,23 @@ const ProductTopSection = ({
             <div className="row total">
               <span>{isSubscription ? "가전 구독 총 요금" : "총 금액"}</span>
               <span className="price-total">
-                {isSubscription
-                  ? product.price
-                    ? product.price.toLocaleString()
-                    : 0
-                  : product.price
-                  ? (product.price * quantity).toLocaleString()
-                  : 0}
-                원
+                {displayTotalPrice.toLocaleString()}원
               </span>
             </div>
           </div>
 
           <div className="btn-group">
-            <button className="cart" onClick={openCartModal}>
+            <button className="cart" onClick={handleCartClick}>
               <img src={carticon} alt="장바구니" />
             </button>
             {isCartOpen && <CartModal onClose={closeCartModal} />}
 
-            <button className="consult" onClick={openConsultModal}>
+            <button className="consult" onClick={handleConsultClick}>
               {isSubscription ? "구독 상담 예약" : "상담 예약"}
             </button>
             {isConsultOpen && <ConsultationModal onClose={closeConsultModal} />}
 
-            <button className="main-action">
+            <button className="main-action" onClick={handleMainActionClick}>
               {isSubscription ? "구독 하기" : "구매 하기"}
             </button>
           </div>

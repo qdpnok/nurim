@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import SpeechIcon from "../../../img/speech_bubble.png";
+// import SpeechIcon from "../../../img/speech_bubble.png";
 
 const Container = styled.div`
   width: 1240px;

@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import axios from "axios";
 
-// --- Styled Components ---
+// [추가] URL 파싱 및 데이터 조회를 위한 import
+import { useLocation } from "react-router-dom";
+// 경로가 정확한지 확인해주세요 (예: ../../../data/productCardSpecs)
+import { productCardData } from "../../../data/productCardSpecs";
 
+// --- Styled Components (기존과 동일, 생략 없이 전체 포함) ---
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -79,7 +84,7 @@ const ProductBox = styled.div`
 const ProductImg = styled.img`
   width: 100px;
   height: 100px;
-  object-fit: contain;
+  object-fit: cover;
   margin-right: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -92,6 +97,7 @@ const ProductInfoText = styled.div`
   h4 {
     font-size: 18px;
     margin: 0;
+    font-weight: bold;
   }
   span {
     font-size: 14px;
@@ -247,7 +253,6 @@ const TimeGrid = styled.div`
   margin-top: 10px;
 `;
 
-/* [수정] 시간 슬롯 스타일: disabled 상태일 때 회색 처리 */
 const TimeSlot = styled.div`
   padding: 10px 0;
   background-color: ${(props) => (props.$disabled ? "#eee" : "white")};
@@ -360,6 +365,69 @@ const TIME_SLOTS_PM = [
 ];
 
 const ConsultationModal = ({ onClose }) => {
+  // 1. URL에서 ID 추출
+  const location = useLocation();
+  const pathSegments = location.pathname.split("/");
+  const productId = pathSegments[pathSegments.length - 1]; // URL에서 ID 추출
+
+  // 2. [로컬 데이터] 제품 이름 가져오기
+  const productInfo = productCardData[productId];
+  const productName = productInfo?.name?.[0] || "상품명 없음";
+
+  // 3. [상태] DB에서 가져올 정보 (이미지, 시리얼 넘버)
+  const [dbProductInfo, setDbProductInfo] = useState({
+    img: "",
+    serialNum: "",
+  });
+
+  // 4. [API 호출] 상세 조회 API
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      if (!productId) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8222/api/product/detail/${productId}`
+        );
+
+        // [중요] 콘솔 로그로 데이터 확인
+        console.log("🔥 [상담모달] API 응답 데이터:", response.data);
+        console.log("🔥 [상담모달] DB 이미지 값:", response.data.img);
+
+        const data = response.data;
+
+        setDbProductInfo({
+          serialNum: data.serialNum || "시리얼 번호 없음",
+          img: data.img || "", // 백엔드 DTO에 img가 있어야 함
+        });
+      } catch (error) {
+        console.error("❌ 제품 상세 정보를 가져오는데 실패했습니다:", error);
+      }
+    };
+
+    fetchProductDetail();
+  }, [productId]);
+
+  // [중요] 이미지 경로 처리 (DB에 파일명만 있다면 경로 추가)
+  const getImageUrl = (imgFromDb) => {
+    if (!imgFromDb) return null;
+
+    // 만약 DB 값이 "http"로 시작하면 그대로 사용 (완전한 URL인 경우)
+    if (imgFromDb.startsWith("http")) return imgFromDb;
+
+    // 만약 DB 값이 파일명(ex: tv_lg_01.jpg)만 있다면 public/img/ 경로 붙이기
+    // (프로젝트 구조에 따라 /img/ 경로는 달라질 수 있습니다.)
+    return `/images/${imgFromDb}`;
+  };
+
+  // 최종 이미지 URL 결정
+  const finalImage =
+    getImageUrl(dbProductInfo.img) ||
+    `https://placehold.co/100x100?text=${productName.substring(0, 2)}`;
+
+  // 확인용 로그
+  console.log("🖼️ 최종 렌더링될 이미지 URL:", finalImage);
+
   const [consultType, setConsultType] = useState("subscription");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
@@ -391,29 +459,23 @@ const ConsultationModal = ({ onClose }) => {
     }
 
     const formattedDate = selectedDate.toISOString().split("T")[0];
-    alert(`상담 예약 완료!\n날짜: ${formattedDate}\n시간: ${selectedTime}`);
+    alert(
+      `상담 예약 완료!\n상품: ${productName}\n시리얼: ${dbProductInfo.serialNum}\n날짜: ${formattedDate}\n시간: ${selectedTime}`
+    );
     onClose();
   };
 
-  // 날짜 비교 로직 (시간 제외)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
-  // 1. 과거 날짜인지 확인 (Overlay용)
   const isPastDate = selectedDate < today;
-
-  // 2. '오늘'인지 확인 (시간 비활성화용)
   const isToday = selectedDate.toDateString() === new Date().toDateString();
 
-  // [추가 로직] 특정 시간이 현재 시간보다 과거인지 판별하는 함수
   const checkIsPastTime = (timeStr) => {
-    if (!isToday) return false; // 오늘이 아니면 시간 체크 안 함
-
+    if (!isToday) return false;
     const now = new Date();
     const [hour, minute] = timeStr.split(":").map(Number);
     const targetTime = new Date(selectedDate);
     targetTime.setHours(hour, minute, 0, 0);
-
     return targetTime < now;
   };
 
@@ -423,14 +485,23 @@ const ConsultationModal = ({ onClose }) => {
         <InnerWrapper>
           <SectionTitle>상담 예약</SectionTitle>
 
-          {/* 제품 정보 */}
+          {/* 제품 정보 표시 */}
           <div>
             <SubTitle>제품 정보</SubTitle>
             <ProductBox>
-              <ProductImg src="https://via.placeholder.com/100" alt="Product" />
+              {/* API에서 가져온 이미지 사용 */}
+              <ProductImg
+                src={finalImage}
+                alt={productName}
+                onError={(e) => {
+                  console.log("❌ 이미지 로드 실패:", e.target.src);
+                  e.target.src = `https://placehold.co/100x100?text=NoImage`;
+                }}
+              />
               <ProductInfoText>
-                <h4>LG전자 스탠바이미</h4>
-                <span>27ART10AKPL</span>
+                <h4>{productName}</h4>
+                {/* API에서 가져온 시리얼 넘버 사용 */}
+                <span>{dbProductInfo.serialNum}</span>
               </ProductInfoText>
             </ProductBox>
           </div>
@@ -471,7 +542,6 @@ const ConsultationModal = ({ onClose }) => {
               </CalendarWrapper>
 
               <TimeSelectionBox>
-                {/* 지난 날짜 오버레이 */}
                 {isPastDate && (
                   <DisabledOverlay>
                     선택한 날짜는
@@ -491,12 +561,12 @@ const ConsultationModal = ({ onClose }) => {
                 </div>
                 <TimeGrid>
                   {TIME_SLOTS_AM.map((time) => {
-                    const isDisabled = checkIsPastTime(time); // 시간 비활성화 여부 확인
+                    const isDisabled = checkIsPastTime(time);
                     return (
                       <TimeSlot
                         key={time}
                         $selected={selectedTime === time}
-                        $disabled={isDisabled} // 스타일 적용
+                        $disabled={isDisabled}
                         onClick={() =>
                           !isPastDate && !isDisabled && setSelectedTime(time)
                         }
