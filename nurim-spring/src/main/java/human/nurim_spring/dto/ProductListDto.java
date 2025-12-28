@@ -19,4 +19,5 @@ public class ProductListDto {
     private Long sDiscountRate;
     private Long scopeCount;
     private Double scopeAvg;
+    private Long price_36;
 }

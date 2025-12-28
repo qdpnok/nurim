@@ -2,6 +2,7 @@ package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
 
@@ -21,9 +22,9 @@ public class Payment {
     @JoinColumn(name = "member_num")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_num")
-    private Product product;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orders_num")
+    private Orders orders;
 
     @Column
     private Long quantity;
@@ -32,10 +33,10 @@ public class Payment {
     private Long total_price;
 
     @Column
-    private boolean isBye_state;
+    private String bye_state;
 
     @Column
-    private boolean isPayment_method;
+    private String payment_method;
 
     @Column
     private LocalDateTime payment_data;

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter @Setter @NoArgsConstructor
 @Builder @AllArgsConstructor
-public class Order {
+public class Orders {
     @Id
     @Column(name = "order_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
