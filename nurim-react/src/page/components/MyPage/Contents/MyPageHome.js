@@ -2,29 +2,35 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-// [수정] 너비를 100%로 변경하여 부모 레이아웃에 맞춤
 const MainContainer = styled.div`
   width: 100%;
 `;
 
-// [추가] 상단 경로 스타일
+// [통일] 상단 경로
 const Breadcrumb = styled.div`
   font-size: 14px;
   color: #888;
-  margin-bottom: 30px; /* 모든 페이지 30px로 통일 */
+  margin-bottom: 30px;
+`;
+
+// [추가] 다른 페이지의 TitleHeader와 동일한 역할을 하는 래퍼 (마진 병합 방지용)
+const TitleWrapper = styled.div`
+  margin-top: 0;
+  margin-bottom: 10px; /* 홈 화면은 바로 밑에 인사가 오므로 간격 조절 */
 `;
 
 const PageTitle = styled.h1`
   font-size: 24px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 10px; /* 홈은 바로 밑에 인사말이 오므로 간격 좁게 */
+  margin: 0; /* 태그 자체의 마진은 0으로 제거 */
+  line-height: 1.5; /* [중요] 줄 높이 통일 */
 `;
 
 const Greeting = styled.p`
   font-size: 16px;
   color: #333;
-  margin-bottom: 40px; /* 본문 시작 전 간격 확보 */
+  margin-bottom: 40px;
   span {
     font-weight: bold;
   }
@@ -39,7 +45,6 @@ const SectionCard = styled.div`
   background-color: #fff;
 `;
 
-// 1. 회원 정보 섹션
 const MemberInfoHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -73,7 +78,6 @@ const StatBox = styled.div`
   }
 `;
 
-// 2. 배너 섹션 (누림)
 const BannerTitle = styled.h3`
   font-size: 16px;
   font-weight: bold;
@@ -86,7 +90,6 @@ const BannerText = styled.p`
   line-height: 1.5;
 `;
 
-// 3. 소식 받기 섹션
 const NewsletterWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -111,7 +114,7 @@ const EmailInput = styled.input`
 `;
 
 const ActionButton = styled.button`
-  background-color: #356469; /* 포인트 컬러 */
+  background-color: #356469;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -124,7 +127,6 @@ const ActionButton = styled.button`
   }
 `;
 
-// 4. 고객 지원 섹션
 const SupportHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -177,16 +179,18 @@ const MyPageHome = () => {
 
   return (
     <MainContainer>
-      {/* [추가] 상단 경로 표시 */}
       <Breadcrumb>Home &gt; My Page</Breadcrumb>
 
-      <PageTitle>마이페이지</PageTitle>
+      {/* [수정] TitleWrapper로 감싸서 구조 통일 */}
+      <TitleWrapper>
+        <PageTitle>마이페이지</PageTitle>
+      </TitleWrapper>
+
       <Greeting>
         <span>정동균님 안녕하세요.</span> 누림과 함께 스마트한 가전 생활을
         즐겨보세요!
       </Greeting>
 
-      {/* 1. 회원 정보 */}
       <SectionCard>
         <MemberInfoHeader onClick={() => navigate("info")}>
           회원 정보 &gt;
@@ -204,19 +208,14 @@ const MyPageHome = () => {
         </StatsGrid>
       </SectionCard>
 
-      {/* 2. 누림 배너 */}
       <SectionCard>
         <BannerTitle>가전의 새로운 기준, 누림(NURIM)</BannerTitle>
         <BannerText>
           누림은 복잡한 가전 선택의 고민을 해결하고, 구독과 구매 사이의 가장
           합리적인 대안을 제시합니다.
-          <br />
-          구독 비교하기와 전문적인 사후 관리를 통해 당신의 일상을 더 풍요롭게
-          누려보세요.
         </BannerText>
       </SectionCard>
 
-      {/* 3. 소식 받기 */}
       <SectionCard>
         <NewsletterWrapper>
           <BannerTitle>새로운 혜택 소식 받기</BannerTitle>
@@ -231,7 +230,6 @@ const MyPageHome = () => {
         </NewsletterWrapper>
       </SectionCard>
 
-      {/* 4. 고객 지원 */}
       <SupportHeader>
         <h3>고객 지원</h3>
         <ActionButton>고객 지원 센터 바로가기</ActionButton>
