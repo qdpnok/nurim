@@ -10,6 +10,8 @@ import ProductDetailPage from "./page/ProductDetailPage";
 import CustomerSupportPage from "./page/CoustomerSuppoertPage";
 import CartPage from "./page/CartPage";
 import { CartProvider } from "./context/CartContext";
+import MyPage from "./page/MyPage";
+import CheckoutPage from "./page/CheckoutPage";
 
 import "./App.css";
 
@@ -45,6 +47,8 @@ function App() {
               />
               <Route path="/support" element={<CustomerSupportPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/mypage" element={<MyPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
             </Route>
           </Routes>
         </Router>

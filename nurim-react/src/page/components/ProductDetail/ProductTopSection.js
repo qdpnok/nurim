@@ -4,7 +4,7 @@ import { AiFillStar, AiOutlineHeart } from "react-icons/ai";
 import carticon from "../../../img/carticon.png";
 import CartModal from "../Modal/CartModal";
 import ConsultationModal from "../Modal/ConsultationModal";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { productCardData } from "../../../data/productCardSpecs";
 import { CartContext } from "../../../context/CartContext";
 
@@ -292,6 +292,7 @@ const ProductTopSection = ({
   selectedCategory,
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Context 사용
   const { addToCart } = useContext(CartContext);
@@ -396,7 +397,27 @@ const ProductTopSection = ({
       alert("로그인 후 이용 가능한 서비스 입니다");
       return;
     }
-    alert(`${isSubscription ? "구독" : "구매"} 신청을 진행합니다.`);
+
+    const itemData = {
+      productId: product.id || product.num,
+      name: displayName,
+      model: product.serialNum || "MODEL-000",
+      img: finalImage,
+      type: isSubscription ? "subscription" : "purchase",
+      price: isSubscription
+        ? displayMonthlyPrice
+        : customData?.prices?.buy || product.price || 0,
+      period: isSubscription ? `${selectedPeriod}개월` : null,
+      qty: isSubscription ? 1 : quantity, // 구매일 경우 수량 반영
+    };
+
+    // 2. 페이지 이동 (state에 데이터 담아서 보냄)
+    navigate("/checkout", {
+      state: {
+        mode: isSubscription ? "subscription" : "purchase",
+        items: [itemData], // 배열 형태로 전달 (CheckoutPage가 map을 쓰므로)
+      },
+    });
   };
 
   const handleQuantityChange = (delta) => {
