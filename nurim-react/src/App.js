@@ -8,6 +8,9 @@ import FindIP from "./page/FindPage";
 import SubPage from "./page/SubPage";
 import ProductDetailPage from "./page/ProductDetailPage";
 import CustomerSupportPage from "./page/CoustomerSuppoertPage";
+import CartPage from "./page/CartPage";
+import { CartProvider } from "./context/CartContext";
+
 import "./App.css";
 
 import ScrollToTop from "./ScrollToTop";
@@ -16,33 +19,36 @@ import { GlobalStyle } from "./styles/AuthStyles";
 function App() {
   return (
     <>
-      <GlobalStyle />
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<HOME />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/findip" element={<FindIP />} />
-            <Route
-              path="/subscriptions"
-              element={<SubPage type="subscription" />}
-            />
-            <Route path="/purchase" element={<SubPage type="purchase" />} />
+      <CartProvider>
+        <GlobalStyle />
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<HOME />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<LogIn />} />
+              <Route path="/findip" element={<FindIP />} />
+              <Route
+                path="/subscriptions"
+                element={<SubPage type="subscription" />}
+              />
+              <Route path="/purchase" element={<SubPage type="purchase" />} />
 
-            <Route
-              path="/subscriptions/:category/:id"
-              element={<ProductDetailPage />}
-            />
-            <Route
-              path="/purchase/:category/:id"
-              element={<ProductDetailPage />}
-            />
-            <Route path="/support" element={<CustomerSupportPage />} />
-          </Route>
-        </Routes>
-      </Router>
+              <Route
+                path="/subscriptions/:category/:id"
+                element={<ProductDetailPage />}
+              />
+              <Route
+                path="/purchase/:category/:id"
+                element={<ProductDetailPage />}
+              />
+              <Route path="/support" element={<CustomerSupportPage />} />
+              <Route path="/cart" element={<CartPage />} />
+            </Route>
+          </Routes>
+        </Router>
+      </CartProvider>
     </>
   );
 }
