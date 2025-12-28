@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Calendar from "react-calendar"; // 라이브러리 임포트
-import "react-calendar/dist/Calendar.css"; // 기본 스타일 임포트
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import axios from "axios";
 
-// --- Styled Components ---
+// [추가] URL 파싱 및 데이터 조회를 위한 import
+import { useLocation } from "react-router-dom";
+// 경로가 정확한지 확인해주세요 (예: ../../../data/productCardSpecs)
+import { productCardData } from "../../../data/productCardSpecs";
 
+// --- Styled Components (기존과 동일, 생략 없이 전체 포함) ---
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -79,7 +84,7 @@ const ProductBox = styled.div`
 const ProductImg = styled.img`
   width: 100px;
   height: 100px;
-  object-fit: contain;
+  object-fit: cover;
   margin-right: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -92,6 +97,7 @@ const ProductInfoText = styled.div`
   h4 {
     font-size: 18px;
     margin: 0;
+    font-weight: bold;
   }
   span {
     font-size: 14px;
@@ -124,7 +130,6 @@ const MenuButton = styled.button`
 `;
 
 /* --- Calendar Styling Wrapper --- */
-/* react-calendar의 기본 스타일을 덮어씌워서 디자인에 맞게 변경 */
 const CalendarWrapper = styled.div`
   width: 470px;
   height: 470px;
@@ -134,7 +139,7 @@ const CalendarWrapper = styled.div`
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* 상단 정렬 */
+  align-items: flex-start;
 
   .react-calendar {
     width: 100%;
@@ -143,7 +148,6 @@ const CalendarWrapper = styled.div`
     font-family: inherit;
   }
 
-  /* 네비게이션 (월 이동 버튼 등) */
   .react-calendar__navigation {
     display: flex;
     justify-content: space-between;
@@ -162,7 +166,6 @@ const CalendarWrapper = styled.div`
     }
   }
 
-  /* 요일 라벨 */
   .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
@@ -175,14 +178,13 @@ const CalendarWrapper = styled.div`
     }
   }
 
-  /* 날짜 타일 */
   .react-calendar__tile {
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
-    border-radius: 50%; /* 원형 */
+    border-radius: 50%;
     background: transparent;
     color: #333;
 
@@ -193,13 +195,11 @@ const CalendarWrapper = styled.div`
     }
   }
 
-  /* 현재 날짜 */
   .react-calendar__tile--now {
     background: #eee;
     color: #333;
   }
 
-  /* 선택된 날짜 (커스텀 테마 색상 적용) */
   .react-calendar__tile--active {
     background: #2f6162 !important;
     color: white !important;
@@ -221,7 +221,29 @@ const TimeSelectionBox = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* 시간 슬롯이 많으면 스크롤 */
+  overflow-y: auto;
+  position: relative;
+`;
+
+/* 지난 날짜 오버레이 */
+const DisabledOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(80, 80, 80, 0.85);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.5;
+  text-align: center;
 `;
 
 const TimeGrid = styled.div`
@@ -233,21 +255,24 @@ const TimeGrid = styled.div`
 
 const TimeSlot = styled.div`
   padding: 10px 0;
-  background-color: white;
-  border: 1px solid ${(props) => (props.$selected ? "#2F6162" : "#ddd")};
+  background-color: ${(props) => (props.$disabled ? "#eee" : "white")};
+  border: 1px solid
+    ${(props) =>
+      props.$disabled ? "#ddd" : props.$selected ? "#2F6162" : "#ddd"};
   border-radius: 8px;
   text-align: center;
   font-size: 14px;
-  cursor: pointer;
-  color: ${(props) => (props.$selected ? "#2F6162" : "#333")};
+  cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
+  color: ${(props) =>
+    props.$disabled ? "#aaa" : props.$selected ? "#2F6162" : "#333"};
   font-weight: ${(props) => (props.$selected ? "bold" : "normal")};
+  pointer-events: ${(props) => (props.$disabled ? "none" : "auto")};
 
   &:hover {
-    border-color: #2f6162;
+    border-color: ${(props) => (props.$disabled ? "#ddd" : "#2f6162")};
   }
 `;
 
-/* 신청자 정보 박스 */
 const ApplicantBox = styled.div`
   width: 505px;
   height: 300px;
@@ -279,7 +304,6 @@ const InputField = styled.input`
   }
 `;
 
-/* 상담 내용 입력창 */
 const TextAreaBox = styled.div`
   width: 1000px;
   height: 335px;
@@ -300,7 +324,6 @@ const StyledTextArea = styled.textarea`
   outline: none;
 `;
 
-/* Footer */
 const Footer = styled.div`
   width: 1000px;
   display: flex;
@@ -341,10 +364,72 @@ const TIME_SLOTS_PM = [
   "19:00",
 ];
 
-// --- Main Component ---
 const ConsultationModal = ({ onClose }) => {
+  // 1. URL에서 ID 추출
+  const location = useLocation();
+  const pathSegments = location.pathname.split("/");
+  const productId = pathSegments[pathSegments.length - 1]; // URL에서 ID 추출
+
+  // 2. [로컬 데이터] 제품 이름 가져오기
+  const productInfo = productCardData[productId];
+  const productName = productInfo?.name?.[0] || "상품명 없음";
+
+  // 3. [상태] DB에서 가져올 정보 (이미지, 시리얼 넘버)
+  const [dbProductInfo, setDbProductInfo] = useState({
+    img: "",
+    serialNum: "",
+  });
+
+  // 4. [API 호출] 상세 조회 API
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      if (!productId) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8222/api/product/detail/${productId}`
+        );
+
+        // [중요] 콘솔 로그로 데이터 확인
+        console.log("🔥 [상담모달] API 응답 데이터:", response.data);
+        console.log("🔥 [상담모달] DB 이미지 값:", response.data.img);
+
+        const data = response.data;
+
+        setDbProductInfo({
+          serialNum: data.serialNum || "시리얼 번호 없음",
+          img: data.img || "", // 백엔드 DTO에 img가 있어야 함
+        });
+      } catch (error) {
+        console.error("❌ 제품 상세 정보를 가져오는데 실패했습니다:", error);
+      }
+    };
+
+    fetchProductDetail();
+  }, [productId]);
+
+  // [중요] 이미지 경로 처리 (DB에 파일명만 있다면 경로 추가)
+  const getImageUrl = (imgFromDb) => {
+    if (!imgFromDb) return null;
+
+    // 만약 DB 값이 "http"로 시작하면 그대로 사용 (완전한 URL인 경우)
+    if (imgFromDb.startsWith("http")) return imgFromDb;
+
+    // 만약 DB 값이 파일명(ex: tv_lg_01.jpg)만 있다면 public/img/ 경로 붙이기
+    // (프로젝트 구조에 따라 /img/ 경로는 달라질 수 있습니다.)
+    return `/images/${imgFromDb}`;
+  };
+
+  // 최종 이미지 URL 결정
+  const finalImage =
+    getImageUrl(dbProductInfo.img) ||
+    `https://placehold.co/100x100?text=${productName.substring(0, 2)}`;
+
+  // 확인용 로그
+  console.log("🖼️ 최종 렌더링될 이미지 URL:", finalImage);
+
   const [consultType, setConsultType] = useState("subscription");
-  const [selectedDate, setSelectedDate] = useState(new Date()); // react-calendar는 Date 객체 사용
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -355,7 +440,7 @@ const ConsultationModal = ({ onClose }) => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    setSelectedTime(""); // 날짜 변경 시 시간 초기화
+    setSelectedTime("");
   };
 
   const handleInputChange = (e) => {
@@ -364,17 +449,34 @@ const ConsultationModal = ({ onClose }) => {
   };
 
   const handleSubmit = () => {
-    // 날짜 포맷팅 (YYYY-MM-DD)
-    const formattedDate = selectedDate.toISOString().split("T")[0];
+    if (isPastDate) {
+      alert("올바른 날짜를 선택해주세요.");
+      return;
+    }
+    if (!selectedTime) {
+      alert("시간을 선택해주세요.");
+      return;
+    }
 
-    alert(`상담 예약 완료!\n날짜: ${formattedDate}\n시간: ${selectedTime}`);
-    console.log({
-      consultType,
-      date: formattedDate,
-      time: selectedTime,
-      ...formData,
-    });
+    const formattedDate = selectedDate.toISOString().split("T")[0];
+    alert(
+      `상담 예약 완료!\n상품: ${productName}\n시리얼: ${dbProductInfo.serialNum}\n날짜: ${formattedDate}\n시간: ${selectedTime}`
+    );
     onClose();
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isPastDate = selectedDate < today;
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
+
+  const checkIsPastTime = (timeStr) => {
+    if (!isToday) return false;
+    const now = new Date();
+    const [hour, minute] = timeStr.split(":").map(Number);
+    const targetTime = new Date(selectedDate);
+    targetTime.setHours(hour, minute, 0, 0);
+    return targetTime < now;
   };
 
   return (
@@ -383,19 +485,28 @@ const ConsultationModal = ({ onClose }) => {
         <InnerWrapper>
           <SectionTitle>상담 예약</SectionTitle>
 
-          {/* 1. 제품 정보 */}
+          {/* 제품 정보 표시 */}
           <div>
             <SubTitle>제품 정보</SubTitle>
             <ProductBox>
-              <ProductImg src="https://via.placeholder.com/100" alt="Product" />
+              {/* API에서 가져온 이미지 사용 */}
+              <ProductImg
+                src={finalImage}
+                alt={productName}
+                onError={(e) => {
+                  console.log("❌ 이미지 로드 실패:", e.target.src);
+                  e.target.src = `https://placehold.co/100x100?text=NoImage`;
+                }}
+              />
               <ProductInfoText>
-                <h4>LG전자 스탠바이미</h4>
-                <span>27ART10AKPL</span>
+                <h4>{productName}</h4>
+                {/* API에서 가져온 시리얼 넘버 사용 */}
+                <span>{dbProductInfo.serialNum}</span>
               </ProductInfoText>
             </ProductBox>
           </div>
 
-          {/* 2. 상담 메뉴 */}
+          {/* 상담 메뉴 */}
           <div>
             <SubTitle>상담 메뉴</SubTitle>
             <MenuBox>
@@ -414,25 +525,31 @@ const ConsultationModal = ({ onClose }) => {
             </MenuBox>
           </div>
 
-          {/* 3. 상담 희망 일시 (react-calendar 적용) */}
+          {/* 상담 희망 일시 */}
           <div>
             <SubTitle>상담 희망 일시</SubTitle>
             <DateTimeWrapper>
-              {/* 왼쪽: 라이브러리 캘린더 */}
               <CalendarWrapper>
                 <Calendar
                   onChange={handleDateChange}
                   value={selectedDate}
-                  formatDay={(locale, date) => date.getDate()} // 날짜에 '일' 제거하고 숫자만 표시
-                  calendarType="gregory" // 일요일부터 시작
-                  showNeighboringMonth={false} // 이전/다음 달 날짜 숨기기 (깔끔하게)
-                  next2Label={null} // 년도 이동 버튼 숨기기
+                  formatDay={(locale, date) => date.getDate()}
+                  calendarType="gregory"
+                  showNeighboringMonth={false}
+                  next2Label={null}
                   prev2Label={null}
                 />
               </CalendarWrapper>
 
-              {/* 오른쪽: 시간 선택 */}
               <TimeSelectionBox>
+                {isPastDate && (
+                  <DisabledOverlay>
+                    선택한 날짜는
+                    <br />
+                    지난 날짜 입니다.
+                  </DisabledOverlay>
+                )}
+
                 <div
                   style={{
                     marginBottom: "10px",
@@ -443,15 +560,21 @@ const ConsultationModal = ({ onClose }) => {
                   오전
                 </div>
                 <TimeGrid>
-                  {TIME_SLOTS_AM.map((time) => (
-                    <TimeSlot
-                      key={time}
-                      $selected={selectedTime === time}
-                      onClick={() => setSelectedTime(time)}
-                    >
-                      {time}
-                    </TimeSlot>
-                  ))}
+                  {TIME_SLOTS_AM.map((time) => {
+                    const isDisabled = checkIsPastTime(time);
+                    return (
+                      <TimeSlot
+                        key={time}
+                        $selected={selectedTime === time}
+                        $disabled={isDisabled}
+                        onClick={() =>
+                          !isPastDate && !isDisabled && setSelectedTime(time)
+                        }
+                      >
+                        {time}
+                      </TimeSlot>
+                    );
+                  })}
                 </TimeGrid>
 
                 <div
@@ -465,21 +588,27 @@ const ConsultationModal = ({ onClose }) => {
                   오후
                 </div>
                 <TimeGrid>
-                  {TIME_SLOTS_PM.map((time) => (
-                    <TimeSlot
-                      key={time}
-                      $selected={selectedTime === time}
-                      onClick={() => setSelectedTime(time)}
-                    >
-                      {time}
-                    </TimeSlot>
-                  ))}
+                  {TIME_SLOTS_PM.map((time) => {
+                    const isDisabled = checkIsPastTime(time);
+                    return (
+                      <TimeSlot
+                        key={time}
+                        $selected={selectedTime === time}
+                        $disabled={isDisabled}
+                        onClick={() =>
+                          !isPastDate && !isDisabled && setSelectedTime(time)
+                        }
+                      >
+                        {time}
+                      </TimeSlot>
+                    );
+                  })}
                 </TimeGrid>
               </TimeSelectionBox>
             </DateTimeWrapper>
           </div>
 
-          {/* 4. 신청자 정보 */}
+          {/* 신청자 정보 */}
           <div>
             <SubTitle>신청자 정보</SubTitle>
             <ApplicantBox>
@@ -522,7 +651,7 @@ const ConsultationModal = ({ onClose }) => {
             </ApplicantBox>
           </div>
 
-          {/* 5. 상담 내용 입력 */}
+          {/* 상담 내용 */}
           <div>
             <TextAreaBox>
               <SubTitle>(필수) 상담 내용을 입력해 주세요.</SubTitle>

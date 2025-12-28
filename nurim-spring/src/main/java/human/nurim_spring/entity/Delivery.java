@@ -22,8 +22,8 @@ public class Delivery {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_num")
-    private Product product;
+    @JoinColumn(name = "order_num")
+    private Order order;
 
     private String address;
 
