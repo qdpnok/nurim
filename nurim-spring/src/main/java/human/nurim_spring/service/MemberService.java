@@ -55,7 +55,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
-        if(memberRepository.existsByPhoneNumAndIdNot(dto.getPhone(), memberNum))
+        if(memberRepository.existsByPhoneNumAndNumNot(dto.getPhone(), memberNum))
             throw new BusinessException("DUPLICATE_PHONE", "이미 사용 중인 번호입니다.");
 
         member.setName(dto.getName());

@@ -45,6 +45,9 @@ class MemberRepositoryTest {
         Member member2 = memberRepository.findByEmail("tkdal@gmail.com").orElseThrow(() -> new RuntimeException("해당 머시깽이 존재하지 않습니다."));
         log.info(member.toString());
         log.info(member2.toString());
+
+        boolean existInfo = memberRepository.existsByPhoneNumAndNumNot("010-1234-1234", 1L);
+        log.info(String.valueOf(existInfo));
     }
 
 
