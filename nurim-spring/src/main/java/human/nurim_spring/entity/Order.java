@@ -3,14 +3,13 @@ package human.nurim_spring.entity;
 import human.nurim_spring.constant.OrderStatus;
 import human.nurim_spring.constant.OrderType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@Builder @AllArgsConstructor
 public class Order {
     @Id
     @Column(name = "order_num")

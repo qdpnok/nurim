@@ -1,19 +1,20 @@
 package human.nurim_spring.service;
 
+import human.nurim_spring.constant.OrderStatus;
+import human.nurim_spring.constant.OrderType;
+import human.nurim_spring.dto.CreateOrderReqDto;
+import human.nurim_spring.dto.CreateOrderResDto;
 import human.nurim_spring.dto.SubOrderPageRes;
 import human.nurim_spring.dto.SubscriptionCartDto;
-import human.nurim_spring.entity.Member;
-import human.nurim_spring.entity.Product;
-import human.nurim_spring.entity.Subscription;
-import human.nurim_spring.entity.SubscriptionCartItem;
+import human.nurim_spring.entity.*;
 import human.nurim_spring.error.BusinessException;
-import human.nurim_spring.repository.MemberRepository;
-import human.nurim_spring.repository.ProductRepository;
-import human.nurim_spring.repository.SubscriptionCartItemRepository;
+import human.nurim_spring.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class SubscriptionOrderService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final SubscriptionCartItemRepository subscriptionCartItemRepository;
+    private final OrderRepository orderRepository;
+    private final SubscriptionRepository subscriptionRepository;
+    private final DeliveryRepository deliveryRepository;
 
     // 상품에서 결제 화면으로 직접 접근 시, 화면 렌더링에 사용할 메서드
     public SubOrderPageRes directOrderPage(Long memberId, Long productId, Long month) {
@@ -80,6 +84,71 @@ public class SubscriptionOrderService {
         paymentPrice = totalPrice - discountPrice + 3000L;
 
         return convertEntityToDto(member, list, count, totalPrice, discountPrice, 3000L, paymentPrice);
+    }
+
+    // 주문, 구독, 배송 생성
+    @Transactional
+    public CreateOrderResDto createOrder(Long memberId, CreateOrderReqDto dto) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        // 주문 데이터 생성
+        Order order = orderRepository.save(buildOrder(member, dto.getName(), dto.getEmail(), dto.getPhoneNum()));
+
+        // 구독 데이터 생성
+        for (Long num : dto.getCartItemList()) {
+            SubscriptionCartItem item = subscriptionCartItemRepository.findById(num)
+                    .orElseThrow(() -> new BusinessException("NOT_EXIST_ITEM", "장바구니에 해당 상품이 존재하지 않습니다."));
+
+            long dDay = item.getMonth()*30;
+            long totalCoast = item.getMonth()* item.getPrice();
+
+            subscriptionRepository.save(buildSubscription(member, item.getProduct(), order, item.getMonth(), item.getPrice(), totalCoast, dDay));
+        }
+
+        // 배송 데이터 생성
+        deliveryRepository.save(buildDelivery(member, order, dto));
+
+        return new CreateOrderResDto(order.getNum());
+    }
+
+    private Delivery buildDelivery(Member member, Order order, CreateOrderReqDto dto) {
+        return Delivery.builder()
+                .member(member)
+                .order(order)
+                .address(dto.getAddress())
+                .quantity(dto.getQuantity())
+                .delivery_message(dto.getDeliveryMessage())
+                .isAdvance_visit(dto.getIsVisit())
+                .invoice_num(dto.getInvoiceNum())
+                .deliveryDate(dto.getDeliveryDate())
+                .build();
+    }
+
+    private Subscription buildSubscription(Member member, Product product, Order order,
+                                           Long month, Long price, Long cost, Long dDay) {
+        return Subscription.builder()
+                .member(member)
+                .product(product)
+                .order(order)
+                .start_data(LocalDateTime.now())
+                .end_data(LocalDateTime.now().plusMonths(month))
+                .next_pay(LocalDateTime.now().plusMonths(1).withDayOfMonth(20))
+                .price(price)
+                .d_day(dDay)
+                .remaining_cost(cost)
+                .build();
+    }
+
+    private Order buildOrder(Member member, String name, String email, String phone) {
+        return Order.builder()
+                .member(member)
+                .orderName(name)
+                .orderEmail(email)
+                .orderPhone(phone)
+                .orderType(OrderType.SUBSCRIPTION)
+                .orderStatus(OrderStatus.ORDERED)
+                .build();
     }
 
     private SubOrderPageRes convertEntityToDto(Member member, List<SubscriptionCartDto> list, Long count,

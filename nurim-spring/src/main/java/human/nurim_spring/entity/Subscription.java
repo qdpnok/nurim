@@ -43,10 +43,10 @@ public class Subscription {
     private Long price;
 
     @Column
-    private LocalDateTime d_day;
+    private Long d_day;
 
     @Column
-    private LocalDateTime remaining_cost;
+    private Long remaining_cost;
 
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus subscriptionStatus;
