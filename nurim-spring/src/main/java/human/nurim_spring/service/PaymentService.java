@@ -34,7 +34,7 @@ public class PaymentService {
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_ORDERS", "해당 주문 기록이 존재하지 않습니다."));
 
         List<Subscription> subscriptions = subscriptionRepository.findByOrders(orders);
-        if(subscriptions.isEmpty()) throw new BusinessException("NOT_EXISTS_SUBSCRIPTION", "구독 기록이 없습니다.");
+        if(subscriptions.isEmpty()) throw new BusinessException("NOT_EXISTS_SUBSCRIPTION", "구독 정보가 존재하지 않습니다.");
 
         long quantity = subscriptions.size();
         long totalPrice = 0;
