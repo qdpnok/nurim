@@ -277,7 +277,11 @@ const DetailReviewSection = ({ product, staticSpecData }) => {
         {activeTab === "details" ? (
           <div className="spec-container">
             <h3>상품 상세 스펙</h3>
-            <ProductSpecTable data={product.spec || staticSpecData} />
+            {/* [수정] data 폴더(staticSpecData)에서 받아온 데이터를 ProductSpecTable에 전달합니다.
+                만약 staticSpecData가 없다면 product.spec을 대체값으로 사용합니다.
+                (ProductSpecTable 컴포넌트가 배열 형태의 이미지 경로 리스트를 처리한다고 가정)
+             */}
+            <ProductSpecTable data={staticSpecData} />
           </div>
         ) : (
           <ReviewContainer>

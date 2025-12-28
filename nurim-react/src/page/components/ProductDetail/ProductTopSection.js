@@ -338,7 +338,7 @@ const ProductTopSection = ({
   const getImageUrl = (img) => {
     if (!img) return null;
     if (img.startsWith("http")) return img;
-    return `/img/${img}`;
+    return `/images/${img}`; // public/images/ 폴더에서 이미지 로드
   };
   const finalImage =
     getImageUrl(product.img) || `https://placehold.co/443x592?text=NoImage`;
