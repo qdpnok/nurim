@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { AiFillStar, AiOutlineHeart } from "react-icons/ai";
 import carticon from "../../../img/carticon.png";
@@ -6,6 +6,7 @@ import CartModal from "../Modal/CartModal";
 import ConsultationModal from "../Modal/ConsultationModal";
 import { useLocation } from "react-router-dom";
 import { productCardData } from "../../../data/productCardSpecs";
+import { CartContext } from "../../../context/CartContext";
 
 // --- 스타일 컴포넌트 ---
 const Container = styled.div`
@@ -292,6 +293,9 @@ const ProductTopSection = ({
 }) => {
   const location = useLocation();
 
+  // Context 사용
+  const { addToCart } = useContext(CartContext);
+
   const currentType = location.pathname.toLowerCase().includes("purchase")
     ? "purchase"
     : "subscription";
@@ -330,29 +334,53 @@ const ProductTopSection = ({
     displayTotalPrice = unitPrice * quantity;
   }
 
-  // --- 이미지 경로 처리 로직 ---
+  // --- 이미지 경로 처리 ---
   const getImageUrl = (img) => {
     if (!img) return null;
     if (img.startsWith("http")) return img;
-    return `/images/${img}`;
+    return `/img/${img}`;
   };
-
   const finalImage =
     getImageUrl(product.img) || `https://placehold.co/443x592?text=NoImage`;
 
   // --- 핸들러 ---
   const openCartModal = () => setIsCartOpen(true);
   const closeCartModal = () => setIsCartOpen(false);
-
   const openConsultModal = () => setIsConsultOpen(true);
   const closeConsultModal = () => setIsConsultOpen(false);
 
+  // [수정] 장바구니 담기 로직
   const handleCartClick = () => {
     if (!isLoggedIn) {
       alert("로그인 후 이용 가능한 서비스 입니다");
       return;
     }
-    openCartModal();
+
+    // 장바구니에 담을 객체 생성
+    const newItem = {
+      productId: product.id || product.num,
+      name: displayName,
+      model: product.serialNum || "MODEL-000",
+      img: finalImage,
+      type: isSubscription ? "subscription" : "purchase", // 타입 구분
+
+      // 가격 정보
+      price: isSubscription
+        ? displayMonthlyPrice
+        : customData?.prices?.buy || product.price || 0,
+
+      // 구독일 경우 정보
+      period: isSubscription ? `${selectedPeriod}개월` : null,
+
+      // 구매일 경우 정보
+      qty: isSubscription ? 1 : quantity, // 구독은 수량 1 고정
+      option: "기본 옵션", // 필요시 옵션 state 추가하여 연결
+      install: "전문 기사 설치",
+      color: "Color Info", // 필요시 데이터 연동
+    };
+
+    addToCart(newItem); // Context 함수 호출
+    openCartModal(); // 모달 열기 (장바구니 담김 알림)
   };
 
   const handleConsultClick = () => {

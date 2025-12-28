@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
+import { CartContext } from "../../../context/CartContext";
 
 // 이미지 import (경로 확인 필요)
 import MainLogo from "../../../img/MainLogo.png";
@@ -246,9 +247,11 @@ const BottomLine = styled.div`
 const Header = () => {
   const [search, setSearch] = useState("");
   const [isLogin, setIsLogin] = useState(false);
-  const location = useLocation(); // 현재 경로 정보를 가져옴
+  const location = useLocation();
 
-  // 로그인 상태 확인 (기존 로직 유지)
+  // Context에서 cartItems 가져오기
+  const { cartItems } = useContext(CartContext);
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsLogin(!!token);
@@ -261,7 +264,6 @@ const Header = () => {
     alert("로그아웃 되었습니다.");
     window.location.href = "/";
   };
-
   return (
     <Container>
       <HeaderWrapper>
@@ -297,9 +299,11 @@ const Header = () => {
               <Link to="/cart">
                 <IconWrapper>
                   <img src={cart} alt="cart" />
-                  <Badge color="#00cc82">0</Badge>
+                  {/* 장바구니 개수 표시 */}
+                  <Badge color="#00cc82">{cartItems.length}</Badge>
                 </IconWrapper>
               </Link>
+
               <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>
             </>
           ) : (
