@@ -19,6 +19,7 @@ public class PurchaseCart {
     @JoinColumn(name = "member_num")
     private Member member;
 
+    @Builder.Default
     @OneToMany(mappedBy = "purchaseCart", cascade = CascadeType.ALL)
     private List<PurchaseCartItem> purchaseCartItems = new ArrayList<>();
 }

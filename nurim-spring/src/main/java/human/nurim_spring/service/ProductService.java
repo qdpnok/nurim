@@ -32,13 +32,11 @@ public class ProductService {
         Page<Object[]> results;
         List<ProductListDto> list = new ArrayList<>();
 
-// size가 없으면 기본값 20으로 설정 (혹은 9)
+        // size가 없으면 기본값 20으로 설정
         int pageSize = (size == null) ? 20 : size;
 
-        // 고정된 9 대신 pageSize 변수 사용
         Pageable pageable = PageRequest.of(pageNum == null ? 0 : pageNum - 1, pageSize);
 
-        // 서브 카테고리 이름이 있으면 서브 카테고리로 검색, 아니면 구매 상품 모두 검색
         if(category != null) {
             String scName;
             scName = category.equals("세탁기") ? "세탁기/건조기" : category;
@@ -48,7 +46,6 @@ public class ProductService {
             results = productRepository.findAllProductWithReviewStats(pageable);
         }
 
-        // product join reviews 해서 productListResDto로 convert
         for(Object[] result: results.getContent()) {
             list.add(convertResultToProductListRes(result, category));
         }
@@ -56,7 +53,7 @@ public class ProductService {
         return new ProductListResDto(list, results.getTotalPages(), results.getTotalElements(), pageNum == null? 1 : pageNum, pageSize);
     }
 
-    // 상품 목록 조회, 메인화면: 카테고리 번호가 오면 해당 제품만, 없으면 전체 조회
+    // 상품 목록 조회, 메인화면
     public List<MainProductResDto> getMainList(Long id) {
         List<Product> result;
         List<MainProductResDto> list = new ArrayList<>();
@@ -77,7 +74,7 @@ public class ProductService {
         return list;
     }
 
-    // 상품 상세 조회
+    // [수정] 상품 상세 조회 (NPE 해결)
     public ProductDetailResDto get(Long id) {
         List<Object[]> results = productRepository.findDetail(id);
         if (results.isEmpty()) {
@@ -90,13 +87,21 @@ public class ProductService {
         Double avg = (Double) result[1];
         Long discount;
 
+        // DB에서 가져온 할인율이 null이면 0으로 처리하는 로직 추가
+        Long dbDiscountRate = product.getDiscountRate();
+        long safeDiscountRate = (dbDiscountRate != null) ? dbDiscountRate : 0L;
+
         // 구독이면 할인률, 구매면 할인 금액
         if(product.getSubCategory().getMainCategory().getNum() == 1) {
-            discount = product.getDiscountRate();
+            // 구독일 경우 할인율 그대로 사용
+            discount = safeDiscountRate;
         } else {
+            // 구매일 경우 할인 금액 계산 (가격 - (가격 * 할인율 / 100))
             Long price = product.getPrice();
-            Long discountRate = product.getDiscountRate();
-            discount = price - (price*discountRate/100);
+            // price가 null일 수도 있으니 안전하게 처리 (선택사항)
+            long safePrice = (price != null) ? price : 0L;
+
+            discount = safePrice - (safePrice * safeDiscountRate / 100);
         }
 
         return convertResultToProductDetailRes(product, discount, avg);
@@ -161,6 +166,7 @@ public class ProductService {
                 .price48(product.getPrice48())
                 .price36(product.getPrice36())
                 .discount(discount)
+                .img(product.getImg())
                 .build();
     }
 
