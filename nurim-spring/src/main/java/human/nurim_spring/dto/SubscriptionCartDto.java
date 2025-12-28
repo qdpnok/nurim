@@ -6,6 +6,7 @@ import lombok.*;
 
 @Getter @Setter @NoArgsConstructor
 @Builder @AllArgsConstructor
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SubscriptionCartDto {
     private Long cartItemNum;
