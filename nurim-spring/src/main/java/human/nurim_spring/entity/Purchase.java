@@ -25,6 +25,10 @@ public class Purchase {
     @JoinColumn(name = "product_num")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_num")
+    private Orders orders;
+
     @Column
     private LocalDateTime purchase_data;
 
