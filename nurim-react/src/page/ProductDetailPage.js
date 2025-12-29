@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import api from "../api/Axios";
 
 // 컴포넌트 임포트
 import ProductTopSection from "./components/ProductDetail/ProductTopSection";
@@ -53,9 +54,7 @@ const ProductDetailPage = () => {
     const fetchProductDetail = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `http://localhost:8222/api/product/detail/${id}`
-        );
+        const response = await api.get(`/product/detail/${id}`);
         setProduct(response.data);
       } catch (e) {
         console.error("상세 정보 로딩 실패:", e);

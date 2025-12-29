@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import api from "../api/Axios";
 
 // 컴포넌트 import
 import CategoryFilter from "./components/Sub/CategoryFilter";
@@ -141,7 +142,7 @@ const SubPage = ({ type: initialType }) => {
         ];
 
         const requests = pages.map((page) =>
-          axios.get("http://localhost:8222/api/product/list", {
+          api.get("/product/list", {
             params: { page: page, size: 20 },
           })
         );

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import axios from "axios";
+import api from "../api/Axios";
 import {
   FaArrowLeft,
   FaCreditCard,
@@ -314,9 +315,9 @@ const CheckoutPage = () => {
 
         // 2. 백엔드 API 호출
         // URL 패턴: /api/subscription-order/{memberId}/{type}?파라미터들
-        const url = `http://localhost:8222/api/subscription-order/${memberId}/${type}${queryParams}`;
+        const url = `/subscription-order/${memberId}/${type}${queryParams}`;
 
-        const response = await axios.get(url, {
+        const response = await api.get(url, {
           headers: {
             Authorization: `Bearer ${token}`, // 필요 시 토큰 전송
           },
