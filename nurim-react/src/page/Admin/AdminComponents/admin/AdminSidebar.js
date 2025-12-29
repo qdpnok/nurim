@@ -29,9 +29,9 @@ const AdminSidebar = () => {
     { name: "상품 등록 관리", path: "/admin/products", icon: <FaBoxOpen /> },
     {
       name: "상담 신청 내역",
-      path: "/admin/AdminConsultationDetail",
+      path: "/admin/consultation", // 👈 여기가 중요합니다! (detail 아님)
       icon: <FaClipboardList />,
-    }, // 문의관리 상담신청
+    },
     // 필요시 추가 메뉴 확장
     { name: "주문 내역 관리", path: "/admin/orders", icon: <FaTruck /> },
     { name: "매출 관리", path: "/admin/sales", icon: <FaChartBar /> },

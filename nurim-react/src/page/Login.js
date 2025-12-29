@@ -263,10 +263,15 @@ const LogIn = () => {
       const response = await api.post("/auth/login", { id, pwd, rememberMe });
 
       if (response.status === 200) {
-        const token =
-          response.headers["authorization"] ||
-          response.data.token ||
-          "dummy-token";
+        // 백엔드 TokenDto 필드명에 맞춰 accessToken으로 변경
+        const token = response.data.accessToken;
+
+        // 만약 토큰이 없다면 에러 처리 (dummy-token 사용 금지)
+        if (!token) {
+          console.error("토큰을 응답받지 못했습니다.", response.data);
+          alert("로그인 처리 중 오류가 발생했습니다.");
+          return;
+        }
 
         localStorage.setItem("accessToken", token);
 

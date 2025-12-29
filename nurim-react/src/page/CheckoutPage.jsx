@@ -314,7 +314,7 @@ const CheckoutPage = () => {
 
         // 2. 백엔드 API 호출
         // URL 패턴: /api/subscription-order/{memberId}/{type}?파라미터들
-        const url = `http://localhost:8080/api/subscription-order/${memberId}/${type}${queryParams}`;
+        const url = `http://localhost:8222/api/subscription-order/${memberId}/${type}${queryParams}`;
 
         const response = await axios.get(url, {
           headers: {

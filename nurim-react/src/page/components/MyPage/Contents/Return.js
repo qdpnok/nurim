@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import api from "../../../../api/Axios"; // API 경로 확인 필요
 import ReturnModal from "../../Modal/ReturnModal";
 
 // --- 스타일 정의 ---
@@ -15,11 +16,11 @@ const Breadcrumb = styled.div`
   font-size: 14px;
   color: #888;
   margin-bottom: 20px;
-  text-align: left; /* 왼쪽 정렬 */
+  text-align: left;
 `;
 
 const TitleHeader = styled.div`
-  text-align: left; /* 왼쪽 정렬 */
+  text-align: left;
   margin-bottom: 40px;
 `;
 
@@ -158,7 +159,6 @@ const StyledCheckbox = styled.div`
   }
 `;
 
-// 체크박스 컴포넌트 (외부로 분리하여 성능 최적화)
 const CustomCheckbox = ({ checked, onChange }) => (
   <CheckboxContainer onClick={onChange}>
     <HiddenCheckbox checked={checked} readOnly />
@@ -175,31 +175,68 @@ const Return = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // 체크박스 상태 관리
-  const [isChecked, setIsChecked] = useState(true);
+  // [수정] 실제 데이터 및 체크 상태 관리
+  const [products, setProducts] = useState([]);
+  const [checkedItems, setCheckedItems] = useState([]); // 선택된 pNum들
+  const memberNum = 1; // 임시 회원 번호 (로그인 연동 시 변경)
 
-  const products = [
-    {
-      id: 1,
-      image: "",
-      name: "LG 스탠바이미",
-      model: "27ART10AKPL",
-      regDate: "2023-01-25",
-      monthlyPrice: "4,900원",
-      remaining: "14개월",
-      penaltyCost: "50,000원",
-    },
-  ];
+  // [수정] 데이터 로드 (구독 중인 상품 리스트)
+  useEffect(() => {
+    api
+      .get(`/mypage/subscriptions/${memberNum}`)
+      .then((res) => {
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.error("데이터 로드 실패:", err);
+      });
+  }, []);
 
-  const toggleCheckbox = () => setIsChecked(!isChecked);
+  // [추가] 전체 선택/해제 핸들러
+  const handleAllCheck = () => {
+    if (checkedItems.length === products.length) {
+      setCheckedItems([]);
+    } else {
+      // DTO의 PK가 pNum이므로 pNum을 매핑
+      const allIds = products.map((p) => p.pNum);
+      setCheckedItems(allIds);
+    }
+  };
+
+  // [추가] 개별 선택 핸들러
+  const handleSingleCheck = (pNum) => {
+    if (checkedItems.includes(pNum)) {
+      setCheckedItems(checkedItems.filter((item) => item !== pNum));
+    } else {
+      setCheckedItems([...checkedItems, pNum]);
+    }
+  };
 
   const handleApply = () => {
-    if (!isChecked) {
+    if (checkedItems.length === 0) {
       alert("반납할 제품을 선택해주세요.");
       return;
     }
-    setSelectedProduct(products[0]);
+    // 선택된 제품 찾기 (pNum 기준)
+    const targetProduct = products.find((p) => p.pNum === checkedItems[0]);
+    setSelectedProduct(targetProduct);
     setIsModalOpen(true);
+  };
+
+  // 모달 내부 '신청하기' 버튼 클릭 시 실행될 함수
+  const submitReturn = async () => {
+    try {
+      await api.post("/mypage/return", {
+        memberNum: memberNum,
+        productNum: selectedProduct.pNum, // DTO에 맞춰 productId -> productNum
+      });
+      alert("반납 신청이 완료되었습니다.");
+      setIsModalOpen(false);
+      // 필요 시 목록 새로고침 로직 추가
+    } catch (e) {
+      console.error(e);
+      alert("오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -214,37 +251,52 @@ const Return = () => {
         <thead>
           <tr>
             <Th>
-              {/* 전체 선택 체크박스 적용 */}
-              <CustomCheckbox checked={isChecked} onChange={toggleCheckbox} />
+              {/* 전체 선택 체크박스 */}
+              <CustomCheckbox
+                checked={
+                  products.length > 0 && checkedItems.length === products.length
+                }
+                onChange={handleAllCheck}
+              />
             </Th>
             <Th>전체선택</Th>
             <Th>가전 명</Th>
-            <Th>가입 일자</Th>
+            {/* DTO에 날짜가 없다면 스펙 등으로 대체 */}
+            <Th>스펙</Th>
             <Th>월 케어 비용</Th>
-            <Th>남은 기간</Th>
+            <Th>브랜드</Th>
           </tr>
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.id}>
+            <tr key={product.pNum}>
               <Td>
-                {/* 개별 선택 체크박스 적용 */}
-                <CustomCheckbox checked={isChecked} onChange={toggleCheckbox} />
+                {/* 개별 선택 체크박스 */}
+                <CustomCheckbox
+                  checked={checkedItems.includes(product.pNum)}
+                  onChange={() => handleSingleCheck(product.pNum)}
+                />
               </Td>
               <Td>
-                <img src={product.image} alt="제품" />
+                {/* DTO 필드명에 맞춰 수정 (image -> img) */}
+                <img src={product.img} alt="제품" />
               </Td>
-              {/* 제품명 텍스트 왼쪽 정렬 및 여백 추가 */}
               <Td style={{ textAlign: "left", paddingLeft: "30px" }}>
                 <strong>{product.name}</strong>
                 <br />
+                {/* model -> category 또는 spec */}
                 <span style={{ fontSize: "12px", color: "#888" }}>
-                  [{product.model}]
+                  [{product.category}]
                 </span>
               </Td>
-              <Td>{product.regDate}</Td>
-              <Td>{product.monthlyPrice}</Td>
-              <Td>{product.remaining}</Td>
+              {/* regDate 대신 spec 표시 */}
+              <Td>{product.spec}</Td>
+              {/* monthlyPrice -> price_36 */}
+              <Td>
+                {product.price_36 ? product.price_36.toLocaleString() : 0}원
+              </Td>
+              {/* remaining 대신 brand 표시 */}
+              <Td>{product.brand}</Td>
             </tr>
           ))}
         </tbody>
@@ -261,6 +313,7 @@ const Return = () => {
         <ReturnModal
           product={selectedProduct}
           onClose={() => setIsModalOpen(false)}
+          onConfirm={submitReturn} // 모달 확인 버튼 이벤트 연결
         />
       )}
     </Container>

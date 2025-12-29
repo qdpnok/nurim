@@ -16,7 +16,7 @@ import AdminLayout from "./page/AdminLayout";
 import AdminDashboard from "./page/Admin/AdminDashboard";
 import AdminFaq from "./page/Admin/AdminFaq";
 import AdminQna from "./page/Admin/AdminQna";
-import AdminConsultationDetail from "./page/components/Modal/AdminConsultationDetail";
+import AdminConsultation from "./page/Admin/AdminConsultation";
 import AdminMemberInfo from "./page/Admin/AdminMemberInfo";
 import AdminWithdrawal from "./page/Admin/AdminWithdrawal";
 import AdminProductList from "./page/Admin/AdminProductList";
@@ -81,10 +81,7 @@ function App() {
               <Route path="qna" element={<AdminQna />} />
 
               {/* 문의 관리 - 상담 신청 내역 */}
-              <Route
-                path="AdminConsultationDetail"
-                element={<AdminConsultationDetail title="상담 신청 내역" />}
-              />
+              <Route path="consultation" element={<AdminConsultation />} />
 
               {/* 상품 관리 */}
               <Route path="products" element={<AdminProductList />} />
