@@ -12,4 +12,5 @@ import java.util.List;
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     List<Subscription> findByOrders(Orders orders);
     Long countByMember(Member member);
+    List<Subscription> findByMember(Member member);
 }

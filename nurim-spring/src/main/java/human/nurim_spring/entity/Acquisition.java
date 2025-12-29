@@ -1,14 +1,14 @@
 package human.nurim_spring.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@AllArgsConstructor // 빌더 패턴 사용 시 필수
+@Builder
 public class Acquisition {
     @Id
     @Column(name = "acquisition_num")

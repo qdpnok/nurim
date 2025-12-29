@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/api/subscription-order")
 @RequiredArgsConstructor
 public class SubscriptionOrderController {

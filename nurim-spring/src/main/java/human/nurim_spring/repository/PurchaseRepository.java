@@ -14,4 +14,5 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     // 회원과 상품으로 가장 최근 구매 내역 1개 찾기
     Optional<Purchase> findTopByMemberAndProductOrderByNumDesc(Member member, Product product);
     Long countByMember(Member member);
+    List<Purchase> findByMember(Member member);
 }
