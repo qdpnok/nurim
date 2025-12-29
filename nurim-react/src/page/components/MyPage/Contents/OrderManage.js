@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import api from "../../../../api/Axios";
 
 const Container = styled.div`
   width: 100%;
@@ -58,8 +59,45 @@ const ActionButton = styled.button`
   }
 `;
 
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+const ItemCard = styled.div`
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+`;
+const InfoSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #eee;
+  }
+`;
+
 const OrderManage = () => {
   const navigate = useNavigate();
+  const [list, setList] = useState([]);
+  const memberNum = 1;
+
+  useEffect(() => {
+    // 구매 내역 API 호출
+    api
+      .get(`/mypage/orders/${memberNum}`)
+      .then((res) => setList(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <Container>
@@ -68,12 +106,32 @@ const OrderManage = () => {
         <Title>구매한 제품</Title>
         <Divider />
       </TitleHeader>
-      <EmptyState>
-        <p>구매한 제품이 없습니다.</p>
-        <ActionButton onClick={() => navigate("/purchase")}>
-          제품 구매하기
-        </ActionButton>
-      </EmptyState>
+      {list.length === 0 ? (
+        <EmptyState>
+          <p>구매한 제품이 없습니다.</p>
+          <ActionButton onClick={() => navigate("/purchase")}>
+            제품 구매하기
+          </ActionButton>
+        </EmptyState>
+      ) : (
+        <ListContainer>
+          {list.map((item, idx) => (
+            <ItemCard key={idx}>
+              {/* 렌더링 로직 위와 동일 (period 제외 등) */}
+              <InfoSection>
+                <img src={item.image} alt={item.name} />
+                <div>
+                  <div style={{ fontWeight: "bold" }}>{item.name}</div>
+                  <div style={{ fontSize: "12px", color: "#888" }}>
+                    {item.model}
+                  </div>
+                </div>
+              </InfoSection>
+              <div style={{ fontWeight: "bold" }}>{item.price}</div>
+            </ItemCard>
+          ))}
+        </ListContainer>
+      )}
     </Container>
   );
 };

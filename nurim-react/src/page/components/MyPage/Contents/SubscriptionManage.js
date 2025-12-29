@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
+import api from "../../../../api/Axios";
 const Container = styled.div`
   width: 100%;
 `;
@@ -58,8 +58,45 @@ const ActionButton = styled.button`
   }
 `;
 
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+const ItemCard = styled.div`
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+`;
+const InfoSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #eee;
+  }
+`;
+
 const SubscriptionManage = () => {
   const navigate = useNavigate();
+  const [list, setList] = useState([]);
+  const memberNum = 1; // 로그인 로직 연동 시 변경
+
+  useEffect(() => {
+    // 구독 내역 API 호출
+    api
+      .get(`/mypage/subscriptions/${memberNum}`)
+      .then((res) => setList(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <Container>
@@ -68,12 +105,45 @@ const SubscriptionManage = () => {
         <Title>구독 관리</Title>
         <Divider />
       </TitleHeader>
-      <EmptyState>
-        <p>구독중인 제품이 없습니다.</p>
-        <ActionButton onClick={() => navigate("/subscriptions")}>
-          제품 구독하기
-        </ActionButton>
-      </EmptyState>
+
+      {list.length === 0 ? (
+        <EmptyState>
+          <p>구독중인 제품이 없습니다.</p>
+          <ActionButton onClick={() => navigate("/subscriptions")}>
+            제품 구독하기
+          </ActionButton>
+        </EmptyState>
+      ) : (
+        <ListContainer>
+          {list.map((item, idx) => (
+            <ItemCard key={item.pNum || idx}>
+              {" "}
+              {/* id -> pNum */}
+              <InfoSection>
+                {/* image -> img */}
+                <img src={item.img} alt={item.name} />
+                <div>
+                  <div style={{ fontWeight: "bold" }}>{item.name}</div>
+                  {/* model -> spec */}
+                  <div style={{ fontSize: "12px", color: "#888" }}>
+                    {item.spec}
+                  </div>
+                </div>
+              </InfoSection>
+              <div style={{ textAlign: "right" }}>
+                {/* monthlyPrice -> price_36 */}
+                <div style={{ fontWeight: "bold" }}>
+                  월 {item.price_36 ? item.price_36.toLocaleString() : 0}원
+                </div>
+                {/* DTO에 기간 정보가 없으므로 브랜드 등으로 대체 */}
+                <div style={{ fontSize: "13px", color: "#666" }}>
+                  {item.brand}
+                </div>
+              </div>
+            </ItemCard>
+          ))}
+        </ListContainer>
+      )}
     </Container>
   );
 };
