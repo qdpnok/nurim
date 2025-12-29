@@ -43,19 +43,15 @@ const Section = styled.div`
 `;
 
 const GallerySection = styled.div`
-  width: 610px; /* 전체 갤러리 너비 유지 */
+  width: 610px;
   height: 592px;
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
+  justify-content: center;
   align-items: center;
 `;
 
-// [수정] 썸네일 컬럼 삭제됨
-// const ThumbColumn = styled.div` ... `;
-// const ThumbItem = styled.div` ... `;
-
 const MainImageItem = styled.div`
-  width: 100%; /* 갤러리 섹션 너비에 꽉 차게 변경 */
+  width: 100%;
   height: 100%;
   background-color: #f9f9f9;
   border-radius: 20px;
@@ -65,7 +61,7 @@ const MainImageItem = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 이미지가 꽉 차게 */
+    object-fit: cover;
   }
 `;
 
@@ -339,7 +335,7 @@ const ProductTopSection = ({
   const getImageUrl = (img) => {
     if (!img) return null;
     if (img.startsWith("http")) return img;
-    return `/images/${img}`; // public/images/ 폴더에서 이미지 로드
+    return `/images/${img}`;
   };
   const finalImage =
     getImageUrl(product.img) || `https://placehold.co/443x592?text=NoImage`;
@@ -350,38 +346,30 @@ const ProductTopSection = ({
   const openConsultModal = () => setIsConsultOpen(true);
   const closeConsultModal = () => setIsConsultOpen(false);
 
-  // [수정] 장바구니 담기 로직
   const handleCartClick = () => {
     if (!isLoggedIn) {
       alert("로그인 후 이용 가능한 서비스 입니다");
       return;
     }
 
-    // 장바구니에 담을 객체 생성
     const newItem = {
       productId: product.id || product.num,
       name: displayName,
       model: product.serialNum || "MODEL-000",
       img: finalImage,
-      type: isSubscription ? "subscription" : "purchase", // 타입 구분
-
-      // 가격 정보
+      type: isSubscription ? "subscription" : "purchase",
       price: isSubscription
         ? displayMonthlyPrice
         : customData?.prices?.buy || product.price || 0,
-
-      // 구독일 경우 정보
       period: isSubscription ? `${selectedPeriod}개월` : null,
-
-      // 구매일 경우 정보
-      qty: isSubscription ? 1 : quantity, // 구독은 수량 1 고정
-      option: "기본 옵션", // 필요시 옵션 state 추가하여 연결
+      qty: isSubscription ? 1 : quantity,
+      option: "기본 옵션",
       install: "전문 기사 설치",
-      color: "Color Info", // 필요시 데이터 연동
+      color: "Color Info",
     };
 
-    addToCart(newItem); // Context 함수 호출
-    openCartModal(); // 모달 열기 (장바구니 담김 알림)
+    addToCart(newItem);
+    openCartModal();
   };
 
   const handleConsultClick = () => {
@@ -408,20 +396,27 @@ const ProductTopSection = ({
         ? displayMonthlyPrice
         : customData?.prices?.buy || product.price || 0,
       period: isSubscription ? `${selectedPeriod}개월` : null,
-      qty: isSubscription ? 1 : quantity, // 구매일 경우 수량 반영
+      qty: isSubscription ? 1 : quantity,
     };
 
-    // 2. 페이지 이동 (state에 데이터 담아서 보냄)
     navigate("/checkout", {
       state: {
         mode: isSubscription ? "subscription" : "purchase",
-        items: [itemData], // 배열 형태로 전달 (CheckoutPage가 map을 쓰므로)
+        items: [itemData],
       },
     });
   };
 
   const handleQuantityChange = (delta) => {
     setQuantity((prev) => Math.max(1, prev + delta));
+  };
+
+  // [수정] 모달에 전달할 데이터 객체 생성
+  // 실제 로그인 유저 정보가 있다면 user 필드에 넣으면 됩니다.
+  const consultationData = {
+    product: displayName,
+    type: isSubscription ? "구독 상담" : "구매 상담",
+    user: "회원님", // 임시 값 (로그인 정보에서 가져와도 됨)
   };
 
   return (
@@ -438,10 +433,7 @@ const ProductTopSection = ({
       </ContentHeader>
 
       <Section>
-        {/* 좌측 이미지 갤러리 (썸네일 삭제, 메인만 표시) */}
         <GallerySection>
-          {/* ThumbColumn 삭제됨 */}
-
           <MainImageItem>
             <img
               src={finalImage}
@@ -453,7 +445,6 @@ const ProductTopSection = ({
           </MainImageItem>
         </GallerySection>
 
-        {/* 우측 정보 박스 */}
         <InfoBox $isPurchase={!isSubscription}>
           <div className="header">
             <div className="title-row">
@@ -543,12 +534,10 @@ const ProductTopSection = ({
             <button className="cart" onClick={handleCartClick}>
               <img src={carticon} alt="장바구니" />
             </button>
-            {isCartOpen && <CartModal onClose={closeCartModal} />}
 
             <button className="consult" onClick={handleConsultClick}>
               {isSubscription ? "구독 상담 예약" : "상담 예약"}
             </button>
-            {isConsultOpen && <ConsultationModal onClose={closeConsultModal} />}
 
             <button className="main-action" onClick={handleMainActionClick}>
               {isSubscription ? "구독 하기" : "구매 하기"}
@@ -556,6 +545,16 @@ const ProductTopSection = ({
           </div>
         </InfoBox>
       </Section>
+
+      {isCartOpen && <CartModal onClose={closeCartModal} />}
+
+      {/* [수정] data prop을 전달하여 모달이 null을 반환하지 않도록 함 */}
+      {isConsultOpen && (
+        <ConsultationModal
+          onClose={closeConsultModal}
+          data={consultationData}
+        />
+      )}
     </Container>
   );
 };
