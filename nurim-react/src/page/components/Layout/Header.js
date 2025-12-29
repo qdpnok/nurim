@@ -341,8 +341,8 @@ const Header = () => {
         <NavItem to="/purchase" $bold={location.pathname === "/purchase"}>
           Purchase
         </NavItem>
-        <NavItem to="/QnA" $bold={location.pathname === "/QnA"}>
-          QnA
+        <NavItem to="/support" $bold={location.pathname === "/QnA"}>
+          Support
         </NavItem>
       </Navbar>
 

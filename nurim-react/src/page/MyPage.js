@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Routes, Route } from "react-router-dom";
 
-import Sidebar from "./components/MyPage/SideBar";
+import Sidebar from "./components/MyPage/Sidebar";
 
 // 컨텐츠 컴포넌트들
 import MyPageHome from "./components/MyPage/Contents/MyPageHome";
