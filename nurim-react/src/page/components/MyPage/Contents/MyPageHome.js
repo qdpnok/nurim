@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import api from "../../../../api/Axios";
 
 const MainContainer = styled.div`
   width: 100%;
@@ -176,6 +177,13 @@ const WhiteButton = styled.button`
 
 const MyPageHome = () => {
   const navigate = useNavigate();
+
+  const [userName, setUserName] = useState("");
+  const [stats, setStats] = useState({
+    subscriptionCount: 0,
+    orderCount: 0,
+    reviewCount: 0, // 혹은 productManageCount 등 백엔드 DTO에 맞춰 수정
+  });
 
   return (
     <MainContainer>
