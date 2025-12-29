@@ -7,19 +7,19 @@ import EmailVerification from "./components/Auth/EmailVerification";
 // --- 스타일 정의 ---
 const Container = styled.div`
   width: 100%;
-  min-height: 100vh; /* 화면 전체 높이 사용 */
+  min-height: 100vh;
   background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Poppins", sans-serif;
-  padding: 20px; /* 모바일에서 테두리 여백 확보 */
+  padding: 20px;
   box-sizing: border-box;
 `;
 
 const Card = styled.div`
   width: 100%;
-  max-width: 600px; /* 카드의 최대 너비 제한 */
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +27,7 @@ const Card = styled.div`
 `;
 
 const Content = styled.div`
-  width: 100%; /* 부모(Card) 너비에 맞춤 */
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,11 +43,10 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 32px; /* 모바일 고려하여 폰트 사이즈 약간 축소 */
+  font-size: 32px;
   font-weight: 600;
   color: #333;
   margin: 0;
-
   @media (max-width: 480px) {
     font-size: 28px;
   }
@@ -74,7 +73,7 @@ const StepperContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   margin-bottom: 10px;
-  padding: 0 10px; /* 좌우 여백 */
+  padding: 0 10px;
   box-sizing: border-box;
 `;
 
@@ -105,9 +104,8 @@ const StepText = styled.span`
   font-size: 14px;
   color: ${(props) => (props.$active ? "#333" : "#aaa")};
   font-weight: ${(props) => (props.$active ? 600 : 400)};
-
   @media (max-width: 480px) {
-    font-size: 12px; /* 모바일에서 텍스트 크기 줄임 */
+    font-size: 12px;
   }
 `;
 
@@ -116,7 +114,7 @@ const Line = styled.div`
   height: 2px;
   background-color: ${(props) => (props.$active ? "#2f6364" : "#e0e0e0")};
   margin: 0 10px;
-  transform: translateY(-14px); /* 텍스트 높이 고려 위치 조정 */
+  transform: translateY(-14px);
   transition: background-color 0.3s;
 `;
 
@@ -131,7 +129,7 @@ const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  position: relative;
+  position: relative; /* 버튼 배치를 위해 relative 설정 */
 `;
 
 const Label = styled.label`
@@ -153,6 +151,30 @@ const StyledInput = styled.input`
   &:focus {
     outline: none;
     border-color: #2f6364;
+  }
+`;
+
+// [추가] 중복 확인 버튼 스타일
+const CheckBtn = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 38px; /* Label 높이(약 22px) + Gap(8px) + 상단 여백 고려 */
+  padding: 6px 12px;
+  background-color: #2f6364;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  &:hover:not(:disabled) {
+    background-color: #244f50;
   }
 `;
 
@@ -190,7 +212,6 @@ const NextButton = styled.button`
   }
 `;
 
-// --- 모달 반응형 수정 ---
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -208,7 +229,7 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   width: 100%;
-  max-width: 535px; /* 최대 너비 설정 */
+  max-width: 535px;
   background: white;
   border-radius: 20px;
   display: flex;
@@ -247,7 +268,7 @@ const ModalTitle = styled.h2`
   color: #333;
   margin: 0 0 10px 0;
   text-align: center;
-  word-break: keep-all; /* 모바일 줄바꿈 방지 */
+  word-break: keep-all;
 `;
 
 const ModalDesc = styled.p`
@@ -305,6 +326,7 @@ const SignUp = () => {
 
   const checkId = async () => {
     if (userId.length < 4) {
+      alert("아이디는 4글자 이상이어야 합니다."); // alert 추가하여 명확히 알림
       setIdCheckMsg("아이디는 4글자 이상이어야 합니다.");
       setIsIdUnique(false);
       return;
@@ -312,8 +334,16 @@ const SignUp = () => {
     try {
       const response = await api.get(`/auth/check-id?memberId=${userId}`);
       if (response.status === 200) {
-        setIsIdUnique(true);
-        setIdCheckMsg("");
+        // 백엔드 로직에 따라 true/false 반환값 확인 (여기선 status 200이면 성공으로 간주)
+        if (response.data === true) {
+          setIsIdUnique(true);
+          setIdCheckMsg("");
+          alert("사용 가능한 아이디입니다.");
+        } else {
+          setIsIdUnique(false);
+          setIdCheckMsg("이미 사용중인 아이디입니다.");
+          alert("이미 사용중인 아이디입니다.");
+        }
       }
     } catch (error) {
       setIsIdUnique(false);
@@ -327,7 +357,8 @@ const SignUp = () => {
 
   const handleUserIdChange = (e) => {
     setUserId(e.target.value);
-    setIsIdUnique(false);
+    setIsIdUnique(false); // 입력이 변경되면 다시 중복확인을 받아야 함
+    setIdCheckMsg(""); // 메시지 초기화
   };
 
   const handlePhone = (e) => {
@@ -428,8 +459,17 @@ const SignUp = () => {
                   placeholder="Enter your ID"
                   value={userId}
                   onChange={handleUserIdChange}
-                  onBlur={checkId}
+                  // onBlur 제거: 버튼 클릭으로 확인
                 />
+                {/* 중복 확인 버튼 추가 */}
+                <CheckBtn
+                  type="button" // form submit 방지
+                  onClick={checkId}
+                  disabled={userId.length < 1} // 입력값이 없으면 비활성화
+                >
+                  Check
+                </CheckBtn>
+
                 {userId.length > 0 && !isIdUnique && (
                   <ErrorText>{idCheckMsg || "Please check your ID."}</ErrorText>
                 )}
@@ -437,6 +477,7 @@ const SignUp = () => {
                   <HelperText $valid={true}>Available ID</HelperText>
                 )}
               </InputGroup>
+
               <InputGroup>
                 <Label>Name</Label>
                 <StyledInput
