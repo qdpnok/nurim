@@ -78,5 +78,8 @@ public class MemberService {
         return new ProductManageResDto(acquisitionCount, returnCount);
     }
 
-
+    // 인수/반납 신청 페이지&모달창 렌더링
+    public
+    // 인수 신청 비즈니스 로직
+    // 반납 신청 비즈니스 로직
 }
