@@ -1,16 +1,18 @@
 package human.nurim_spring.service;
 
-import human.nurim_spring.dto.ChangeInfoReqDto;
-import human.nurim_spring.dto.MyInfoResDto;
-import human.nurim_spring.dto.MyPageResDto;
-import human.nurim_spring.dto.ProductManageResDto;
+import human.nurim_spring.constant.SubscriptionStatus;
+import human.nurim_spring.dto.*;
 import human.nurim_spring.entity.Member;
+import human.nurim_spring.entity.Subscription;
 import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -79,7 +81,7 @@ public class MemberService {
     }
 
     // 인수/반납 신청 페이지&모달창 렌더링
-    public
+
     // 인수 신청 비즈니스 로직
     // 반납 신청 비즈니스 로직
 }
