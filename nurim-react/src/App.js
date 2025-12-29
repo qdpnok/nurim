@@ -12,6 +12,18 @@ import CartPage from "./page/CartPage";
 import { CartProvider } from "./context/CartContext";
 import MyPage from "./page/MyPage";
 import CheckoutPage from "./page/CheckoutPage";
+import AdminLayout from "./page/AdminLayout";
+import AdminDashboard from "./page/Admin/AdminDashboard";
+import AdminFaq from "./page/Admin/AdminFaq";
+import AdminQna from "./page/Admin/AdminQna";
+import AdminConsultationDetail from "./page/components/Modal/AdminConsultationDetail";
+import AdminMemberInfo from "./page/Admin/AdminMemberInfo";
+import AdminWithdrawal from "./page/Admin/AdminWithdrawal";
+import AdminProductList from "./page/Admin/AdminProductList";
+import AdminProductRegister from "./page/Admin/AdminProductRegister";
+import AdminOrderList from "./page/Admin/AdminOrderList";
+import AdminSales from "./page/Admin/AdminSales";
+// import PlaceholderPage from "./page/PlaceholderPage";
 
 import "./App.css";
 
@@ -49,6 +61,41 @@ function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/mypage/*" element={<MyPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+            </Route>
+
+            {/* ---------------- 관리자 페이지 (Admin) ---------------- */}
+            <Route path="/admin" element={<AdminLayout />}>
+              {/* 대시보드 (메인) */}
+              <Route index element={<AdminDashboard />} />
+
+              {/* 회원 관리 */}
+              <Route path="members" element={<AdminMemberInfo />} />
+
+              {/* 회원 탈퇴 관리 (추가!) */}
+              <Route path="withdrawal" element={<AdminWithdrawal />} />
+
+              {/* 문의 관리 - FAQ */}
+              <Route path="faq" element={<AdminFaq />} />
+
+              {/* 문의 관리 - QnA */}
+              <Route path="qna" element={<AdminQna />} />
+
+              {/* 문의 관리 - 상담 신청 내역 */}
+              <Route
+                path="AdminConsultationDetail"
+                element={<AdminConsultationDetail title="상담 신청 내역" />}
+              />
+
+              {/* 상품 관리 */}
+              <Route path="products" element={<AdminProductList />} />
+              <Route
+                path="products/register"
+                element={<AdminProductRegister />}
+              />
+
+              {/* 주문/매출 관리 */}
+              <Route path="orders" element={<AdminOrderList />} />
+              <Route path="sales" element={<AdminSales />} />
             </Route>
           </Routes>
         </Router>

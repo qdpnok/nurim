@@ -1,0 +1,435 @@
+// src/data/adminData.js
+
+// 대시보드 상단 통계 카드 데이터
+export const dashboardStats = [
+  {
+    id: 1,
+    title: "총 가입자",
+    count: "2,847",
+    trend: "+12%",
+    trendType: "up", // or 'down'
+    icon: "users",
+  },
+  {
+    id: 2,
+    title: "구독 계정",
+    count: "1,234",
+    trend: "+8%",
+    trendType: "up",
+    icon: "subscription",
+  },
+  {
+    id: 3,
+    title: "구매 계정",
+    count: "1,613",
+    trend: "-3%",
+    trendType: "down",
+    icon: "purchase",
+  },
+  {
+    id: 4,
+    title: "운영 계정",
+    count: "156",
+    trend: "+5%",
+    trendType: "up",
+    icon: "admin",
+  },
+];
+
+// 대시보드 최근 활동 로그
+export const recentActivities = [
+  {
+    id: 1,
+    type: "계정 생성",
+    desc: "새로운 회원계정이 생성되었습니다",
+    system: "회원 가입",
+    time: "2시간 전",
+    status: "완료",
+  },
+  {
+    id: 2,
+    type: "인수 신청",
+    desc: "인수 신청이 접수되었습니다.",
+    system: "구독 전환",
+    time: "4시간 전",
+    status: "완료",
+  },
+  {
+    id: 3,
+    type: "문의 접수",
+    desc: "기능 개선 요청이 접수되었습니다",
+    system: "GHI 제조",
+    time: "6시간 전",
+    status: "대기중",
+  },
+  {
+    id: 4,
+    type: "계정 해지",
+    desc: "유료계정이 해지되었습니다",
+    system: "JKL 유통",
+    time: "1일 전",
+    status: "취소",
+  },
+  {
+    id: 5,
+    type: "버전 업데이트",
+    desc: "v2.1.3 버전이 배포되었습니다",
+    system: "시스템",
+    time: "2일 전",
+    status: "완료",
+  },
+];
+
+// src/data/adminData.js (기존 내용 아래에 추가)
+
+export const memberList = [
+  {
+    id: 1,
+    userId: "nurim1234",
+    name: "이누림",
+    email: "nurim@gmail.com",
+    role: "구매 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 2,
+    userId: "user002",
+    name: "김민수",
+    email: "minsoo@naver.com",
+    role: "일반 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 3,
+    userId: "hong123",
+    name: "홍길동",
+    email: "hong@daum.net",
+    role: "구독 회원",
+    deleteWait: "Y",
+  },
+  {
+    id: 4,
+    userId: "park_gu",
+    name: "박지성",
+    email: "jisung@gmail.com",
+    role: "구매 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 5,
+    userId: "lee_kang",
+    name: "이강인",
+    email: "kangin@shoot.com",
+    role: "일반 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 6,
+    userId: "sonny7",
+    name: "손흥민",
+    email: "sonny@spurs.com",
+    role: "구독 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 7,
+    userId: "kim_yuna",
+    name: "김연아",
+    email: "yuna@ice.com",
+    role: "VIP 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 8,
+    userId: "faker",
+    name: "이상혁",
+    email: "t1@lol.com",
+    role: "일반 회원",
+    deleteWait: "N",
+  },
+  {
+    id: 9,
+    userId: "bong",
+    name: "봉준호",
+    email: "parasite@movie.com",
+    role: "구매 회원",
+    deleteWait: "Y",
+  },
+  {
+    id: 10,
+    userId: "iu_love",
+    name: "아이유",
+    email: "iu@music.com",
+    role: "구독 회원",
+    deleteWait: "N",
+  },
+];
+
+// src/data/adminData.js (기존 내용 아래에 추가)
+
+// 회원 탈퇴 관리 상단 통계
+export const memberStats = [
+  {
+    id: 1,
+    title: "총 가입자",
+    count: "2,847",
+    trend: "+12%",
+    trendType: "up",
+    icon: "users",
+  },
+  {
+    id: 2,
+    title: "구독 고객",
+    count: "1,234",
+    trend: "+8%",
+    trendType: "up",
+    icon: "subscription",
+  },
+  {
+    id: 3,
+    title: "구매 고객",
+    count: "1,613",
+    trend: "-3%",
+    trendType: "down",
+    icon: "purchase",
+  },
+  {
+    id: 4,
+    title: "탈퇴 고객",
+    count: "136",
+    trend: "-8%",
+    trendType: "down",
+    icon: "withdrawal",
+  },
+];
+
+// 탈퇴 회원 리스트 (예시)
+export const withdrawnMembers = [
+  {
+    id: 1,
+    userId: "nurim1234",
+    name: "이누림",
+    email: "nurim@gmail.com",
+    role: "구매 회원",
+    deleteWait: "N",
+    date: "2025.12.25",
+  },
+  {
+    id: 2,
+    userId: "hong_gildong",
+    name: "홍길동",
+    email: "hong@naver.com",
+    role: "일반 회원",
+    deleteWait: "Y",
+    date: "2025.12.24",
+  },
+  {
+    id: 3,
+    userId: "kim_chulsu",
+    name: "김철수",
+    email: "kim@daum.net",
+    role: "구독 회원",
+    deleteWait: "Y",
+    date: "2025.12.23",
+  },
+  {
+    id: 4,
+    userId: "lee_young",
+    name: "이영희",
+    email: "young@gmail.com",
+    role: "일반 회원",
+    deleteWait: "N",
+    date: "2025.12.22",
+  },
+  {
+    id: 5,
+    userId: "park_min",
+    name: "박민수",
+    email: "park@nate.com",
+    role: "구매 회원",
+    deleteWait: "N",
+    date: "2025.12.20",
+  },
+];
+
+// src/data/adminData.js (기존 내용 아래에 추가)
+
+export const productList = [
+  {
+    id: 1,
+    code: "27ART10AKPL",
+    name: "스탠바이미",
+    brand: "LG 전자",
+    category: "구독 > TV",
+    supplyPrice: "1,150,000원",
+    totalPrice: "1,150,000원",
+    discountPrice: "-",
+    status: "판매중",
+  },
+  {
+    id: 2,
+    code: "AF60F17D11GS",
+    name: "Q9000",
+    brand: "삼성 전자",
+    category: "구매 > 에어컨",
+    supplyPrice: "1,451,400원",
+    totalPrice: "1,451,400원",
+    discountPrice: "-",
+    status: "판매중",
+  },
+  {
+    id: 3,
+    code: "BESPOKE_AI",
+    name: "비스포크 AI 콤보",
+    brand: "삼성 전자",
+    category: "구독 > 세탁기",
+    supplyPrice: "2,500,000원",
+    totalPrice: "2,500,000원",
+    discountPrice: "2,300,000원",
+    status: "품절",
+  },
+  {
+    id: 4,
+    code: "DYSON_V15",
+    name: "V15 Detect",
+    brand: "Dyson",
+    category: "구매 > 청소기",
+    supplyPrice: "1,200,000원",
+    totalPrice: "1,200,000원",
+    discountPrice: "-",
+    status: "숨김",
+  },
+];
+
+// src/data/adminData.js (기존 내용 아래에 추가)
+
+// 주문 내역 데이터
+export const orderList = [
+  {
+    id: 1,
+    date: "2023-12-24 13:57:44",
+    productCode: "27ART10AKPL",
+    type: "구독",
+    orderer: "이누림",
+    address: "충남 천안시 동남구 대흥로 215",
+    deliveryDate: "25.12.29",
+    qty: 1,
+    status: "배송중",
+  },
+  {
+    id: 2,
+    date: "2023-12-24 11:20:10",
+    productCode: "BESPOKE_AI",
+    type: "구매",
+    orderer: "김민수",
+    address: "서울시 강남구 테헤란로",
+    deliveryDate: "25.12.30",
+    qty: 1,
+    status: "배송완료",
+  },
+  {
+    id: 3,
+    date: "2023-12-23 15:40:33",
+    productCode: "DYSON_V15",
+    type: "구매",
+    orderer: "박지성",
+    address: "경기도 수원시 팔달구",
+    deliveryDate: "25.12.28",
+    qty: 1,
+    status: "결제완료",
+  },
+  {
+    id: 4,
+    date: "2023-12-23 09:15:00",
+    productCode: "AF60F17D",
+    type: "구독",
+    orderer: "손흥민",
+    address: "강원도 춘천시",
+    deliveryDate: "25.12.27",
+    qty: 1,
+    status: "배송준비",
+  },
+  {
+    id: 5,
+    date: "2023-12-22 18:30:55",
+    productCode: "LG_OBJ_REF",
+    type: "구독",
+    orderer: "홍길동",
+    address: "제주시 노형동",
+    deliveryDate: "25.12.26",
+    qty: 1,
+    status: "취소",
+  },
+];
+
+// 매출 관리 - 상단 통계
+export const salesStats = [
+  { title: "이번 달 예상 금액", value: "₩17,722,000", sub: "2025년 12월" },
+  { title: "대기 중인 정산", value: "4명", sub: "정산 필요" },
+  { title: "평균 급여", value: "₩3,544,400", sub: "직원 1인당" },
+  { title: "총 직원", value: "5명", sub: "급여 지급 대상" },
+];
+
+// 매출 관리 - 직원 급여 리스트
+export const payrollList = [
+  {
+    id: 1,
+    name: "김민수",
+    role: "매니저",
+    days: "22일",
+    hours: "176h",
+    base: "3,500,000",
+    allowance: "280,000",
+    extra: "150,000",
+    total: "3,930,000",
+    status: "대기",
+  },
+  {
+    id: 2,
+    name: "이서연",
+    role: "사원",
+    days: "22일",
+    hours: "176h",
+    base: "2,800,000",
+    allowance: "224,000",
+    extra: "0",
+    total: "3,024,000",
+    status: "대기",
+  },
+  {
+    id: 3,
+    name: "박준호",
+    role: "대리",
+    days: "20일",
+    hours: "160h",
+    base: "3,200,000",
+    allowance: "256,000",
+    extra: "80,000",
+    total: "3,536,000",
+    status: "완료",
+  },
+  {
+    id: 4,
+    name: "최지우",
+    role: "사원",
+    days: "21일",
+    hours: "168h",
+    base: "2,600,000",
+    allowance: "208,000",
+    extra: "120,000",
+    total: "2,928,000",
+    status: "대기",
+  },
+  {
+    id: 5,
+    name: "정현우",
+    role: "과장",
+    days: "22일",
+    hours: "176h",
+    base: "3,800,000",
+    allowance: "304,000",
+    extra: "200,000",
+    total: "4,304,000",
+    status: "대기",
+  },
+];
