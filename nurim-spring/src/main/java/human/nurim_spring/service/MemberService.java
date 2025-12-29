@@ -3,11 +3,10 @@ package human.nurim_spring.service;
 import human.nurim_spring.dto.ChangeInfoReqDto;
 import human.nurim_spring.dto.MyInfoResDto;
 import human.nurim_spring.dto.MyPageResDto;
+import human.nurim_spring.dto.ProductManageResDto;
 import human.nurim_spring.entity.Member;
 import human.nurim_spring.error.BusinessException;
-import human.nurim_spring.repository.MemberRepository;
-import human.nurim_spring.repository.PurchaseRepository;
-import human.nurim_spring.repository.SubscriptionRepository;
+import human.nurim_spring.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +20,8 @@ public class MemberService {
     private final SubscriptionRepository subscriptionRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AcquisitionRepository acquisitionRepository;
+    private final ReturnRepository returnRepository;
 
     // 마이페이지 메인 렌더링
     public MyPageResDto mainPage(Long memberNum) {
@@ -65,4 +66,17 @@ public class MemberService {
 
         return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum());
     }
+
+    // 제품 관리 렌더링
+    public ProductManageResDto myProduct(Long memberNum) {
+        Member member = memberRepository.findById(memberNum)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
+
+        long acquisitionCount = acquisitionRepository.countByMember(member);
+        long returnCount = returnRepository.countByMember(member);
+
+        return new ProductManageResDto(acquisitionCount, returnCount);
+    }
+
+
 }
