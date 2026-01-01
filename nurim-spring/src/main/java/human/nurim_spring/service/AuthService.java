@@ -60,11 +60,27 @@ public class AuthService {
         memberRepository.save(member);
     }
 
-    // 로그인
+    // [수정] 로그인 (status 포함)
     public TokenDto login(LoginReqDto dto) {
+        // 1. Authentication 생성
         UsernamePasswordAuthenticationToken authenticationToken = dto.toAuthentication();
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-        return tokenProvider.generateTokenDto(authentication);
+
+        // 2. Member 엔티티 조회 (status 값을 가져오기 위함)
+        Member member = memberRepository.findById(dto.getId())
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "존재하지 않는 회원입니다."));
+
+        // 3. 토큰 생성
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        // 4. TokenDto 재빌드 (기존 토큰 정보 + status 추가)
+        return TokenDto.builder()
+                .grantType(tokenDto.getGrantType())
+                .accessToken(tokenDto.getAccessToken())
+                .tokenExpiresIn(tokenDto.getTokenExpiresIn())
+                .memberNum(member.getNum())// 회원 번호 포함
+                .status(member.getStatus().toString()) // ★ 핵심 수정: DB의 status 값을 DTO에 포함
+                .build();
     }
 
     // [수정] 이메일 인증번호 전송: 회원 가입
@@ -124,7 +140,7 @@ public class AuthService {
         sendVerificationCodeInternal(email);
     }
 
-    // ★★★ [누락된 부분 추가] 비밀번호 재설정 인증번호 검증 ★★★
+    // 비밀번호 재설정 인증번호 검증
     public void resetPwdValid(String email, String code) {
         if (!verifyCode(email, code)) {
             throw new BusinessException("CODE_MISMATCH", "인증 코드가 일치하지 않거나 만료되었습니다.");

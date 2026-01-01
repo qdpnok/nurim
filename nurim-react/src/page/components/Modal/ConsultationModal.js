@@ -3,13 +3,9 @@ import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import axios from "axios";
+import api from "../../../api/Axios";
 
-// [추가] URL 파싱 및 데이터 조회를 위한 import
-import { useLocation } from "react-router-dom";
-// 경로가 정확한지 확인해주세요 (예: ../../../data/productCardSpecs)
-import { productCardData } from "../../../data/productCardSpecs";
-
-// --- Styled Components (기존과 동일) ---
+// --- Styled Components (기존 스타일 유지) ---
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -22,7 +18,6 @@ const Overlay = styled.div`
   align-items: center;
   z-index: 2000;
 `;
-
 const ModalContainer = styled.div`
   width: 1200px;
   max-height: 95vh;
@@ -35,7 +30,6 @@ const ModalContainer = styled.div`
   align-items: center;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -44,14 +38,12 @@ const ModalContainer = styled.div`
     border-radius: 4px;
   }
 `;
-
 const InnerWrapper = styled.div`
   width: 1000px;
   display: flex;
   flex-direction: column;
   gap: 30px;
 `;
-
 const SectionTitle = styled.h2`
   font-size: 24px;
   font-weight: bold;
@@ -60,15 +52,12 @@ const SectionTitle = styled.h2`
   padding-bottom: 20px;
   margin: 0;
 `;
-
 const SubTitle = styled.h3`
   font-size: 18px;
   font-weight: bold;
   margin: 0 0 15px 0;
   color: #333;
 `;
-
-/* 제품 정보 박스 */
 const ProductBox = styled.div`
   width: 505px;
   height: 165px;
@@ -80,16 +69,14 @@ const ProductBox = styled.div`
   box-sizing: border-box;
   background-color: #fff;
 `;
-
 const ProductImg = styled.img`
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   margin-right: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
 `;
-
 const ProductInfoText = styled.div`
   display: flex;
   flex-direction: column;
@@ -104,8 +91,6 @@ const ProductInfoText = styled.div`
     color: #888;
   }
 `;
-
-/* 상담 메뉴 박스 */
 const MenuBox = styled.div`
   width: 372px;
   height: 96px;
@@ -113,7 +98,6 @@ const MenuBox = styled.div`
   align-items: center;
   gap: 20px;
 `;
-
 const MenuButton = styled.button`
   width: 166px;
   height: 48px;
@@ -128,8 +112,6 @@ const MenuButton = styled.button`
     opacity: 0.9;
   }
 `;
-
-/* --- Calendar Styling Wrapper --- */
 const CalendarWrapper = styled.div`
   width: 470px;
   height: 470px;
@@ -140,19 +122,16 @@ const CalendarWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-
   .react-calendar {
     width: 100%;
     background: none;
     border: none;
     font-family: inherit;
   }
-
   .react-calendar__navigation {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-
     button {
       font-size: 18px;
       font-weight: bold;
@@ -165,7 +144,6 @@ const CalendarWrapper = styled.div`
       }
     }
   }
-
   .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
@@ -177,7 +155,6 @@ const CalendarWrapper = styled.div`
       text-decoration: none;
     }
   }
-
   .react-calendar__tile {
     height: 50px;
     display: flex;
@@ -187,31 +164,26 @@ const CalendarWrapper = styled.div`
     border-radius: 50%;
     background: transparent;
     color: #333;
-
     &:enabled:hover,
     &:enabled:focus {
       background-color: #e0e0e0;
       color: #333;
     }
   }
-
   .react-calendar__tile--now {
     background: #eee;
     color: #333;
   }
-
   .react-calendar__tile--active {
     background: #2f6162 !important;
     color: white !important;
   }
 `;
-
 const DateTimeWrapper = styled.div`
   display: flex;
   gap: 40px;
   align-items: flex-start;
 `;
-
 const TimeSelectionBox = styled.div`
   width: 470px;
   height: 470px;
@@ -224,8 +196,6 @@ const TimeSelectionBox = styled.div`
   overflow-y: auto;
   position: relative;
 `;
-
-/* 지난 날짜 오버레이 */
 const DisabledOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -245,14 +215,12 @@ const DisabledOverlay = styled.div`
   line-height: 1.5;
   text-align: center;
 `;
-
 const TimeGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
   margin-top: 10px;
 `;
-
 const TimeSlot = styled.div`
   padding: 10px 0;
   background-color: ${(props) => (props.$disabled ? "#eee" : "white")};
@@ -267,12 +235,10 @@ const TimeSlot = styled.div`
     props.$disabled ? "#aaa" : props.$selected ? "#2F6162" : "#333"};
   font-weight: ${(props) => (props.$selected ? "bold" : "normal")};
   pointer-events: ${(props) => (props.$disabled ? "none" : "auto")};
-
   &:hover {
     border-color: ${(props) => (props.$disabled ? "#ddd" : "#2f6162")};
   }
 `;
-
 const ApplicantBox = styled.div`
   width: 505px;
   height: 300px;
@@ -280,19 +246,16 @@ const ApplicantBox = styled.div`
   flex-direction: column;
   gap: 15px;
 `;
-
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
 `;
-
 const Label = styled.label`
   font-size: 14px;
   font-weight: bold;
   color: #333;
 `;
-
 const InputField = styled.input`
   padding: 12px;
   border: 1px solid #ddd;
@@ -303,7 +266,6 @@ const InputField = styled.input`
     border-color: #2f6162;
   }
 `;
-
 const TextAreaBox = styled.div`
   width: 1000px;
   height: 335px;
@@ -312,7 +274,6 @@ const TextAreaBox = styled.div`
   padding: 20px;
   box-sizing: border-box;
 `;
-
 const StyledTextArea = styled.textarea`
   width: 100%;
   height: 100%;
@@ -323,7 +284,6 @@ const StyledTextArea = styled.textarea`
   font-family: inherit;
   outline: none;
 `;
-
 const Footer = styled.div`
   width: 1000px;
   display: flex;
@@ -331,7 +291,6 @@ const Footer = styled.div`
   gap: 15px;
   margin-top: 30px;
 `;
-
 const ActionButton = styled.button`
   width: 160px;
   height: 50px;
@@ -347,7 +306,6 @@ const ActionButton = styled.button`
   }
 `;
 
-// --- Mock Data ---
 const TIME_SLOTS_AM = ["10:00", "10:30", "11:00", "11:30"];
 const TIME_SLOTS_PM = [
   "13:30",
@@ -364,59 +322,65 @@ const TIME_SLOTS_PM = [
   "19:00",
 ];
 
-const ConsultationModal = ({ onClose }) => {
-  // [추가] 1. URL에서 ID 추출
-  const location = useLocation();
-  const pathSegments = location.pathname.split("/");
-  // URL 마지막 부분이 ID라고 가정 (예: /purchase/productAcSpecs/82 -> 82)
-  const productId = pathSegments[pathSegments.length - 1];
+const ConsultationModal = ({ onClose, data }) => {
+  // 1. 전달받은 데이터(data) 사용
+  const productName = data?.product || "상품명 없음";
+  // [중요] ProductTopSection에서 이미 처리된 이미지 경로 사용
+  const productImage =
+    data?.img || `https://placehold.co/100x100?text=${productName}`;
+  const productId = data?.productId; // 시리얼 번호 조회용 ID
 
-  // [추가] 2. 데이터 매핑 (ID로 데이터 찾기)
-  // productCardSpecs.js에서 해당 ID의 데이터 가져오기
-  const productInfo = productCardData[productId];
-  const productName = productInfo?.name?.[0] || "상품명 없음";
-
-  // 3. 이미지 URL 생성 (가상 이미지 서비스 사용 예시)
-  // 실제 이미지가 있다면 productInfo.img 등을 사용
-  const productImage = `https://placehold.co/100x100?text=${productName.substring(
-    0,
-    2
-  )}`;
-
-  // [상태] 시리얼 넘버 (DB에서 가져올 값)
   const [serialNum, setSerialNum] = useState("");
-
-  // [API 호출] 백엔드에서 시리얼 넘버 등 상세 정보 가져오기
-  useEffect(() => {
-    const fetchProductDetail = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8222/api/product/detail/${productId}`
-        );
-        // 응답 데이터 구조에 맞춰 serialNum 추출 (ProductDetailResDto 참고)
-        if (response.data && response.data.serialNum) {
-          setSerialNum(response.data.serialNum);
-        }
-      } catch (error) {
-        console.error("제품 정보를 가져오는데 실패했습니다:", error);
-        setSerialNum("조회 불가");
-      }
-    };
-
-    if (productId) {
-      fetchProductDetail();
-    }
-  }, [productId]);
-
   const [consultType, setConsultType] = useState("subscription");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
+
   const [formData, setFormData] = useState({
     name: "",
     id: "",
     phone: "",
     content: "",
   });
+
+  // [기능 1] 회원 정보 불러와서 자동 입력
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const memberNum = localStorage.getItem("memberNum");
+      if (memberNum) {
+        try {
+          const response = await api.get(`/mypage/my-info/${memberNum}`);
+          const userData = response.data;
+          setFormData((prev) => ({
+            ...prev,
+            name: userData.name || "",
+            id: userData.id || "",
+            phone: userData.phone || userData.phone_num || "",
+          }));
+        } catch (error) {
+          console.error("회원 정보 자동입력 실패:", error);
+        }
+      }
+    };
+    fetchUserInfo();
+  }, []);
+
+  // [기능 2] 제품 시리얼 넘버 조회
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      if (!productId) return;
+      try {
+        const response = await axios.get(
+          `http://localhost:8222/api/product/detail/${productId}`
+        );
+        if (response.data && response.data.serialNum) {
+          setSerialNum(response.data.serialNum);
+        }
+      } catch (error) {
+        setSerialNum("조회 정보 없음");
+      }
+    };
+    fetchProductDetail();
+  }, [productId]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -437,15 +401,13 @@ const ConsultationModal = ({ onClose }) => {
       alert("시간을 선택해주세요.");
       return;
     }
-
     const formattedDate = selectedDate.toISOString().split("T")[0];
     alert(
-      `상담 예약 완료!\n상품: ${productName}\n시리얼: ${serialNum}\n날짜: ${formattedDate}\n시간: ${selectedTime}`
+      `[상담 신청 완료]\n상품: ${productName}\n신청자: ${formData.name}\n일시: ${formattedDate} ${selectedTime}`
     );
     onClose();
   };
 
-  // 날짜 비교 로직
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const isPastDate = selectedDate < today;
@@ -466,15 +428,13 @@ const ConsultationModal = ({ onClose }) => {
         <InnerWrapper>
           <SectionTitle>상담 예약</SectionTitle>
 
-          {/* [변경] 제품 정보 표시 영역 */}
+          {/* 제품 정보 */}
           <div>
             <SubTitle>제품 정보</SubTitle>
             <ProductBox>
               <ProductImg src={productImage} alt={productName} />
               <ProductInfoText>
-                {/* 로컬 데이터에서 가져온 이름 */}
                 <h4>{productName}</h4>
-                {/* DB에서 가져온 시리얼 넘버 */}
                 <span>{serialNum || "Loading..."}</span>
               </ProductInfoText>
             </ProductBox>
@@ -591,7 +551,9 @@ const ConsultationModal = ({ onClose }) => {
                 <InputField
                   name="name"
                   placeholder="이름을 입력하세요"
+                  value={formData.name}
                   onChange={handleInputChange}
+                  readOnly
                 />
               </InputGroup>
               <InputGroup>
@@ -599,7 +561,9 @@ const ConsultationModal = ({ onClose }) => {
                 <InputField
                   name="id"
                   placeholder="아이디를 입력하세요"
+                  value={formData.id}
                   onChange={handleInputChange}
+                  readOnly
                 />
               </InputGroup>
               <InputGroup>
@@ -618,6 +582,7 @@ const ConsultationModal = ({ onClose }) => {
                     name="phone"
                     placeholder="번호를 입력하세요"
                     style={{ flex: 1 }}
+                    value={formData.phone}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -632,6 +597,7 @@ const ConsultationModal = ({ onClose }) => {
               <StyledTextArea
                 name="content"
                 placeholder="내용을 입력해 주세요."
+                value={formData.content}
                 onChange={handleInputChange}
               />
             </TextAreaBox>

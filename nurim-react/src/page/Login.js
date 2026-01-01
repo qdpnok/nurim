@@ -9,10 +9,10 @@ import nurimw from "../img/Logo.w.PNG";
 import ceye from "../img/Ceye.png";
 import oeye from "../img/Oeye.png";
 
-// --- 스타일 정의 ---
+// --- 스타일 정의 (기존 유지) ---
 const Container = styled.div`
   width: 100%;
-  min-height: 100vh; /* 화면 전체 높이 */
+  min-height: 100vh;
   position: relative;
   display: flex;
   justify-content: center;
@@ -40,30 +40,28 @@ const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center; /* 기본 중앙 정렬 */
+  justify-content: center;
   align-items: center;
   padding: 40px;
   box-sizing: border-box;
 
-  /* PC 화면에서는 좌우 분할 */
   @media (min-width: 1025px) {
     justify-content: space-between;
     padding: 0 100px;
-    max-width: 1440px; /* 최대 너비 제한 */
+    max-width: 1440px;
   }
 `;
 
 const LeftSection = styled.div`
-  display: none; /* 기본 숨김 (모바일/태블릿) */
+  display: none;
   flex-direction: column;
   justify-content: center;
   color: white;
   max-width: 500px;
 
-  /* PC 화면에서만 보임 */
   @media (min-width: 1025px) {
     display: flex;
-    margin-left: 60px; /* 간격 조정 */
+    margin-left: 60px;
   }
 `;
 
@@ -90,25 +88,24 @@ const Description = styled.p`
 
 const LoginCard = styled.div`
   width: 100%;
-  max-width: 460px; /* 최대 너비 설정 */
+  max-width: 460px;
   background-color: white;
-  border-radius: 20px; /* 전체 둥글게 */
+  border-radius: 20px;
   padding: 60px 40px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
 
-  /* PC 화면 위치 조정 */
   @media (min-width: 1025px) {
-    border-radius: 20px 20px 0px 0px; /* PC 디자인 유지 */
-    height: 768px; /* PC에서는 고정 높이 유지하거나 min-height 사용 */
-    margin-top: 100px; /* 상단 여백 */
+    border-radius: 20px 20px 0px 0px;
+    height: 768px;
+    margin-top: 100px;
     margin-right: 60px;
   }
 
   @media (max-width: 480px) {
-    padding: 40px 20px; /* 모바일 패딩 축소 */
+    padding: 40px 20px;
   }
 `;
 
@@ -250,12 +247,30 @@ const LogoNR = styled.img`
 
 const LogIn = () => {
   const navigate = useNavigate();
-  // const { login } = useAuth();
-
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  // JWT Decoding Function
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -263,17 +278,32 @@ const LogIn = () => {
       const response = await api.post("/auth/login", { id, pwd, rememberMe });
 
       if (response.status === 200) {
-        // 백엔드 TokenDto 필드명에 맞춰 accessToken으로 변경
-        const token = response.data.accessToken;
+        // [수정 완료] 구조 분해 할당 문법 오류 수정 ({ } 추가)
+        let { accessToken, memberNum, status } = response.data;
 
-        // 만약 토큰이 없다면 에러 처리 (dummy-token 사용 금지)
-        if (!token) {
+        if (!accessToken) {
           console.error("토큰을 응답받지 못했습니다.", response.data);
           alert("로그인 처리 중 오류가 발생했습니다.");
           return;
         }
 
-        localStorage.setItem("accessToken", token);
+        // [수정 완료] memberNum이 없을 때 재할당 로직
+        if (!memberNum) {
+          console.log("memberNum이 null이라 토큰에서 추출합니다.");
+          const decodedToken = parseJwt(accessToken);
+          memberNum = decodedToken ? decodedToken.memberNum : null;
+        }
+
+        // 최종적으로 값을 저장
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("memberNum", memberNum);
+
+        // status 기본값 처리
+        const memberStatus = status || "MEMBER";
+        localStorage.setItem("memberStatus", memberStatus);
+
+        console.log("저장된 회원번호:", memberNum); // 1이 나오면 성공!
+        console.log("저장된 상태:", memberStatus);
 
         alert("로그인 되었습니다.");
         navigate("/");

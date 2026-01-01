@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { AiFillStar, AiOutlineHeart } from "react-icons/ai";
+import { AiFillStar } from "react-icons/ai";
 import carticon from "../../../img/carticon.png";
 import CartModal from "../Modal/CartModal";
 import ConsultationModal from "../Modal/ConsultationModal";
@@ -8,24 +8,21 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { productCardData } from "../../../data/productCardSpecs";
 import { CartContext } from "../../../context/CartContext";
 
-// --- 스타일 컴포넌트 ---
+// --- 스타일 컴포넌트 (기존과 동일) ---
 const Container = styled.div`
   width: 1200px;
   margin: 0 auto;
 `;
-
 const ContentHeader = styled.div`
   width: 100%;
   margin-top: 30px;
   margin-bottom: 20px;
 `;
-
 const Breadcrumb = styled.div`
   font-size: 14px;
   color: #888;
   display: flex;
   align-items: center;
-
   span {
     margin-right: 8px;
     &.active {
@@ -34,14 +31,12 @@ const Breadcrumb = styled.div`
     }
   }
 `;
-
 const Section = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 80px;
 `;
-
 const GallerySection = styled.div`
   width: 610px;
   height: 592px;
@@ -49,7 +44,6 @@ const GallerySection = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
 const MainImageItem = styled.div`
   width: 100%;
   height: 100%;
@@ -57,14 +51,12 @@ const MainImageItem = styled.div`
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid #eee;
-
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 `;
-
 const InfoBox = styled.div`
   width: 590px;
   height: auto;
@@ -74,7 +66,6 @@ const InfoBox = styled.div`
   padding: 10px;
   box-sizing: border-box;
   margin-left: 30px;
-
   .header {
     margin-bottom: 10px;
     .title-row {
@@ -82,7 +73,6 @@ const InfoBox = styled.div`
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 10px;
-
       h2 {
         font-size: 32px;
         font-weight: 700;
@@ -94,7 +84,6 @@ const InfoBox = styled.div`
         color: #333;
       }
     }
-
     .sub-info {
       display: flex;
       gap: 15px;
@@ -108,14 +97,12 @@ const InfoBox = styled.div`
         gap: 5px;
       }
     }
-
     .specs {
       font-size: 13px;
       color: #666;
       line-height: 1.5;
     }
   }
-
   .option-group {
     padding: 10px 0;
     label {
@@ -130,7 +117,6 @@ const InfoBox = styled.div`
       gap: 10px;
     }
   }
-
   .purchase-info-row {
     display: flex;
     justify-content: space-between;
@@ -139,32 +125,27 @@ const InfoBox = styled.div`
     font-size: 16px;
     font-weight: bold;
     color: #333;
-
     .label {
       color: #888;
       font-weight: normal;
     }
   }
-
   .quantity-control {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-
     label {
       font-weight: bold;
       color: #555;
       font-size: 14px;
     }
-
     .counter-box {
       display: flex;
       align-items: center;
       background-color: #f3f3f3;
       border-radius: 30px;
       padding: 5px 15px;
-
       button {
         background: none;
         border: none;
@@ -180,12 +161,10 @@ const InfoBox = styled.div`
       }
     }
   }
-
   .price-area {
     margin-top: auto;
     margin-bottom: 20px;
     background-color: #fff;
-
     .row {
       display: flex;
       justify-content: space-between;
@@ -193,7 +172,6 @@ const InfoBox = styled.div`
       margin-bottom: 10px;
       font-size: 16px;
       padding: 10px 0;
-
       &.total {
         margin-top: 10px;
         border-top: none;
@@ -207,12 +185,10 @@ const InfoBox = styled.div`
       }
     }
   }
-
   .btn-group {
     display: flex;
     gap: 10px;
     height: 60px;
-
     button {
       flex: 1;
       border-radius: 50px;
@@ -243,14 +219,12 @@ const InfoBox = styled.div`
     }
   }
 `;
-
 const Divider = styled.div`
   width: 100%;
   height: 1px;
   background-color: #e0e0e0;
   margin: 10px 0;
 `;
-
 const StyledSelect = styled.select`
   width: 100%;
   padding: 15px;
@@ -267,7 +241,6 @@ const StyledSelect = styled.select`
   background-position: right 15px top 50%;
   background-size: 12px auto;
 `;
-
 const PeriodBtn = styled.button`
   flex: 1;
   padding: 12px;
@@ -279,8 +252,6 @@ const PeriodBtn = styled.button`
   cursor: pointer;
 `;
 
-// --- 컴포넌트 시작 ---
-
 const ProductTopSection = ({
   product,
   selectedPeriod,
@@ -289,22 +260,18 @@ const ProductTopSection = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Context 사용
   const { addToCart } = useContext(CartContext);
 
   const currentType = location.pathname.toLowerCase().includes("purchase")
     ? "purchase"
     : "subscription";
   const isSubscription = currentType === "subscription";
-
   const isLoggedIn = !!localStorage.getItem("accessToken");
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isConsultOpen, setIsConsultOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  // --- productCardData 매핑 로직 ---
   const sNum = product.sNum || product.snum || product.num;
   const mappingKey = sNum;
   const customData = productCardData[mappingKey];
@@ -331,7 +298,7 @@ const ProductTopSection = ({
     displayTotalPrice = unitPrice * quantity;
   }
 
-  // --- 이미지 경로 처리 ---
+  // --- 이미지 경로 처리 함수 ---
   const getImageUrl = (img) => {
     if (!img) return null;
     if (img.startsWith("http")) return img;
@@ -340,7 +307,6 @@ const ProductTopSection = ({
   const finalImage =
     getImageUrl(product.img) || `https://placehold.co/443x592?text=NoImage`;
 
-  // --- 핸들러 ---
   const openCartModal = () => setIsCartOpen(true);
   const closeCartModal = () => setIsCartOpen(false);
   const openConsultModal = () => setIsConsultOpen(true);
@@ -411,12 +377,12 @@ const ProductTopSection = ({
     setQuantity((prev) => Math.max(1, prev + delta));
   };
 
-  // [수정] 모달에 전달할 데이터 객체 생성
-  // 실제 로그인 유저 정보가 있다면 user 필드에 넣으면 됩니다.
+  // [수정] 모달에 전달할 데이터: 이미지 경로 포함
   const consultationData = {
+    productId: product.id || product.num, // ID 추가
     product: displayName,
+    img: finalImage, // 처리된 이미지 경로 전달
     type: isSubscription ? "구독 상담" : "구매 상담",
-    user: "회원님", // 임시 값 (로그인 정보에서 가져와도 됨)
   };
 
   return (
@@ -450,7 +416,6 @@ const ProductTopSection = ({
             <div className="title-row">
               <h2>{displayName}</h2>
             </div>
-
             <div className="sub-info">
               <span>{product.serialNum || "27ART10AKPL"}</span>
               <span>|</span>
@@ -460,9 +425,7 @@ const ProductTopSection = ({
             </div>
             <div className="specs">{displaySpecs}</div>
           </div>
-
           <Divider />
-
           <div className="option-group">
             <label>Choose Option</label>
             <StyledSelect defaultValue="default">
@@ -472,9 +435,7 @@ const ProductTopSection = ({
               <option value="none">없음</option>
             </StyledSelect>
           </div>
-
           <Divider />
-
           {isSubscription ? (
             <div className="option-group">
               <label>계약 기간</label>
@@ -521,7 +482,6 @@ const ProductTopSection = ({
                 </span>
               </div>
             ) : null}
-
             <div className="row total">
               <span>{isSubscription ? "가전 구독 총 요금" : "총 금액"}</span>
               <span className="price-total">
@@ -534,11 +494,9 @@ const ProductTopSection = ({
             <button className="cart" onClick={handleCartClick}>
               <img src={carticon} alt="장바구니" />
             </button>
-
             <button className="consult" onClick={handleConsultClick}>
               {isSubscription ? "구독 상담 예약" : "상담 예약"}
             </button>
-
             <button className="main-action" onClick={handleMainActionClick}>
               {isSubscription ? "구독 하기" : "구매 하기"}
             </button>
@@ -547,8 +505,6 @@ const ProductTopSection = ({
       </Section>
 
       {isCartOpen && <CartModal onClose={closeCartModal} />}
-
-      {/* [수정] data prop을 전달하여 모달이 null을 반환하지 않도록 함 */}
       {isConsultOpen && (
         <ConsultationModal
           onClose={closeConsultModal}

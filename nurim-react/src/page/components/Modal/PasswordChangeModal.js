@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import api from "../../../api/Axios";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -14,7 +15,6 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-// [동적 높이 조절] 완료 상태에 따라 높이 변경
 const ModalContent = styled.div`
   background: white;
   width: 640px;
@@ -66,6 +66,11 @@ const InputGroup = styled.div`
     color: #888;
     margin-top: 5px;
   }
+  .error {
+    font-size: 11px;
+    color: #e74c3c;
+    margin-top: 5px;
+  }
 `;
 
 const ActionButton = styled.button`
@@ -73,7 +78,7 @@ const ActionButton = styled.button`
   padding: 15px;
   border-radius: 30px;
   border: none;
-  background-color: #8fa7a9; /* 이미지의 톤다운된 민트색 */
+  background-color: #8fa7a9;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -85,18 +90,44 @@ const ActionButton = styled.button`
 `;
 
 const ConfirmButton = styled(ActionButton)`
-  background-color: #356469; /* 완료 모달의 짙은 색 */
+  background-color: #356469;
   &:hover {
     background-color: #2a5054;
   }
 `;
 
-const PasswordChangeModal = ({ onClose }) => {
+// [수정] memberNum props 추가
+const PasswordChangeModal = ({ onClose, memberNum }) => {
   const [step, setStep] = useState("input"); // input -> completed
+  const [newPwd, setNewPwd] = useState("");
+  const [checkPwd, setCheckPwd] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = () => {
-    // 여기에 비밀번호 변경 API 호출 로직 추가
-    setStep("completed");
+  const handleSubmit = async () => {
+    // 1. 유효성 검사
+    if (newPwd.length < 8) {
+      setErrorMsg("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
+    if (newPwd !== checkPwd) {
+      setErrorMsg("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      // 2. API 호출 (백엔드 엔드포인트 확인 필요)
+      // 예: PUT /api/mypage/password/{memberNum}
+      const response = await api.post(`/mypage/my-info/pwd/${memberNum}`, {
+        pwd: newPwd,
+      });
+
+      if (response.status === 200) {
+        setStep("completed");
+      }
+    } catch (error) {
+      console.error("비밀번호 변경 실패:", error);
+      setErrorMsg("비밀번호 변경 중 오류가 발생했습니다.");
+    }
   };
 
   if (step === "completed") {
@@ -127,6 +158,11 @@ const PasswordChangeModal = ({ onClose }) => {
           <input
             type="password"
             placeholder="새로운 비밀번호를 입력해 주세요."
+            value={newPwd}
+            onChange={(e) => {
+              setNewPwd(e.target.value);
+              setErrorMsg("");
+            }}
           />
           <p className="hint">
             영문, 숫자, 특수문자를 조합하여 8자 이상으로 설정해 주세요.
@@ -138,7 +174,13 @@ const PasswordChangeModal = ({ onClose }) => {
           <input
             type="password"
             placeholder="새로운 비밀번호를 한 번 더 입력해 주세요."
+            value={checkPwd}
+            onChange={(e) => {
+              setCheckPwd(e.target.value);
+              setErrorMsg("");
+            }}
           />
+          {errorMsg && <p className="error">{errorMsg}</p>}
         </InputGroup>
 
         <ActionButton onClick={handleSubmit}>변경 하기</ActionButton>

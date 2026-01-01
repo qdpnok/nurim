@@ -50,7 +50,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberNum)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "해당 회원이 존재하지 않습니다."));
 
-        return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum());
+        return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum(), member.getRegDate());
     }
 
     // 비밀번호 변경
@@ -74,7 +74,7 @@ public class MemberService {
         member.setPhoneNum(dto.getPhone());
         memberRepository.save(member);
 
-        return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum());
+        return new MyInfoResDto(member.getId(), member.getEmail(), member.getName(), member.getPhoneNum(), member.getRegDate());
     }
 
     // 제품 관리 렌더링 (인수/반납 개수)
