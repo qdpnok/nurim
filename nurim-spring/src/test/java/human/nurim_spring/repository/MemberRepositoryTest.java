@@ -6,6 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +51,17 @@ class MemberRepositoryTest {
 
         boolean existInfo = memberRepository.existsByPhoneNumAndNumNot("010-1234-1234", 1L);
         log.info(String.valueOf(existInfo));
+    }
+
+    @Test
+    @DisplayName("admin, 회원관리_회원 정보 조회")
+    public void searchMember() {
+
+        Pageable pageable = PageRequest.of(0,10);
+
+        Page<Member> members =  memberRepository.searchMember("TestadminId", null, null, null, pageable);
+
+        log.info(members.getContent().get(0).toString());
     }
 
 

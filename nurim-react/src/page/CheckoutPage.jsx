@@ -3,12 +3,10 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import axios from "axios";
-import api from "../api/Axios";
 import {
   FaArrowLeft,
   FaCreditCard,
   FaRegCreditCard,
-  FaPaypal,
   FaTimes,
 } from "react-icons/fa";
 
@@ -258,13 +256,11 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // items: 이전 페이지(상세페이지 or 장바구니)에서 넘겨준 상품 정보들
   const { items = [], mode = "purchase" } = location.state || {};
 
   const [step, setStep] = useState(1);
   const [isOpenPost, setIsOpenPost] = useState(false);
 
-  // --- 사용자 정보 State ---
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -274,7 +270,6 @@ const CheckoutPage = () => {
     detailAddress: "",
   });
 
-  // --- 배송 및 결제 State ---
   const [deliveryRequest, setDeliveryRequest] = useState("");
   const [deliveryDates, setDeliveryDates] = useState({});
   const [paymentInfo, setPaymentInfo] = useState({
@@ -283,57 +278,43 @@ const CheckoutPage = () => {
     cvv: "",
   });
 
-  // [API 호출] 백엔드 SubscriptionOrderController와 통신
   useEffect(() => {
     const fetchOrderPageData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        // [주의] memberId는 로그인 시 저장해둔 값을 가져와야 합니다. 없으면 1(테스트용)로 가정
         const memberId = localStorage.getItem("memberId") || 1;
 
-        // 1. 요청 타입 및 파라미터 결정 logic
-        let type = "cart"; // 기본값
+        let type = "cart";
         let queryParams = "";
 
         if (items.length === 1 && items[0].productId) {
-          // items가 1개이고 productId가 있으면 '상세페이지 직접 구매(product)'로 간주
           type = "product";
           const productId = items[0].productId;
-          // period 문자열(예: "36개월")에서 숫자만 추출하거나, 넘어온 값 사용. 없으면 0
           const month = items[0].period ? parseInt(items[0].period) : 0;
           queryParams = `?productId=${productId}&month=${month}`;
         } else {
-          // 그 외에는 '장바구니 구매(cart)'로 간주
           type = "cart";
-          // items 배열에서 cartItemId들을 추출해서 쿼리스트링으로 만듦
-          // (주의: items 객체 안에 cartItemId가 있어야 함. 없으면 productId라도 사용)
           const ids = items
             .map((item) => item.cartItemId || item.productId)
             .join(",");
           queryParams = `?cartItemIds=${ids}`;
         }
 
-        // 2. 백엔드 API 호출
-        // URL 패턴: /api/subscription-order/{memberId}/{type}?파라미터들
-        const url = `/subscription-order/${memberId}/${type}${queryParams}`;
+        const url = `http://localhost:8222/api/subscription-order/${memberId}/${type}${queryParams}`;
 
-        const response = await api.get(url, {
+        const response = await axios.get(url, {
           headers: {
-            Authorization: `Bearer ${token}`, // 필요 시 토큰 전송
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        // 3. 받아온 데이터(SubOrderPageRes) 매핑
-        const data = response.data; // { memberName, email, phoneNum, ... }
+        const data = response.data;
 
         setUserInfo((prev) => ({
           ...prev,
-          name: data.memberName || "", // DTO 필드: memberName
-          email: data.email || "", // DTO 필드: email
-          phone: data.phoneNum || "", // DTO 필드: phoneNum
-          // 만약 백엔드가 주소 정보도 준다면 아래처럼 추가 매핑 가능
-          // zipCode: data.zipCode || "",
-          // address: data.address || "",
+          name: data.memberName || "",
+          email: data.email || "",
+          phone: data.phoneNum || "",
         }));
       } catch (error) {
         console.error("주문 페이지 정보를 불러오는데 실패했습니다.", error);
@@ -341,9 +322,8 @@ const CheckoutPage = () => {
     };
 
     fetchOrderPageData();
-  }, [items]); // items가 변경될 때마다 실행 (실제로는 마운트 시 1회)
+  }, [items]);
 
-  // --- 계산 로직 (프론트엔드 계산 유지) ---
   const calculateTotal = () => {
     return items.reduce((acc, item) => {
       const itemPrice = item.price * (item.qty || 1);
@@ -354,7 +334,6 @@ const CheckoutPage = () => {
   const discount = 0;
   const finalPrice = totalPrice - discount;
 
-  // --- 핸들러 ---
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserInfo((prev) => ({ ...prev, [name]: value }));
@@ -387,7 +366,6 @@ const CheckoutPage = () => {
     setIsOpenPost(false);
   };
 
-  // --- 유효성 검사 ---
   const validateStep = () => {
     if (step === 1) {
       if (
@@ -422,13 +400,72 @@ const CheckoutPage = () => {
     return true;
   };
 
+  // --- 결제 및 주문 생성 요청 로직 ---
+  const handleSubmitOrder = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const memberId = localStorage.getItem("memberId") || 1;
+
+      // DTO: CreateOrderReqDto 구조에 맞게 데이터 가공
+      // 주소 조합
+      const fullAddress = `(${userInfo.zipCode}) ${userInfo.address} ${userInfo.detailAddress}`;
+
+      // 배송일: 여러 개 중 첫 번째 날짜를 선택하거나, 로직에 따라 결정 (DTO는 단일 날짜)
+      // LocalDateTime 형식이므로 "yyyy-MM-ddTHH:mm:ss" 형태로 보냄
+      const firstDeliveryDateKey = Object.keys(deliveryDates)[0];
+      const selectedDate = deliveryDates[firstDeliveryDateKey]
+        ? `${deliveryDates[firstDeliveryDateKey]}T09:00:00`
+        : null;
+
+      // cartItemList 생성 (cartItemId가 없으면 productId 사용 - 백엔드 로직에 따라 다름)
+      const cartItemIds = items.map(
+        (item) => item.cartItemId || item.productId
+      );
+
+      const requestDto = {
+        name: userInfo.name,
+        email: userInfo.email,
+        phoneNum: userInfo.phone,
+        cartItemList: cartItemIds,
+        address: fullAddress,
+        deliveryMessage: deliveryRequest,
+        isVisit: false, // 별도 선택란이 없으므로 기본값 false
+        deliveryDate: selectedDate,
+      };
+
+      let url = "";
+      if (mode === "subscription") {
+        url = `http://localhost:8222/api/subscription-order/add/${memberId}`;
+      } else {
+        url = `http://localhost:8222/api/purchase-order/add/${memberId}`;
+      }
+
+      const response = await axios.post(url, requestDto, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        // 성공 시 CreateOrderResDto 반환됨 (orderNum 포함)
+        const orderNum = response.data.orderNum;
+        alert(`주문이 완료되었습니다! (주문번호: ${orderNum})`);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("주문 처리 중 에러 발생:", error);
+      alert("주문 처리에 실패했습니다.");
+    }
+  };
+
   const handleNext = () => {
     if (!validateStep()) return;
     if (step < 3) {
       setStep(step + 1);
     } else {
-      alert("결제가 완료되었습니다!");
-      navigate("/");
+      // 마지막 단계에서 결제하기 버튼 클릭 시
+      handleSubmitOrder();
     }
   };
 
@@ -437,6 +474,7 @@ const CheckoutPage = () => {
     else navigate(-1);
   };
 
+  // ... (return 부분은 기존과 동일) ...
   return (
     <div>
       <Container>
