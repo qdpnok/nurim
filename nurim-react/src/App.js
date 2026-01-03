@@ -23,7 +23,7 @@ import AdminProductList from "./page/Admin/AdminProductList";
 import AdminProductRegister from "./page/Admin/AdminProductRegister";
 import AdminOrderList from "./page/Admin/AdminOrderList";
 import AdminSales from "./page/Admin/AdminSales";
-// import PlaceholderPage from "./page/PlaceholderPage";
+import ProtectedRoute from "./page/components/Auth/ProtectedRoute";
 
 import "./App.css";
 
@@ -64,35 +64,37 @@ function App() {
             </Route>
 
             {/* ---------------- 관리자 페이지 (Admin) ---------------- */}
-            <Route path="/admin" element={<AdminLayout />}>
-              {/* 대시보드 (메인) */}
-              <Route index element={<AdminDashboard />} />
+            <Route element={<ProtectedRoute allowedStatus="MANAGER" />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                {/* 대시보드 (메인) */}
+                <Route index element={<AdminDashboard />} />
 
-              {/* 회원 관리 */}
-              <Route path="members" element={<AdminMemberInfo />} />
+                {/* 회원 관리 */}
+                <Route path="members" element={<AdminMemberInfo />} />
 
-              {/* 회원 탈퇴 관리 (추가!) */}
-              <Route path="withdrawal" element={<AdminWithdrawal />} />
+                {/* 회원 탈퇴 관리 (추가!) */}
+                <Route path="withdrawal" element={<AdminWithdrawal />} />
 
-              {/* 문의 관리 - FAQ */}
-              <Route path="faq" element={<AdminFaq />} />
+                {/* 문의 관리 - FAQ */}
+                <Route path="faq" element={<AdminFaq />} />
 
-              {/* 문의 관리 - QnA */}
-              <Route path="qna" element={<AdminQna />} />
+                {/* 문의 관리 - QnA */}
+                <Route path="qna" element={<AdminQna />} />
 
-              {/* 문의 관리 - 상담 신청 내역 */}
-              <Route path="consultation" element={<AdminConsultation />} />
+                {/* 문의 관리 - 상담 신청 내역 */}
+                <Route path="consultation" element={<AdminConsultation />} />
 
-              {/* 상품 관리 */}
-              <Route path="products" element={<AdminProductList />} />
-              <Route
-                path="products/register"
-                element={<AdminProductRegister />}
-              />
+                {/* 상품 관리 */}
+                <Route path="products" element={<AdminProductList />} />
+                <Route
+                  path="products/register"
+                  element={<AdminProductRegister />}
+                />
 
-              {/* 주문/매출 관리 */}
-              <Route path="orders" element={<AdminOrderList />} />
-              <Route path="sales" element={<AdminSales />} />
+                {/* 주문/매출 관리 */}
+                <Route path="orders" element={<AdminOrderList />} />
+                <Route path="sales" element={<AdminSales />} />
+              </Route>
             </Route>
           </Routes>
         </Router>

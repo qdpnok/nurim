@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import api from "../../../../api/Axios";
+import api from "../../../../api/Axios"; // Axios 인스턴스 import
 
+// ... (스타일 정의 코드는 그대로 유지) ...
 const MainContainer = styled.div`
   width: 100%;
 `;
-
-// [통일] 상단 경로
 const Breadcrumb = styled.div`
   font-size: 14px;
   color: #888;
   margin-bottom: 30px;
 `;
-
-// [추가] 다른 페이지의 TitleHeader와 동일한 역할을 하는 래퍼 (마진 병합 방지용)
 const TitleWrapper = styled.div`
   margin-top: 0;
-  margin-bottom: 10px; /* 홈 화면은 바로 밑에 인사가 오므로 간격 조절 */
+  margin-bottom: 10px;
 `;
-
 const PageTitle = styled.h1`
   font-size: 24px;
   font-weight: bold;
   color: #333;
-  margin: 0; /* 태그 자체의 마진은 0으로 제거 */
-  line-height: 1.5; /* [중요] 줄 높이 통일 */
+  margin: 0;
+  line-height: 1.5;
 `;
-
 const Greeting = styled.p`
   font-size: 16px;
   color: #333;
@@ -36,8 +31,6 @@ const Greeting = styled.p`
     font-weight: bold;
   }
 `;
-
-// --- 공통 카드 스타일 ---
 const SectionCard = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -45,7 +38,6 @@ const SectionCard = styled.div`
   margin-bottom: 30px;
   background-color: #fff;
 `;
-
 const MemberInfoHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -55,12 +47,10 @@ const MemberInfoHeader = styled.div`
   cursor: pointer;
   color: #333;
 `;
-
 const StatsGrid = styled.div`
   display: flex;
   gap: 20px;
 `;
-
 const StatBox = styled.div`
   flex: 1;
   background-color: #f9f9f9;
@@ -71,26 +61,22 @@ const StatBox = styled.div`
   align-items: center;
   font-size: 14px;
   color: #555;
-
   span.count {
     font-weight: bold;
     color: #000;
     font-size: 16px;
   }
 `;
-
 const BannerTitle = styled.h3`
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
 `;
-
 const BannerText = styled.p`
   font-size: 13px;
   color: #666;
   line-height: 1.5;
 `;
-
 const NewsletterWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -98,13 +84,11 @@ const NewsletterWrapper = styled.div`
   text-align: center;
   gap: 15px;
 `;
-
 const InputGroup = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 10px;
 `;
-
 const EmailInput = styled.input`
   width: 300px;
   padding: 10px 15px;
@@ -113,7 +97,6 @@ const EmailInput = styled.input`
   background-color: #f5f5f5;
   outline: none;
 `;
-
 const ActionButton = styled.button`
   background-color: #356469;
   color: white;
@@ -122,24 +105,20 @@ const ActionButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-
   &:hover {
     background-color: #2a5054;
   }
 `;
-
 const SupportHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-
   h3 {
     font-size: 18px;
     font-weight: bold;
   }
 `;
-
 const SupportContent = styled.div`
   background-color: #f9f9f9;
   border-radius: 12px;
@@ -148,17 +127,14 @@ const SupportContent = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
-
 const SupportLeft = styled.div`
   font-weight: bold;
   font-size: 16px;
 `;
-
 const SupportButtons = styled.div`
   display: flex;
   gap: 15px;
 `;
-
 const WhiteButton = styled.button`
   background-color: #fff;
   border: 1px solid #ddd;
@@ -168,7 +144,6 @@ const WhiteButton = styled.button`
   color: #555;
   cursor: pointer;
   font-weight: 500;
-
   &:hover {
     border-color: #356469;
     color: #356469;
@@ -178,25 +153,58 @@ const WhiteButton = styled.button`
 const MyPageHome = () => {
   const navigate = useNavigate();
 
+  // [수정 1] memberNum 가져오기
+  const memberNum = localStorage.getItem("memberNum");
+
   const [userName, setUserName] = useState("");
   const [stats, setStats] = useState({
     subscriptionCount: 0,
     orderCount: 0,
-    reviewCount: 0, // 혹은 productManageCount 등 백엔드 DTO에 맞춰 수정
+    reviewCount: 0,
   });
+
+  // [수정 2] API 호출하여 데이터 가져오기
+  useEffect(() => {
+    const fetchMyPageData = async () => {
+      if (!memberNum) {
+        // 로그인 정보가 없으면 처리 (예: 로그인 페이지로 이동)
+        return;
+      }
+
+      try {
+        // 백엔드 컨트롤러: @GetMapping("/{memberNum}") -> /api/mypage/{memberNum}
+        const response = await api.get(`/mypage/${memberNum}`);
+
+        // 데이터 설정 (백엔드 MyPageResDto 필드명에 따라 다를 수 있음)
+        // 예: response.data = { name: "홍길동", subscriptionCount: 2, ... }
+        if (response.data) {
+          setUserName(response.data.name);
+          setStats({
+            subscriptionCount: response.data.subscriptionCount || 0,
+            orderCount: response.data.orderCount || 0,
+            reviewCount: response.data.reviewCount || 0,
+          });
+        }
+      } catch (error) {
+        console.error("마이페이지 정보 로드 실패:", error);
+      }
+    };
+
+    fetchMyPageData();
+  }, [memberNum]);
 
   return (
     <MainContainer>
       <Breadcrumb>Home &gt; My Page</Breadcrumb>
 
-      {/* [수정] TitleWrapper로 감싸서 구조 통일 */}
       <TitleWrapper>
         <PageTitle>마이페이지</PageTitle>
       </TitleWrapper>
 
+      {/* [수정 3] userName 상태값 출력 */}
       <Greeting>
-        <span>정동균님 안녕하세요.</span> 누림과 함께 스마트한 가전 생활을
-        즐겨보세요!
+        <span>{userName ? `${userName}님` : "회원님"} 안녕하세요.</span> 누림과
+        함께 스마트한 가전 생활을 즐겨보세요!
       </Greeting>
 
       <SectionCard>
@@ -205,13 +213,15 @@ const MyPageHome = () => {
         </MemberInfoHeader>
         <StatsGrid>
           <StatBox>
-            구독 관리 <span className="count">0 개</span>
+            {/* [추가] 받아온 stats 데이터 연결 */}
+            구독 관리{" "}
+            <span className="count">{stats.subscriptionCount} 개</span>
           </StatBox>
           <StatBox>
-            구매 제품 <span className="count">0 개</span>
+            구매 제품 <span className="count">{stats.orderCount} 개</span>
           </StatBox>
           <StatBox>
-            리뷰 관리 <span className="count">0 개</span>
+            리뷰 관리 <span className="count">{stats.reviewCount} 개</span>
           </StatBox>
         </StatsGrid>
       </SectionCard>

@@ -2,6 +2,8 @@ package human.nurim_spring.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter @NoArgsConstructor
 @AllArgsConstructor @ToString
 public class MyInfoResDto {
@@ -9,4 +11,5 @@ public class MyInfoResDto {
     private String email;
     private String name;
     private String phone;
+    private LocalDateTime regData;
 }

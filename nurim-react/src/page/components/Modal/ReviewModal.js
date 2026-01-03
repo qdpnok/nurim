@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios"; // [변경] axios 임포트 추가
+// [수정 1] 일반 axios 대신 설정된 api 인스턴스 import
+import api from "../../../api/Axios";
+
 const THEME_COLOR = "#2F6162";
 
+// ... (Overlay, Container, Title 등 스타일 컴포넌트는 기존과 동일) ...
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -15,7 +18,6 @@ const Overlay = styled.div`
   align-items: center;
   z-index: 1000;
 `;
-
 const Container = styled.div`
   width: 1200px;
   height: 1055px;
@@ -28,33 +30,27 @@ const Container = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 `;
-
 const Title = styled.h1`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
   color: #000;
 `;
-
 const ModalContent = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 10px;
 `;
-
-/* --- Product Info Section --- */
 const ProductSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 30px;
 `;
-
 const ProductInfo = styled.div`
   display: flex;
   gap: 20px;
 `;
-
 const ProductImage = styled.img`
   width: 120px;
   height: 120px;
@@ -62,7 +58,6 @@ const ProductImage = styled.img`
   object-fit: cover;
   background-color: #f0f0f0;
 `;
-
 const ImagePlaceholder = styled.div`
   width: 120px;
   height: 120px;
@@ -73,22 +68,19 @@ const ImagePlaceholder = styled.div`
   justify-content: center;
   font-weight: bold;
   color: #999;
-  font-size: 20px;
+  font-size: 14px;
 `;
-
 const ProductDetails = styled.div`
   h3 {
     margin: 0 0 10px 0;
     font-size: 18px;
   }
 `;
-
 const RatingLabel = styled.p`
   font-size: 14px;
   color: #888;
   margin-bottom: 5px;
 `;
-
 const StarContainer = styled.div`
   font-size: 28px;
   color: #ddd;
@@ -96,27 +88,22 @@ const StarContainer = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const Star = styled.span`
   color: ${(props) => (props.$filled ? THEME_COLOR : "#ddd")};
   margin-right: 2px;
   transition: color 0.2s;
 `;
-
 const RatingScore = styled.span`
   font-size: 20px;
   color: #000;
   margin-left: 10px;
 `;
-
-/* --- Toggle Switch --- */
 const ToggleWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
 `;
-
 const ToggleSwitch = styled.div`
   width: 50px;
   height: 26px;
@@ -126,7 +113,6 @@ const ToggleSwitch = styled.div`
   background-color: ${(props) => (props.$isPrivate ? THEME_COLOR : "#fff")};
   border: 2px solid ${THEME_COLOR};
 `;
-
 const ToggleCircle = styled.div`
   width: 18px;
   height: 18px;
@@ -138,28 +124,23 @@ const ToggleCircle = styled.div`
   background-color: ${(props) => (props.$isPrivate ? "#fff" : THEME_COLOR)};
   left: ${(props) => (props.$isPrivate ? "calc(100% - 22px)" : "2px")};
 `;
-
 const ToggleLabel = styled.span`
   font-size: 16px;
   color: #333;
   width: 50px;
   text-align: center;
 `;
-
-/* --- Review Input Section --- */
 const ReviewInputBox = styled.div`
   background-color: #e9e9e9;
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 30px;
 `;
-
 const SectionLabel = styled.h4`
   margin-top: 0;
   margin-bottom: 10px;
   font-size: 16px;
 `;
-
 const ReviewTextarea = styled.textarea`
   width: 100%;
   height: 200px;
@@ -170,17 +151,13 @@ const ReviewTextarea = styled.textarea`
   resize: none;
   box-sizing: border-box;
   font-family: inherit;
-
   &:focus {
     outline: 2px solid ${THEME_COLOR};
   }
 `;
-
-/* --- Notice Section --- */
 const NoticeSection = styled.div`
   margin-top: 20px;
 `;
-
 const NoticeHeader = styled.div`
   display: flex;
   align-items: center;
@@ -188,19 +165,16 @@ const NoticeHeader = styled.div`
   margin-bottom: 10px;
   font-weight: bold;
 `;
-
 const NoticeList = styled.ul`
   font-size: 13px;
   color: #333;
   line-height: 1.6;
   padding-left: 20px;
   margin-bottom: 20px;
-
   li {
     margin-bottom: 4px;
   }
 `;
-
 const AgreementCheck = styled.div`
   display: flex;
   align-items: center;
@@ -209,7 +183,6 @@ const AgreementCheck = styled.div`
   font-size: 14px;
   cursor: pointer;
 `;
-
 const StyledCheckbox = styled.input`
   appearance: none;
   width: 18px;
@@ -219,12 +192,10 @@ const StyledCheckbox = styled.input`
   cursor: pointer;
   background-color: white;
   position: relative;
-
   &:checked {
     background-color: ${THEME_COLOR};
     border-color: ${THEME_COLOR};
   }
-
   &:checked::after {
     content: "✔";
     color: white;
@@ -235,8 +206,6 @@ const StyledCheckbox = styled.input`
     transform: translate(-50%, -50%);
   }
 `;
-
-/* --- Footer --- */
 const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -245,7 +214,6 @@ const Footer = styled.div`
   padding-top: 20px;
   border-top: 1px solid #eee;
 `;
-
 const Button = styled.button`
   padding: 15px 40px;
   border-radius: 30px;
@@ -254,28 +222,23 @@ const Button = styled.button`
   cursor: pointer;
   border: none;
   transition: opacity 0.2s;
-
   &:hover {
     opacity: 0.9;
   }
 `;
-
 const CloseButton = styled(Button)`
   background-color: #888;
   color: white;
 `;
-
 const SubmitButton = styled(Button)`
   background-color: ${THEME_COLOR};
   color: white;
-
   &:disabled {
     background-color: #ccc;
     cursor: not-allowed;
   }
 `;
 
-// --- Main Component ---
 const ReviewModal = ({ onClose, productId = 82 }) => {
   const [isPrivate, setIsPrivate] = useState(true);
   const [rating, setRating] = useState(0);
@@ -302,17 +265,23 @@ const ReviewModal = ({ onClose, productId = 82 }) => {
 
     const fetchProductInfo = async () => {
       try {
-        // [변경] 실제 API 호출
-        const response = await axios.get(
-          `http://localhost:8222/subscriptions/productAcSpecs/${productId}`
-        );
+        // [핵심 수정] 작성하신 ProductController 경로와 일치시킴
+        // Controller: @RequestMapping("/api/product") + @GetMapping("/detail/{num}")
+        // 요청 URL: /product/detail/{productId} (api 인스턴스가 /api를 붙여준다고 가정)
+        const response = await api.get(`/product/detail/${productId}`);
         const data = response.data;
 
-        // [중요] DB에서 받아온 필드명(예: productName)을 화면용 상태(name)로 매핑
-        // 만약 API 응답이 { productName: "...", productImage: "..." } 형태라면 아래처럼 작성:
+        // [데이터 매핑] 백엔드 DTO(ProductDetailResDto)의 필드명 확인 필요
+        // 예: data.name, data.img (파일명만 온다면 경로 추가)
+        const imgPath = data.img
+          ? data.img.startsWith("http")
+            ? data.img
+            : `/images/${data.img}`
+          : "";
+
         setProductData({
-          name: data.productName || data.name || "상품명 없음",
-          img: data.productImage || data.img || "",
+          name: data.name || "상품명 없음",
+          img: imgPath,
         });
       } catch (error) {
         console.error("상품 정보를 불러오지 못했습니다:", error);
@@ -332,18 +301,15 @@ const ReviewModal = ({ onClose, productId = 82 }) => {
         <Title>리뷰 작성하기</Title>
 
         <ModalContent>
-          {/* 상품 정보 및 토글 */}
           <ProductSection>
             <ProductInfo>
-              {/* 이미지가 있으면 이미지 표시, 없으면 텍스트 박스 */}
               {productData.img ? (
-                <ProductImage src={productData.img} alt="Product" />
+                <ProductImage src={productData.img} alt={productData.name} />
               ) : (
-                <ImagePlaceholder>Loading</ImagePlaceholder>
+                <ImagePlaceholder>No Image</ImagePlaceholder>
               )}
 
               <ProductDetails>
-                {/* 받아온 상품명 표시 */}
                 <h3>{productData.name}</h3>
                 <RatingLabel>상품은 만족 하셨나요? | 선택하세요.</RatingLabel>
                 <StarContainer>
@@ -361,7 +327,6 @@ const ReviewModal = ({ onClose, productId = 82 }) => {
               </ProductDetails>
             </ProductInfo>
 
-            {/* 토글 버튼 */}
             <ToggleWrapper onClick={() => setIsPrivate(!isPrivate)}>
               <ToggleSwitch $isPrivate={isPrivate}>
                 <ToggleCircle $isPrivate={isPrivate} />
@@ -370,7 +335,6 @@ const ReviewModal = ({ onClose, productId = 82 }) => {
             </ToggleWrapper>
           </ProductSection>
 
-          {/* 리뷰 입력 */}
           <ReviewInputBox>
             <SectionLabel>(필수) 제품 사용 후기를 남겨주세요.</SectionLabel>
             <ReviewTextarea
@@ -380,7 +344,6 @@ const ReviewModal = ({ onClose, productId = 82 }) => {
             />
           </ReviewInputBox>
 
-          {/* 유의사항 */}
           <NoticeSection>
             <NoticeHeader>
               <span style={{ color: "orange" }}>⚠️</span> 리뷰 작성 시 유의사항
@@ -419,21 +382,3 @@ const ReviewModal = ({ onClose, productId = 82 }) => {
 };
 
 export default ReviewModal;
-
-// 모달 사용을 위한 코드.
-
-// const [isModalOpen, setIsModalOpen] = useState(false);
-// const openModal = () => {
-//   setIsModalOpen(true);
-// };
-
-// // 모달 닫기 함수
-// const closeModal = () => {
-//   setIsModalOpen(false);
-// };
-
-//   <StartButton onClick={openModal}>asdasd</StartButton>
-// {isModalOpen && <ReviewModal onClose={closeModal} />}
-
-// import React, { useState } from "react";
-// import ReviewModal from "../Popup/ReviewPopUp";
