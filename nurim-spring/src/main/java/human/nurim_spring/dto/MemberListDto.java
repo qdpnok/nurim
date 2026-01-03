@@ -1,11 +1,10 @@
 package human.nurim_spring.dto;
 
 import human.nurim_spring.constant.PermissionStatus;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter @NoArgsConstructor
+@Builder @AllArgsConstructor
 public class MemberListDto {
     private Long num;
     private String id;
