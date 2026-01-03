@@ -4,6 +4,7 @@ import human.nurim_spring.constant.PermissionStatus;
 import human.nurim_spring.dto.MemberListDto;
 import human.nurim_spring.dto.MemberPageResDto;
 import human.nurim_spring.entity.Member;
+import human.nurim_spring.error.BusinessException;
 import human.nurim_spring.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class MemberManageService {
     private final MemberRepository memberRepository;
 
     // 회원 관리 정보 조회
-    public MemberPageResDto searchMember(String id, String name, PermissionStatus status, Boolean isQuit,
+    public MemberPageResDto search(String id, String name, PermissionStatus status, Boolean isQuit,
                                          Integer pageNum, Integer size) {
         List<MemberListDto> list = new ArrayList<>();
         int pageSize = (size == null) ? 20 : size;
@@ -39,6 +40,12 @@ public class MemberManageService {
     }
 
     // 유저 삭제
+    public void delete(Long num) {
+        Member member = memberRepository.findById(num)
+                .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "존재하지 않는 회원입니다."));
+
+        memberRepository.delete(member);
+    }
 
     private MemberListDto convertEntityToMemberList(Member member) {
         return MemberListDto.builder()
