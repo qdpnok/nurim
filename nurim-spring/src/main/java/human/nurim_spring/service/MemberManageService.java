@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class MemberManageService {
         Member member = memberRepository.findById(num)
                 .orElseThrow(() -> new BusinessException("NOT_EXIST_MEMBER", "존재하지 않는 회원입니다."));
 
-        memberRepository.delete(member);
+        member.setQuitDate(LocalDateTime.now());
     }
 
     private MemberListDto convertEntityToMemberList(Member member) {
